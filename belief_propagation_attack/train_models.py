@@ -162,7 +162,7 @@ def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, 
     model.add(Dense(classes, activation='softmax'))
 
     # Save image!
-    plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
+    #plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
 
     optimizer = RMSprop(lr=learning_rate)
     if loss_function=='rank_loss':
