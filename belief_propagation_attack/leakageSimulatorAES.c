@@ -4,7 +4,7 @@
 {
     "distutils": {
         "include_dirs": [
-            "/usr/local/lib/python2.7/site-packages/numpy/core/include"
+            "/usr/local/lib/python2.7/dist-packages/numpy/core/include"
         ], 
         "language": "c", 
         "name": "leakageSimulatorAES", 
