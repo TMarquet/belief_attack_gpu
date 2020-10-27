@@ -10,7 +10,7 @@ PATH_TO_LOCAL_ELMO=Leakage/ELMOPowerModel/
 TRACE_NAME=SCALE_PICO_AESFURIOUS_G2_MixedKey_125MHz_210000Traces_51250Samples_2018_06_18
 #TRACE_NAME=SCALE_PICO_AESFURIOUS_G2_MixedKey_125MHz_210000Traces_33750Samples_2018_11_27
 # When using External Hard Drive:
-PATH_TO_TRACES=/Volumes/TRACES/
+PATH_TO_TRACES=/media/usb/MIG/2.0 TB Volume/home/joey/TRACES/
 # When using BlueCrystal:
 #PATH_TO_TRACES=scratch/TRACES/
 # When using PC (Traces on Desktop):
