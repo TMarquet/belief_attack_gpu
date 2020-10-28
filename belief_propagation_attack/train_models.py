@@ -442,7 +442,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
             mlp_best_model = mlp_best(input_length=input_length, layer_nb=mlp_layers, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
         mlp_epochs = epochs if epochs is not None else 200
         mlp_batchsize = batch_size
-        with tf.device('/cpu:0'):
+        with tf.device('/replica:0/task:0/device:CPU:0'):
             train_model(X_profiling, Y_profiling, mlp_best_model, store_directory +
                         "{}_mlp{}{}{}{}_nodes{}_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}_{}.h5".format(
                             variable, mlp_layers, '_multilabel' if multilabel else '', hammingweight_flag, hammingdistance_flag, mlp_nodes, input_length, mlp_epochs, mlp_batchsize, learning_rate, sd,
