@@ -71,6 +71,9 @@ def check_file_exists(file_path):
 
 ############# Loss functions #############
 
+NUM_GPUS = 3
+strategy = tf.contrib.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
+
 #### MLP Best model (6 layers of 200 units)
 def mlp_ascad(node=200,layer_nb=6):
 	model = Sequential()
@@ -132,41 +135,15 @@ def cnn_ascad(classes=256):
 
 #### MLP Weighted bit model (6 layers of 200 units)
 def mlp_weighted_bit(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='binary_crossentropy'):
-    if loss_function is None:
-        loss_function='binary_crossentropy'
-    model = Sequential()
-    model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
-    for i in range(layer_nb-2):
-        model.add(Dense(mlp_nodes, activation='relu'))
-    model.add(Dense(8, activation='sigmoid'))
-    optimizer = RMSprop(lr=learning_rate)
-    try:
-        model.compile(loss=loss_function, optimizer=optimizer, metrics=['accuracy'])
-    except ValueError:
-        print "!!! Loss Function '{}' not recognised, aborting\n".format(loss_function)
-        raise
-    return model
-
-
-#### MLP Best model (6 layers of 200 units)
-def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
-    if loss_function is None:
-        loss_function='categorical_crossentropy'
-    model = Sequential()
-    model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
-    for i in range(layer_nb-2):
-        model.add(Dense(mlp_nodes, activation='relu'))
-    model.add(Dense(classes, activation='softmax'))
-
-    # Save image!
-    #plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
-
-    optimizer = RMSprop(lr=learning_rate)
-    if loss_function=='rank_loss':
-        model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
-    elif loss_function=='median_probability_loss':
-        model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
-    else:
+    with strategy.scope() :
+        if loss_function is None:
+            loss_function='binary_crossentropy'
+        model = Sequential()
+        model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
+        for i in range(layer_nb-2):
+            model.add(Dense(mlp_nodes, activation='relu'))
+        model.add(Dense(8, activation='sigmoid'))
+        optimizer = RMSprop(lr=learning_rate)
         try:
             model.compile(loss=loss_function, optimizer=optimizer, metrics=['accuracy'])
         except ValueError:
@@ -174,143 +151,175 @@ def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, 
             raise
     return model
 
+
+#### MLP Best model (6 layers of 200 units)
+def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
+    with strategy.scope() :
+        if loss_function is None:
+            loss_function='categorical_crossentropy'
+        model = Sequential()
+        model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
+        for i in range(layer_nb-2):
+            model.add(Dense(mlp_nodes, activation='relu'))
+        model.add(Dense(classes, activation='softmax'))
+    
+        # Save image!
+        #plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
+    
+        optimizer = RMSprop(lr=learning_rate)
+        if loss_function=='rank_loss':
+            model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+        elif loss_function=='median_probability_loss':
+            model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
+        else:
+            try:
+                model.compile(loss=loss_function, optimizer=optimizer, metrics=['accuracy'])
+            except ValueError:
+                print "!!! Loss Function '{}' not recognised, aborting\n".format(loss_function)
+                raise
+    return model
+
 ### CNN From MAKE SOME NOISE (AES_HD)
 def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units=512):
-    # From VGG16 design
-    input_shape = (input_length, 1)
-    img_input = Input(shape=input_shape)
-
-    # # Initial Batch Normalisation
-    # x = BatchNormalization(name='initial_batchnorm')(img_input)
-
-    # Block 1 (700)
-    x = Conv1D(8, 3, activation='relu', padding='same', name='block1_conv1')(img_input)
-    x = BatchNormalization(name='block1_batchnorm')(x)
-    x = MaxPooling1D(2, strides=2, name='block1_pool')(x)
-    # Block 2 (350)
-    x = Conv1D(16, 3, activation='relu', padding='same', name='block2_conv1')(x)
-    x = MaxPooling1D(2, strides=2, name='block2_pool')(x)
-    # Block 3 (175)
-    x = Conv1D(32, 3, activation='relu', padding='same', name='block3_conv1')(x)
-    x = BatchNormalization(name='block3_batchnorm')(x)
-    x = MaxPooling1D(2, strides=2, name='block3_pool')(x)
-    # Block 4 (87)
-    x = Conv1D(64, 3, activation='relu', padding='same', name='block4_conv1')(x)
-    x = MaxPooling1D(2, strides=2, name='block4_pool')(x)
-    # Block 5 (43)
-    x = Conv1D(64, 3, activation='relu', padding='same', name='block5_conv1')(x)
-    x = BatchNormalization(name='block5_batchnorm')(x)
-    x = MaxPooling1D(2, strides=2, name='block5_pool')(x)
-    # Block 6 (21)
-    x = Conv1D(128, 3, activation='relu', padding='same', name='block6_conv1')(x)
-    x = MaxPooling1D(2, strides=2, name='block6_pool')(x)
-    # Block 7 (10)
-    x = Conv1D(128, 3, activation='relu', padding='same', name='block7_conv1')(x)
-    x = BatchNormalization(name='block7_batchnorm')(x)
-    x = MaxPooling1D(2, strides=2, name='block7_pool')(x)
-    # Block 8 (5)
-    x = Conv1D(256, 3, activation='relu', padding='same', name='block8_conv1')(x)
-    x = MaxPooling1D(2, strides=2, name='block8_pool')(x)
-    # Block 9 (2)
-    x = Conv1D(256, 3, activation='relu', padding='same', name='block9_conv1')(x)
-    x = BatchNormalization(name='block9_batchnorm')(x)
-    x = MaxPooling1D(2, strides=2, name='block9_pool')(x)
-
-    # Now 1!
-
-    # First Dropout Layer
-    x = Dropout(0.5, name='dropout1')(x)
-    # Classification block
-    x = Flatten(name='flatten')(x)
-
-    # One Dense layer
-    x = Dense(dense_units, activation='relu', name='fc')(x)
-    # Second Dropout Layer
-    x = Dropout(0.5, name='dropout2')(x)
-
-    # Output layer
-    x = Dense(classes, activation='softmax', name='predictions')(x)
-
-    inputs = img_input
-    # Create model.
-    model = Model(inputs, x, name='cnn_best')
-    optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    with strategy.scope() :
+        # From VGG16 design
+        input_shape = (input_length, 1)
+        img_input = Input(shape=input_shape)
+    
+        # # Initial Batch Normalisation
+        # x = BatchNormalization(name='initial_batchnorm')(img_input)
+    
+        # Block 1 (700)
+        x = Conv1D(8, 3, activation='relu', padding='same', name='block1_conv1')(img_input)
+        x = BatchNormalization(name='block1_batchnorm')(x)
+        x = MaxPooling1D(2, strides=2, name='block1_pool')(x)
+        # Block 2 (350)
+        x = Conv1D(16, 3, activation='relu', padding='same', name='block2_conv1')(x)
+        x = MaxPooling1D(2, strides=2, name='block2_pool')(x)
+        # Block 3 (175)
+        x = Conv1D(32, 3, activation='relu', padding='same', name='block3_conv1')(x)
+        x = BatchNormalization(name='block3_batchnorm')(x)
+        x = MaxPooling1D(2, strides=2, name='block3_pool')(x)
+        # Block 4 (87)
+        x = Conv1D(64, 3, activation='relu', padding='same', name='block4_conv1')(x)
+        x = MaxPooling1D(2, strides=2, name='block4_pool')(x)
+        # Block 5 (43)
+        x = Conv1D(64, 3, activation='relu', padding='same', name='block5_conv1')(x)
+        x = BatchNormalization(name='block5_batchnorm')(x)
+        x = MaxPooling1D(2, strides=2, name='block5_pool')(x)
+        # Block 6 (21)
+        x = Conv1D(128, 3, activation='relu', padding='same', name='block6_conv1')(x)
+        x = MaxPooling1D(2, strides=2, name='block6_pool')(x)
+        # Block 7 (10)
+        x = Conv1D(128, 3, activation='relu', padding='same', name='block7_conv1')(x)
+        x = BatchNormalization(name='block7_batchnorm')(x)
+        x = MaxPooling1D(2, strides=2, name='block7_pool')(x)
+        # Block 8 (5)
+        x = Conv1D(256, 3, activation='relu', padding='same', name='block8_conv1')(x)
+        x = MaxPooling1D(2, strides=2, name='block8_pool')(x)
+        # Block 9 (2)
+        x = Conv1D(256, 3, activation='relu', padding='same', name='block9_conv1')(x)
+        x = BatchNormalization(name='block9_batchnorm')(x)
+        x = MaxPooling1D(2, strides=2, name='block9_pool')(x)
+    
+        # Now 1!
+    
+        # First Dropout Layer
+        x = Dropout(0.5, name='dropout1')(x)
+        # Classification block
+        x = Flatten(name='flatten')(x)
+    
+        # One Dense layer
+        x = Dense(dense_units, activation='relu', name='fc')(x)
+        # Second Dropout Layer
+        x = Dropout(0.5, name='dropout2')(x)
+    
+        # Output layer
+        x = Dense(classes, activation='softmax', name='predictions')(x)
+    
+        inputs = img_input
+        # Create model.
+        model = Model(inputs, x, name='cnn_best')
+        optimizer = RMSprop(lr=learning_rate)
+        model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
 
 ### CNN Best model
 def cnn_best(input_length=700, learning_rate=0.00001, classes=256, dense_units=4096):
-    # From VGG16 design
-    input_shape = (input_length, 1)
-    img_input = Input(shape=input_shape)
-    # Block 1
-    x = Conv1D(64, 11, activation='relu', padding='same', name='block1_conv1')(img_input)
-    x = AveragePooling1D(2, strides=2, name='block1_pool')(x)
-    # Block 2
-    x = Conv1D(128, 11, activation='relu', padding='same', name='block2_conv1')(x)
-    x = AveragePooling1D(2, strides=2, name='block2_pool')(x)
-    # Block 3
-    x = Conv1D(256, 11, activation='relu', padding='same', name='block3_conv1')(x)
-    x = AveragePooling1D(2, strides=2, name='block3_pool')(x)
-    # Block 4
-    x = Conv1D(512, 11, activation='relu', padding='same', name='block4_conv1')(x)
-    x = AveragePooling1D(2, strides=2, name='block4_pool')(x)
-    # Block 5
-    x = Conv1D(512, 11, activation='relu', padding='same', name='block5_conv1')(x)
-    x = AveragePooling1D(2, strides=2, name='block5_pool')(x)
-    # Classification block
-    x = Flatten(name='flatten')(x)
-    # Two Dense layers
-    x = Dense(dense_units, activation='relu', name='fc1')(x)
-    x = Dense(dense_units, activation='relu', name='fc2')(x)
-    x = Dense(classes, activation='softmax', name='predictions')(x)
-
-    inputs = img_input
-    # Create model.
-    model = Model(inputs, x, name='cnn_best')
-    optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    with strategy.scope() :
+        # From VGG16 design
+        input_shape = (input_length, 1)
+        img_input = Input(shape=input_shape)
+        # Block 1
+        x = Conv1D(64, 11, activation='relu', padding='same', name='block1_conv1')(img_input)
+        x = AveragePooling1D(2, strides=2, name='block1_pool')(x)
+        # Block 2
+        x = Conv1D(128, 11, activation='relu', padding='same', name='block2_conv1')(x)
+        x = AveragePooling1D(2, strides=2, name='block2_pool')(x)
+        # Block 3
+        x = Conv1D(256, 11, activation='relu', padding='same', name='block3_conv1')(x)
+        x = AveragePooling1D(2, strides=2, name='block3_pool')(x)
+        # Block 4
+        x = Conv1D(512, 11, activation='relu', padding='same', name='block4_conv1')(x)
+        x = AveragePooling1D(2, strides=2, name='block4_pool')(x)
+        # Block 5
+        x = Conv1D(512, 11, activation='relu', padding='same', name='block5_conv1')(x)
+        x = AveragePooling1D(2, strides=2, name='block5_pool')(x)
+        # Classification block
+        x = Flatten(name='flatten')(x)
+        # Two Dense layers
+        x = Dense(dense_units, activation='relu', name='fc1')(x)
+        x = Dense(dense_units, activation='relu', name='fc2')(x)
+        x = Dense(classes, activation='softmax', name='predictions')(x)
+    
+        inputs = img_input
+        # Create model.
+        model = Model(inputs, x, name='cnn_best')
+        optimizer = RMSprop(lr=learning_rate)
+        model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
 ### CNN Previously Trained model
 def cnn_pretrained(input_length=700, learning_rate=0.00001, classes=256):
-    # load model
-    cnn_previous = load_model(CNN_ASCAD_FILEPATH)
-    for layer in cnn_previous.layers[:-6]:
-        layer.trainable = False
-    model = Sequential()
-    model.add(cnn_previous)
-    optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    with strategy.scope() :
+        # load model
+        cnn_previous = load_model(CNN_ASCAD_FILEPATH)
+        for layer in cnn_previous.layers[:-6]:
+            layer.trainable = False
+        model = Sequential()
+        model.add(cnn_previous)
+        optimizer = RMSprop(lr=learning_rate)
+        model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
 
 ### LSTM Best model
 def lstm_best(input_length=700, layer_nb=1, lstm_nodes=64, use_dropout=True, learning_rate=0.00001, classes=256):
-    # From VGG16 design
-    input_shape = (input_length, 1)
-    img_input = Input(shape=input_shape)
-    # Block 1
-    if layer_nb == 1:
-        x = LSTM(lstm_nodes)(img_input)
-
-    else:
-        x = LSTM(lstm_nodes, return_sequences=True)(img_input)
-        for i in range(2, layer_nb):
-
-            x = LSTM(lstm_nodes, return_sequences=True)(x)
-        x = LSTM(lstm_nodes)(x)
-
-    if use_dropout:
-        x = Dropout(0.5)(x)
-
-    x = Dense(classes, activation='softmax', name='predictions')(x)
-
-    inputs = img_input
-    # Create model.
-    model = Model(inputs, x, name='lstm_best')
-    optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    with strategy.scope() :
+        # From VGG16 design
+        input_shape = (input_length, 1)
+        img_input = Input(shape=input_shape)
+        # Block 1
+        if layer_nb == 1:
+            x = LSTM(lstm_nodes)(img_input)
+    
+        else:
+            x = LSTM(lstm_nodes, return_sequences=True)(img_input)
+            for i in range(2, layer_nb):
+    
+                x = LSTM(lstm_nodes, return_sequences=True)(x)
+            x = LSTM(lstm_nodes)(x)
+    
+        if use_dropout:
+            x = Dropout(0.5)(x)
+    
+        x = Dense(classes, activation='softmax', name='predictions')(x)
+    
+        inputs = img_input
+        # Create model.
+        model = Model(inputs, x, name='lstm_best')
+        optimizer = RMSprop(lr=learning_rate)
+        model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
 
 def load_sca_model(model_file):
