@@ -384,7 +384,7 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
         reshaped_y = Y_profiling
         reshaped_val = validation_data[1]
     
-    strategy = tf.contrib.distribute.MirroredStrategy('/replica:0/task:0/device:CPU:0')
+    strategy = tf.contrib.distribute.MirroredStrategy()
     history = model.fit(x=Reshaped_X_profiling, y=reshaped_y, batch_size=batch_size, verbose = progress_bar, epochs=epochs, callbacks=callbacks, validation_data=(Reshaped_validation_data, reshaped_val))
     return history
 
