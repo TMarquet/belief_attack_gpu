@@ -447,8 +447,34 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
     ### MLP training
     elif mlp:
         if multilabel:
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
+            print('HEREEEEEEEEEEEE1')
             mlp_best_model = mlp_weighted_bit(input_length=input_length, layer_nb=mlp_layers, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
         else:
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
+            print('HEREEEEEEEEEEEE')
             mlp_best_model = mlp_best(input_length=input_length, layer_nb=mlp_layers, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
         mlp_epochs = epochs if epochs is not None else 200
         mlp_batchsize = batch_size
