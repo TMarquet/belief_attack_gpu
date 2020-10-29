@@ -28,12 +28,13 @@ from keras.utils.vis_utils import plot_model
 from keras import backend as K
 from utility import *
 
-# tf.debugging.set_log_device_placement(True)
+tf.debugging.set_log_device_placement(True)
 
-# gpus_devices = tf.config.experimental.list_physical_devices('GPU')
-# gpus = []
-# for gpu in range(0,len(gpus_devices)):
-#     gpus.append('/GPU:'+str(gpu))
+gpus_devices = tf.config.experimental.list_physical_devices('GPU')
+gpus = []
+for gpu in range(0,len(gpus_devices)):
+    gpus.append('/GPU:'+str(gpu))
+
 
 ###########################################################################
 
