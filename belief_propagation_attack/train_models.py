@@ -248,7 +248,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
         # Output layer
         model.add(tf.keras.layers.Dense(classes, activation='softmax', name='predictions'))
     
-    #     optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
+        optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
     #     model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     # return model
         parallel_model = tf.keras.utils.multi_gpu_model(model, NUM_GPUS)
