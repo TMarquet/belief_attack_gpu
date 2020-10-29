@@ -32,8 +32,9 @@ tf.debugging.set_log_device_placement(True)
 
 gpus_devices = tf.config.experimental.list_physical_devices('GPU')
 gpus = []
-for gpu in gpus_devices:
-    gpus.append(gpu.name)
+for gpu in range(0,len(gpus_devices)):
+    gpus.append('/GPU:'+str(gpu))
+
 ###########################################################################
 
 class TrainValTensorBoard(TensorBoard):
