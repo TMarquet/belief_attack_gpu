@@ -357,6 +357,8 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     # tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
     callbacks=[save_model, TrainValTensorBoard(write_graph=True)]
     # Get the input layer shape
+    print(input_layer_shape[1])
+    print(len(X_profiling[0])
     input_layer_shape = model.get_layer(index=0).input_shape
     # Sanity check
     if input_layer_shape[1] != len(X_profiling[0]):
