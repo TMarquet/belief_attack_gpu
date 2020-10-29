@@ -171,7 +171,7 @@ def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, 
         # Save image!
         #plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
     
-        optimizer = RMSprop(lr=learning_rate)
+        optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
         if loss_function=='rank_loss':
             model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
         elif loss_function=='median_probability_loss':
