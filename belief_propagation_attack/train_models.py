@@ -162,11 +162,11 @@ def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, 
     with strategy.scope() :
         if loss_function is None:
             loss_function='categorical_crossentropy'
-        model = Sequential()
-        model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
+        model = tf.keras.Sequential()
+        model.add(tf.keras.layers.Dense(mlp_nodes, input_dim=input_length, activation='relu'))
         for i in range(layer_nb-2):
-            model.add(Dense(mlp_nodes, activation='relu'))
-        model.add(Dense(classes, activation='softmax'))
+            model.add(tf.keras.layers.Dense(mlp_nodes, activation='relu'))
+        model.add(tf.keras.layers.Dense(classes, activation='softmax'))
     
         # Save image!
         #plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
