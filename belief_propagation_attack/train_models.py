@@ -28,6 +28,9 @@ from keras.utils.vis_utils import plot_model
 from keras import backend as K
 from utility import *
 
+tf.debugging.set_log_device_placement(True)
+
+
 ###########################################################################
 
 class TrainValTensorBoard(TensorBoard):
