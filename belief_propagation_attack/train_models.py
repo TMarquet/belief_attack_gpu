@@ -250,7 +250,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
         inputs = img_input
         # Create model.
         model = tf.keras.Model(inputs, x, name='cnn_best')
-        optimizer = tf.keras.RMSprop(lr=learning_rate)
+        optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
         parallel_model = tf.keras.utils.multi_gpu_model(model, NUM_GPU)
         parallel_model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return parallel_model
