@@ -135,7 +135,7 @@ def cnn_ascad(classes=256):
 #### MLP Weighted bit model (6 layers of 200 units)
 def mlp_weighted_bit(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='binary_crossentropy'):
     NUM_GPUS = 3
-    strategy = tf.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
+    strategy = tf.distribute.MirroredStrategy()
     with strategy.scope() :
         if loss_function is None:
             loss_function='binary_crossentropy'
@@ -156,7 +156,7 @@ def mlp_weighted_bit(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0
 #### MLP Best model (6 layers of 200 units)
 def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
     NUM_GPUS = 3
-    strategy = tf.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
+    strategy = tf.distribute.MirroredStrategy()
     with strategy.scope() :
         if loss_function is None:
             loss_function='categorical_crossentropy'
@@ -185,7 +185,7 @@ def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, 
 ### CNN From MAKE SOME NOISE (AES_HD)
 def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units=512):
     NUM_GPUS = 3
-    strategy = tf.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
+    strategy = tf.distribute.MirroredStrategy()
     with strategy.scope() :
         # From VGG16 design
         input_shape = (input_length, 1)
@@ -252,7 +252,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
 ### CNN Best model
 def cnn_best(input_length=700, learning_rate=0.00001, classes=256, dense_units=4096):
     NUM_GPUS = 3
-    strategy =tf.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
+    strategy =tf.distribute.MirroredStrategy()
     with strategy.scope() :
         # From VGG16 design
         input_shape = (input_length, 1)
@@ -290,7 +290,7 @@ def cnn_best(input_length=700, learning_rate=0.00001, classes=256, dense_units=4
 ### CNN Previously Trained model
 def cnn_pretrained(input_length=700, learning_rate=0.00001, classes=256):
     NUM_GPUS = 3
-    strategy = tf.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
+    strategy = tf.distribute.MirroredStrategy()
     with strategy.scope() :
         # load model
         cnn_previous = load_model(CNN_ASCAD_FILEPATH)
@@ -305,7 +305,7 @@ def cnn_pretrained(input_length=700, learning_rate=0.00001, classes=256):
 ### LSTM Best model
 def lstm_best(input_length=700, layer_nb=1, lstm_nodes=64, use_dropout=True, learning_rate=0.00001, classes=256):
     NUM_GPUS = 3
-    strategy = tf.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
+    strategy = tf.distribute.MirroredStrategy()
     with strategy.scope() :
         # From VGG16 design
         input_shape = (input_length, 1)
