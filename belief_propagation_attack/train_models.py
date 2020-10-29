@@ -164,7 +164,7 @@ def mlp_weighted_bit(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0
 #### MLP Best model (6 layers of 200 units)
 def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
     NUM_GPUS = 3
-    strategy = tf.distribute.MirroredStrategy(devices = gpus)
+    strategy = tf.distribute.MirroredStrategy()
     print('HEREEEEEEEEEEEE1')
     print('HEREEEEEEEEEEEE1')
     print('HEREEEEEEEEEEEE1')
