@@ -28,12 +28,6 @@ from keras.utils.vis_utils import plot_model
 from keras import backend as K
 from utility import *
 
-tf.debugging.set_log_device_placement(True)
-
-gpus_devices = tf.config.experimental.list_physical_devices('GPU')
-gpus = []
-for gpu in range(0,len(gpus_devices)):
-    gpus.append('/GPU:'+str(gpu))
 
 
 ###########################################################################
@@ -165,16 +159,6 @@ def mlp_weighted_bit(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0
 def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
     NUM_GPUS = 3
     strategy = tf.distribute.MirroredStrategy()
-    print('HEREEEEEEEEEEEE1')
-    print('HEREEEEEEEEEEEE1')
-    print('HEREEEEEEEEEEEE1')
-    print('HEREEEEEEEEEEEE1')
-    print('HEREEEEEEEEEEEE1')
-    print('HEREEEEEEEEEEEE1')
-    print('HEREEEEEEEEEEEE1')
-    print('HEREEEEEEEEEEEE1')
-    print('HEREEEEEEEEEEEE1')
-    print('HEREEEEEEEEEEEE1')
     with strategy.scope() :
         if loss_function is None:
             loss_function='categorical_crossentropy'
