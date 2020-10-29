@@ -193,63 +193,61 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
     with strategy.scope() :
         # From VGG16 design
         input_shape = (input_length, 1)
-        img_input = tf.keras.Input(shape=input_shape)
+        model = tf.keras.Sequential(name='cnn_best')
+        model.add(tf.keras.Input(shape=input_shape))
     
         # # Initial Batch Normalisation
         # x = BatchNormalization(name='initial_batchnorm')(img_input)
     
         # Block 1 (700)
         
-        x = tf.keras.layers.Conv1D(8, 3, activation='relu', padding='same', name='block1_conv1')(img_input)
-        x = tf.keras.layers.BatchNormalization(name='block1_batchnorm')(x)
-        x = tf.keras.layers.MaxPooling1D(2, strides=2, name='block1_pool')(x)
+        model.add(tf.keras.layers.Conv1D(8, 3, activation='relu', padding='same', name='block1_conv1'))
+        model.add(tf.keras.layers.BatchNormalization(name='block1_batchnorm'))
+        model.add(tf.keras.layers.MaxPooling1D(2, strides=2, name='block1_pool'))
         # Block 2 (350)
-        x = tf.keras.layers.Conv1D(16, 3, activation='relu', padding='same', name='block2_conv1')(x)
-        x = tf.keras.layers.MaxPooling1D(2, strides=2, name='block2_pool')(x)
+        model.add(tf.keras.layers.Conv1D(16, 3, activation='relu', padding='same', name='block2_conv1'))
+        model.add(tf.keras.layers.MaxPooling1D(2, strides=2, name='block2_pool'))
         # Block 3 (175)
-        x = tf.keras.layers.Conv1D(32, 3, activation='relu', padding='same', name='block3_conv1')(x)
-        x = tf.keras.layers.BatchNormalization(name='block3_batchnorm')(x)
-        x = tf.keras.layers.MaxPooling1D(2, strides=2, name='block3_pool')(x)
+        model.add(tf.keras.layers.Conv1D(32, 3, activation='relu', padding='same', name='block3_conv1'))
+        model.add(tf.keras.layers.BatchNormalization(name='block3_batchnorm'))
+        model.add(tf.keras.layers.MaxPooling1D(2, strides=2, name='block3_pool'))
         # Block 4 (87)
-        x = tf.keras.layers.Conv1D(64, 3, activation='relu', padding='same', name='block4_conv1')(x)
-        x = tf.keras.layers.MaxPooling1D(2, strides=2, name='block4_pool')(x)
+        model.add(tf.keras.layers.Conv1D(64, 3, activation='relu', padding='same', name='block4_conv1'))
+        model.add(tf.keras.layers.MaxPooling1D(2, strides=2, name='block4_pool'))
         # Block 5 (43)
-        x = tf.keras.layers.Conv1D(64, 3, activation='relu', padding='same', name='block5_conv1')(x)
-        x = tf.keras.layers.BatchNormalization(name='block5_batchnorm')(x)
-        x = tf.keras.layers.MaxPooling1D(2, strides=2, name='block5_pool')(x)
+        model.add(tf.keras.layers.Conv1D(64, 3, activation='relu', padding='same', name='block5_conv1'))
+        model.add(tf.keras.layers.BatchNormalization(name='block5_batchnorm'))
+        model.add(tf.keras.layers.MaxPooling1D(2, strides=2, name='block5_pool'))
         # Block 6 (21)
-        x = tf.keras.layers.Conv1D(128, 3, activation='relu', padding='same', name='block6_conv1')(x)
-        x = tf.keras.layers.MaxPooling1D(2, strides=2, name='block6_pool')(x)
+        model.add(tf.keras.layers.Conv1D(128, 3, activation='relu', padding='same', name='block6_conv1'))
+        model.add(tf.keras.layers.MaxPooling1D(2, strides=2, name='block6_pool'))
         # Block 7 (10)
-        x = tf.keras.layers.Conv1D(128, 3, activation='relu', padding='same', name='block7_conv1')(x)
-        x = tf.keras.layers.BatchNormalization(name='block7_batchnorm')(x)
-        x = tf.keras.layers.MaxPooling1D(2, strides=2, name='block7_pool')(x)
+        model.add(tf.keras.layers.Conv1D(128, 3, activation='relu', padding='same', name='block7_conv1'))
+        model.add(tf.keras.layers.BatchNormalization(name='block7_batchnorm'))
+        model.add(tf.keras.layers.MaxPooling1D(2, strides=2, name='block7_pool'))
         # Block 8 (5)
-        x = tf.keras.layers.Conv1D(256, 3, activation='relu', padding='same', name='block8_conv1')(x)
-        x = tf.keras.layers.MaxPooling1D(2, strides=2, name='block8_pool')(x)
+        model.add(tf.keras.layers.Conv1D(256, 3, activation='relu', padding='same', name='block8_conv1'))
+        model.add(tf.keras.layers.MaxPooling1D(2, strides=2, name='block8_pool'))
         # Block 9 (2)
-        x = tf.keras.layers.Conv1D(256, 3, activation='relu', padding='same', name='block9_conv1')(x)
-        x = tf.keras.layers.BatchNormalization(name='block9_batchnorm')(x)
-        x = tf.keras.layers.MaxPooling1D(2, strides=2, name='block9_pool')(x)
+        model.add(tf.keras.layers.Conv1D(256, 3, activation='relu', padding='same', name='block9_conv1'))
+        model.add(tf.keras.layers.BatchNormalization(name='block9_batchnorm'))
+        model.add(tf.keras.layers.MaxPooling1D(2, strides=2, name='block9_pool'))
     
         # Now 1!
     
         # First Dropout Layer
-        x = tf.keras.layers.Dropout(0.5, name='dropout1')(x)
+        model.add(tf.keras.layers.Dropout(0.5, name='dropout1'))
         # Classification block
-        x = tf.keras.layers.Flatten(name='flatten')(x)
+        model.add(tf.keras.layers.Flatten(name='flatten'))
     
         # One Dense layer
-        x = tf.keras.layers.Dense(dense_units, activation='relu', name='fc')(x)
+        model.add(tf.keras.layers.Dense(dense_units, activation='relu', name='fc'))
         # Second Dropout Layer
-        x = tf.keras.layers.Dropout(0.5, name='dropout2')(x)
+        model.add(tf.keras.layers.Dropout(0.5, name='dropout2'))
     
         # Output layer
-        x = tf.keras.layers.Dense(classes, activation='softmax', name='predictions')(x)
+        model.add(tf.keras.layers.Dense(classes, activation='softmax', name='predictions'))
     
-        inputs = img_input
-        # Create model.
-        model = tf.keras.Model(inputs, x, name='cnn_best')
         optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
         model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
