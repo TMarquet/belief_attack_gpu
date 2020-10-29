@@ -41,7 +41,7 @@ class TrainValTensorBoard(TensorBoard):
 
     def set_model(self, model):
         # Setup writer for validation metrics
-        self.val_writer = tf.summary.FileWriter(self.val_log_dir)
+        self.val_writer = tf.summary.create_file_writer(self.val_log_dir)
         super(TrainValTensorBoard, self).set_model(model)
 
     def on_epoch_end(self, epoch, logs=None):
@@ -51,11 +51,8 @@ class TrainValTensorBoard(TensorBoard):
         logs = logs or {}
         val_logs = {k.replace('val_', ''): v for k, v in logs.items() if k.startswith('val_')}
         for name, value in val_logs.items():
-            summary = tf.Summary()
-            summary_value = summary.value.add()
-            summary_value.simple_value = value.item()
-            summary_value.tag = name
-            self.val_writer.add_summary(summary, epoch)
+            with self.val_writer.as_default():
+                tf.summary.scalar(name,value,step=epoch)
         self.val_writer.flush()
 
         # Pass the remaining logs to `TensorBoard.on_epoch_end`
