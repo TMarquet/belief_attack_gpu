@@ -5,6 +5,7 @@ import numpy as np
 import argparse
 import timing
 from time import time
+from time import sleep
 from keras.models import Model, Sequential
 from keras.layers import Flatten, Dense, Input, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
 from keras.engine.topology import get_source_inputs
@@ -353,7 +354,7 @@ def benchmark(dataset, num_epochs=2):
     for epoch_num in range(num_epochs):
         for sample in dataset:
             # Performing a training step
-             x = 1
+             sleep(0.01)
     print("Execution time:", time() - start_time)
 
 
