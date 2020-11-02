@@ -353,6 +353,7 @@ def benchmark(dataset, num_epochs=2):
     for epoch_num in range(num_epochs):
         for sample in dataset:
             # Performing a training step
+             x = 1
     print("Execution time:", time() - start_time)
 
 
