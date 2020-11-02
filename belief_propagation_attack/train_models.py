@@ -411,7 +411,7 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
         reshaped_y = Y_profiling
         reshaped_val = validation_data[1]
     
-    data = tf.data.Dataset.from_tensor_slices(Reshaped_X_profiling,reshaped_y)
+    data = tf.data.Dataset.from_tensor_slices(Reshaped_X_profiling,reshaped_y).batch(batch_size=batch_size,drop_remainder=True)
     
 
     
