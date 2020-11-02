@@ -351,10 +351,14 @@ def load_sca_model(model_file):
 
 def benchmark(dataset, num_epochs=2):
     start_time = time()
+    print(len(dataset))
     for epoch_num in range(num_epochs):
+        
         for sample in dataset:
+            
             # Performing a training step
              sleep(0.01)
+             
     print("Execution time:", time() - start_time)
 
 
