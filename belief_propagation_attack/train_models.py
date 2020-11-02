@@ -354,12 +354,12 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
 
     check_file_exists(os.path.dirname(save_file_name))
     # Save model every epoch
-    start_time = time.time()
+    start_time = time()
     save_model = ModelCheckpoint(save_file_name)
 
     # tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
     callbacks=[save_model, TrainValTensorBoard(write_graph=True)]
-    print('saving time : ', time.time() - start_time)
+    print('saving time : ', time() - start_time)
     # Get the input layer shape
     
     input_layer_shape = model.get_layer(index=0).input_shape
