@@ -358,7 +358,6 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     # Save model every epoch
 
     save_model = ModelCheckpoint(save_file_name)
-    benchmark(X_profiling)
     # tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
     callbacks=[save_model, TrainValTensorBoard(write_graph=True)]
 
