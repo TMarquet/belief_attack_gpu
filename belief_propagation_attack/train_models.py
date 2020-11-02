@@ -399,15 +399,19 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     # Split up for debug
     if multilabel:
         # print "Before: {} {} {}".format(Y_profiling.shape, type(Y_profiling), Y_profiling)
+        print 'here'
         reshaped_y = np.unpackbits( np.expand_dims(Y_profiling, 1).astype(np.uint8), axis=1)
         reshaped_val = np.unpackbits( np.expand_dims(validation_data[1], 1).astype(np.uint8), axis=1)
     elif hamming_distance_encoding:
         reshaped_y = hamming_distance_encode_bulk(Y_profiling)
         reshaped_val = hamming_distance_encode_bulk(validation_data[1])
+        print 'heree'
     elif one_hot:
         reshaped_y = to_categorical(Y_profiling, num_classes=9 if hammingweight else 256)
         reshaped_val = to_categorical(validation_data[1], num_classes=9 if hammingweight else 256)
+        print 'hereee'
     else:
+        print 'there'
         reshaped_y = Y_profiling
         reshaped_val = validation_data[1]
     
