@@ -399,30 +399,22 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     # Split up for debug
     if multilabel:
         # print "Before: {} {} {}".format(Y_profiling.shape, type(Y_profiling), Y_profiling)
-        print 'here'
         reshaped_y = np.unpackbits( np.expand_dims(Y_profiling, 1).astype(np.uint8), axis=1)
         reshaped_val = np.unpackbits( np.expand_dims(validation_data[1], 1).astype(np.uint8), axis=1)
     elif hamming_distance_encoding:
         reshaped_y = hamming_distance_encode_bulk(Y_profiling)
         reshaped_val = hamming_distance_encode_bulk(validation_data[1])
-        print 'heree'
     elif one_hot:
         reshaped_y = to_categorical(Y_profiling, num_classes=9 if hammingweight else 256)
         reshaped_val = to_categorical(validation_data[1], num_classes=9 if hammingweight else 256)
-        print 'hereee'
     else:
-        print 'there'
         reshaped_y = Y_profiling
         reshaped_val = validation_data[1]
     
-    print Reshaped_X_profiling
-    print reshaped_y
-    
-    print Reshaped_validation_data
-    print reshaped_val
-    data = tf.data.Dataset.from_tensor_slices((Reshaped_X_profiling,reshaped_y)).shuffle(len(Reshaped_X_profiling)).batch(batch_size=batch_size,drop_remainder=True)
+
+    data = tf.data.Dataset.from_tensor_slices((X_profiling,Y_profiling)).shuffle(len(X_profiling)).batch(batch_size=batch_size,drop_remainder=True)
         
-    validation_data = tf.data.Dataset.from_tensor_slices((Reshaped_validation_data,reshaped_val)).shuffle(len(Reshaped_validation_data)).batch(batch_size=batch_size,drop_remainder=True)
+    validation_data = tf.data.Dataset.from_tensor_slices((validation_data[0],validation_data[1])).shuffle(len(validation_data[0])).batch(batch_size=batch_size,drop_remainder=True)
     
     print 'Start training'
     
