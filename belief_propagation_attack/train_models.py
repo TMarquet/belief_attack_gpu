@@ -349,18 +349,6 @@ def load_sca_model(model_file):
         sys.exit(-1)
     return model
 
-def benchmark(dataset, num_epochs=2):
-    start_time = time()
-    print(len(dataset))
-    for epoch_num in range(num_epochs):
-        
-        for sample in dataset:
-            
-            # Performing a training step
-             sleep(0.00001)
-             
-    print("Execution time:", time() - start_time)
-
 
 
 #### Training high level function
@@ -370,7 +358,7 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     # Save model every epoch
 
     save_model = ModelCheckpoint(save_file_name)
-
+    benchmark(X_profiling)
     # tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
     callbacks=[save_model, TrainValTensorBoard(write_graph=True)]
 
@@ -412,13 +400,7 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
         reshaped_val = validation_data[1]
     
 
-    data = tf.data.Dataset.from_tensor_slices((X_profiling,Y_profiling)).shuffle(len(X_profiling)).batch(batch_size=batch_size,drop_remainder=True)
-        
-    validation_data = tf.data.Dataset.from_tensor_slices((validation_data[0],validation_data[1])).shuffle(len(validation_data[0])).batch(batch_size=batch_size,drop_remainder=True)
-    
-    print 'Start training'
-    
-    history = model.fit(data, verbose = progress_bar, epochs=epochs, callbacks=callbacks,validation_data=validation_data)
+    history = model.fit(x=Reshaped_X_profiling, y=reshaped_y, batch_size=batch_size, verbose = progress_bar, epochs=epochs, callbacks=callbacks, validation_data=(Reshaped_validation_data, reshaped_val))
     return history
 
 # def train_svm()
