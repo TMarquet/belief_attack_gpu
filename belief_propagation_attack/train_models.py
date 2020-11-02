@@ -370,7 +370,7 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     # Save model every epoch
 
     save_model = ModelCheckpoint(save_file_name)
-    benchmark(X_profiling)
+
     # tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
     callbacks=[save_model, TrainValTensorBoard(write_graph=True)]
 
@@ -411,8 +411,13 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
         reshaped_y = Y_profiling
         reshaped_val = validation_data[1]
     
+    data = tf.data.Dataset.from_tensor_slices(Reshaped_X_profiling,reshaped_y)
+    
 
-    history = model.fit(x=tf.data.Dataset.from_tensor_slices(Reshaped_X_profiling), y=tf.data.Dataset.from_tensor_slices(reshaped_y), batch_size=batch_size, verbose = progress_bar, epochs=epochs, callbacks=callbacks, validation_data=(tf.data.Dataset.from_tensor_slices(Reshaped_validation_data), tf.data.Dataset.from_tensor_slices(reshaped_val)))
+    
+    validation_data = tf.data.Dataset.from_tensor_slices(Reshaped_validation_data,reshaped_val).batch(batch_size=batch_size,drop_remainder=True)
+    
+    history = model.fit(data, verbose = progress_bar, epochs=epochs, callbacks=callbacks,validation_data=validation_data
     return history
 
 # def train_svm()
