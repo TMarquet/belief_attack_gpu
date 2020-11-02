@@ -417,6 +417,8 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     
     validation_data = tf.data.Dataset.from_tensor_slices([Reshaped_validation_data,reshaped_val]).batch(batch_size=batch_size,drop_remainder=True)
     
+    print 'Start training'
+    
     history = model.fit(data, verbose = progress_bar, epochs=epochs, callbacks=callbacks,validation_data=validation_data)
     return history
 
