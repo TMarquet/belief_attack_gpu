@@ -411,9 +411,11 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
         reshaped_y = Y_profiling
         reshaped_val = validation_data[1]
     
-    print X_profiling
-    print Y_profiling
+    print Reshaped_X_profiling
+    print reshaped_y
     
+    print Reshaped_validation_data
+    print reshaped_val
     data = tf.data.Dataset.from_tensor_slices((Reshaped_X_profiling,reshaped_y)).shuffle(len(Reshaped_X_profiling)).batch(batch_size=batch_size,drop_remainder=True)
         
     validation_data = tf.data.Dataset.from_tensor_slices((Reshaped_validation_data,reshaped_val)).shuffle(len(Reshaped_validation_data)).batch(batch_size=batch_size,drop_remainder=True)
