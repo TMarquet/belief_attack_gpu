@@ -349,22 +349,30 @@ def load_sca_model(model_file):
         sys.exit(-1)
     return model
 
+def benchmark(dataset, num_epochs=2):
+    start_time = time()
+    for epoch_num in range(num_epochs):
+        for sample in dataset:
+            # Performing a training step
+    tf.print("Execution time:", time() - start_time)
+
+
+
 #### Training high level function
 def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, batch_size=100, validation_data=None, progress_bar=1, hamming_distance_encoding=False, one_hot=True, multilabel=False, hammingweight=False):
 
     check_file_exists(os.path.dirname(save_file_name))
     # Save model every epoch
-    start_time = time()
-    save_model = ModelCheckpoint(save_file_name)
 
+    save_model = ModelCheckpoint(save_file_name)
+    benchmark(X_profiling)
     # tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
     callbacks=[save_model, TrainValTensorBoard(write_graph=True)]
-    print('saving time : ', time() - start_time)
+
     # Get the input layer shape
     
     input_layer_shape = model.get_layer(index=0).input_shape
-    print(input_layer_shape)
-    print(len(X_profiling[0]))
+
 
     # Sanity check
     if input_layer_shape[1] != len(X_profiling[0]):
