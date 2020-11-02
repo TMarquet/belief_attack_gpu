@@ -28,7 +28,6 @@ from keras.utils.vis_utils import plot_model
 from keras import backend as K
 from utility import *
 
-tf.debugging.set_log_device_placement(True)
 
 
 ###########################################################################
@@ -354,7 +353,7 @@ def benchmark(dataset, num_epochs=2):
     for epoch_num in range(num_epochs):
         for sample in dataset:
             # Performing a training step
-    tf.print("Execution time:", time() - start_time)
+    print("Execution time:", time() - start_time)
 
 
 
