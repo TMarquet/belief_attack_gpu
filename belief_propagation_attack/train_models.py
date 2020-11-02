@@ -357,7 +357,7 @@ def benchmark(dataset, num_epochs=2):
         for sample in dataset:
             
             # Performing a training step
-             sleep(0.0001)
+             sleep(0.00001)
              
     print("Execution time:", time() - start_time)
 
