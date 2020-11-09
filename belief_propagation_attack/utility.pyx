@@ -2043,7 +2043,7 @@ def tf_median_probability_loss(y_true, y_pred):
     # Gather the probabilities together!
     gathered = tf.gather_nd(y_pred, concatenated_onehot)
     # Take the mean of these ranks (float value)
-    median = 1 - tf.cast(tf.contrib.distributions.percentile(gathered, 50.0), tf.float32)
+    median = 1 - tf.cast(np.percentile(gathered, 50.0), tf.float32)
     # print "Our Rank Median:\ntype {} ({}), shape {}".format(type(median), median.dtype, median.get_shape())
     return median
 
