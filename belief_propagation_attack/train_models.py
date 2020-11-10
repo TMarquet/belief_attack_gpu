@@ -237,9 +237,9 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
         model.add(Flatten(name='flatten'))
     
         # One Dense layer
-        model.add(Dense(dense_units, activation='relu', name='fc'))
-        model.add(Dense(dense_units, activation='relu', name='fc'))
-        model.add(Dense(dense_units, activation='relu', name='fc'))
+        model.add(Dense(dense_units, activation='relu', name='fc1'))
+        model.add(Dense(dense_units, activation='relu', name='fc2'))
+        model.add(Dense(dense_units, activation='relu', name='fc3'))
         # Second Dropout Layer
 
     
