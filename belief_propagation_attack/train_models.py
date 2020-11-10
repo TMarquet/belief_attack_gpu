@@ -192,19 +192,19 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
         model = tf.keras.Sequential(name='cnn_best')
         
         
-        model.add(Conv1D(64, 11, activation='relu', padding='same', name='block1_conv1',input_shape = input_shape))
+        model.add(Conv1D(64, 3, activation='relu', padding='same', name='block1_conv1',input_shape = input_shape))
         model.add(AveragePooling1D(2, strides=2, name='block1_pool'))
         # Block 6 (21)
-        model.add(Conv1D(128, 11, activation='relu', padding='same', name='block2_conv1'))
+        model.add(Conv1D(128, 3, activation='relu', padding='same', name='block2_conv1'))
         model.add(AveragePooling1D(2, strides=2, name='block2_pool'))
         # Block 7 (10)
-        model.add(Conv1D(256, 11, activation='relu', padding='same', name='block3_conv1'))
+        model.add(Conv1D(256, 3, activation='relu', padding='same', name='block3_conv1'))
         model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
         # Block 8 (5)
-        model.add(Conv1D(512, 11, activation='relu', padding='same', name='block4_conv1'))
+        model.add(Conv1D(512, 3, activation='relu', padding='same', name='block4_conv1'))
         model.add(AveragePooling1D(2, strides=2, name='block4_pool'))
         # Block 9 (2)
-        model.add(Conv1D(512, 11, activation='relu', padding='same', name='block5_conv1'))
+        model.add(Conv1D(512, 3, activation='relu', padding='same', name='block5_conv1'))
         model.add(AveragePooling1D(2, strides=2, name='block5_pool'))
     
         # Now 1!
