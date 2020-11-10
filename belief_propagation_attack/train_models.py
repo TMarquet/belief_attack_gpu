@@ -19,7 +19,6 @@ from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import load_model
 
-from keras.utils.vis_utils import plot_model
 
 
 from utility import *

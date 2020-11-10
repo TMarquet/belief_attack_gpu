@@ -34,11 +34,12 @@ DTYPE = np.float32
 ctypedef np.float32_t DTYPE_t
 import os.path
 import platform
-from  tensorflow.keras.models import load_model
+
 
 
 # FROM TRAIN MODELS
 import tensorflow as tf
+from tensorflow.keras.models import load_model
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import Flatten, Dense, Input, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
 
@@ -51,8 +52,6 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import load_model
-
-from keras.utils.vis_utils import plot_model
 
 
 
