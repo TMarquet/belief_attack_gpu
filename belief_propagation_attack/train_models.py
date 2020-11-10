@@ -209,7 +209,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
     
         # Now 1!
     
-
+        model.add(Dropout(0.5, name='dropout1'))
         # Classification block
         model.add(Flatten(name='flatten'))
     
@@ -219,7 +219,14 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
         model.add(Dense(dense_units, activation='relu', name='fc3'))
         # Second Dropout Layer
 
+        # First Dropout Layer
+        
+        # Classification block
+
     
+
+        # Second Dropout Layer
+        model.add(Dropout(0.5, name='dropout2'))    
         # Output layer
         model.add(Dense(classes, activation='softmax', name='predictions'))
     
