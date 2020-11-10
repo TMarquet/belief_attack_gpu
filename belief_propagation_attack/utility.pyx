@@ -34,7 +34,7 @@ DTYPE = np.float32
 ctypedef np.float32_t DTYPE_t
 import os.path
 import platform
-from keras.models import load_model
+from  tensorflow.keras.models import load_model
 
 
 # FROM TRAIN MODELS
