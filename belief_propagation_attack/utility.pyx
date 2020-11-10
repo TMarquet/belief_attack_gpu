@@ -38,25 +38,22 @@ from keras.models import load_model
 
 
 # FROM TRAIN MODELS
-from keras.models import Model, Sequential
-from keras.layers import Flatten, Dense, Input, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout
-from keras.engine.topology import get_source_inputs
-from keras.utils import layer_utils
-from keras.utils.data_utils import get_file
-from keras import backend as K
-from keras.applications.imagenet_utils import decode_predictions
-from keras.applications.imagenet_utils import preprocess_input
-try:
-    from keras.applications.imagenet_utils import _obtain_input_shape
-except ImportError:
-    from keras_applications.imagenet_utils import _obtain_input_shape
-from keras.optimizers import RMSprop
-from keras.callbacks import ModelCheckpoint
-from keras.callbacks import TensorBoard
-from keras.utils import to_categorical
-from keras.models import load_model
 import tensorflow as tf
-from keras import backend as K
+from tensorflow.keras.models import Model, Sequential
+from tensorflow.keras.layers import Flatten, Dense, Input, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
+
+from tensorflow.keras import backend as K
+
+
+
+from tensorflow.keras.optimizers import RMSprop
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.models import load_model
+
+from keras.utils.vis_utils import plot_model
+
 
 
 
