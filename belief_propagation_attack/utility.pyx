@@ -39,7 +39,7 @@ import platform
 
 # FROM TRAIN MODELS
 import tensorflow as tf
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import Flatten, Dense, Input, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
 

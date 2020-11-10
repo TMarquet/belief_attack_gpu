@@ -190,14 +190,14 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
         # From VGG16 design
         input_shape = (input_length, 1)
         model = tf.keras.Sequential(name='cnn_best')
-        model.add(tf.keras.Input(shape=input_shape))
+        
     
         # # Initial Batch Normalisation
         # x = BatchNormalization(name='initial_batchnorm')(img_input)
     
         # Block 1 (700)
         
-        model.add(Conv1D(8, 3, activation='relu', padding='same', name='block1_conv1'))
+        model.add(Conv1D(8, 3, activation='relu', padding='same', name='block1_conv1',input_shape = input_shape))
         model.add(BatchNormalization(name='block1_batchnorm'))
         model.add(MaxPooling1D(2, strides=2, name='block1_pool'))
         # Block 2 (350)
@@ -258,9 +258,9 @@ def cnn_best(input_length=700, learning_rate=0.00001, classes=256, dense_units=4
     with strategy.scope() :
         # From VGG16 design
         input_shape = (input_length, 1)
-        img_input = Input(shape=input_shape)
+
         # Block 1
-        x = Conv1D(64, 11, activation='relu', padding='same', name='block1_conv1')(img_input)
+        x = Conv1D(64, 11, activation='relu', padding='same', name='block1_conv1',input_shape = input_shape)
         x = AveragePooling1D(2, strides=2, name='block1_pool')(x)
         # Block 2
         x = Conv1D(128, 11, activation='relu', padding='same', name='block2_conv1')(x)
