@@ -5,27 +5,22 @@ import numpy as np
 import argparse
 import timing
 from time import time
-from keras.models import Model, Sequential
-from keras.layers import Flatten, Dense, Input, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
-from keras.engine.topology import get_source_inputs
-from keras.utils import layer_utils
-from keras.utils.data_utils import get_file
-from keras import backend as K
-from keras.applications.imagenet_utils import decode_predictions
-from keras.applications.imagenet_utils import preprocess_input
-try:
-    from keras.applications.imagenet_utils import _obtain_input_shape
-except ImportError:
-    from keras_applications.imagenet_utils import _obtain_input_shape
-from keras.optimizers import RMSprop
-from keras.callbacks import ModelCheckpoint
-from keras.callbacks import TensorBoard
-from keras.utils import to_categorical
-from keras.models import load_model
+from tensorflow.keras.models import Model, Sequential
+from tensorflow.keras.layers import Flatten, Dense, Input, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
+
+from tensorflow.keras import backend as K
+
+
+
+from tensorflow.keras.optimizers import RMSprop
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.models import load_model
 import tensorflow as tf
 from keras.utils.vis_utils import plot_model
 
-from keras import backend as K
+
 from utility import *
 
 tf.debugging.set_log_device_placement(True)
@@ -250,7 +245,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
         model.add(tf.keras.layers.Dense(classes, activation='softmax', name='predictions'))
     
         optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
-        model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+        model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
     #     parallel_model = tf.keras.utils.multi_gpu_model(model, NUM_GPUS)
     #     parallel_model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
@@ -290,7 +285,7 @@ def cnn_best(input_length=700, learning_rate=0.00001, classes=256, dense_units=4
         # Create model.
         model = Model(inputs, x, name='cnn_best')
         optimizer = RMSprop(lr=learning_rate)
-        model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+        model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
