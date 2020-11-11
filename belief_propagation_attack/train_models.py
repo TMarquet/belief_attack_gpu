@@ -200,42 +200,39 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     with strategy.scope() :
         # From VGG16 design
         input_shape = (input_length, 1)
-
+        model = tf.keras.Sequential(name='cnn_best')
         # Block 1
-        x = Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape)
-        x = BatchNormalization(name='block1_batchnorm')(x)
-        x = tf.keras.layers.ReLu()(x)
+        model.add(Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape)
+        model.add(BatchNormalization(name='block1_batchnorm'))
+        model.add(tf.keras.layers.ReLu())
         # Block 1
-        x = Conv1D(128, 11, padding='same', name='block2_conv1')(x)
-        x = BatchNormalization(name='block2_batchnorm')(x)
-        x = tf.keras.layers.ReLu()(x)
+        model.add(Conv1D(128, 11, padding='same', name='block2_conv1'))
+        model.add(BatchNormalization(name='block2_batchnorm'))
+        model.add(tf.keras.layers.ReLu())
         # Block 1
-        x = Conv1D(256, 11, padding='same', name='block3_conv1')(x)
-        x = BatchNormalization(name='block3_batchnorm')(x)
-        x = tf.keras.layers.ReLu()(x)
+        model.add(Conv1D(256, 11, padding='same', name='block3_conv1'))
+        model.add(BatchNormalization(name='block3_batchnorm'))
+        model.add(tf.keras.layers.ReLu())
                 # Block 1
-        x = Conv1D(512, 11, padding='same', name='block4_conv1')(x)
-        x = BatchNormalization(name='block4_batchnorm')(x)
-        x = tf.keras.layers.ReLu()(x)
+        model.add(Conv1D(512, 11, padding='same', name='block4_conv1'))
+        model.add(BatchNormalization(name='block4_batchnorm'))
+        model.add(tf.keras.layers.ReLu())
         
                 # Block 1
-        x = Conv1D(512, 11, padding='same', name='block5_conv1')(x)
-        x = BatchNormalization(name='block5_batchnorm')(x)
-        x = tf.keras.layers.ReLu()(x)
+        model.add(Conv1D(512, 11, padding='same', name='block5_conv1'))
+        model.add(BatchNormalization(name='block5_batchnorm'))
+        model.add(tf.keras.layers.ReLu())
         # Classification block
-        x = Dense(dense_units, name='fc1')(x)
-        x = BatchNormalization(name='block6_batchnorm')(x)
-        x = tf.keras.layers.ReLu()(x)
+        model.add(Dense(dense_units, name='fc1'))
+        model.add(BatchNormalization(name='block6_batchnorm'))
+        model.add(tf.keras.layers.ReLu())
         
-        x = Dense(dense_units, name='fc2')(x)
-        x = BatchNormalization(name='block7_batchnorm')(x)
-        x = tf.keras.layers.ReLu()(x)        
+        model.add(Dense(dense_units, name='fc2'))
+        model.add(BatchNormalization(name='block7_batchnorm'))
+        model.add(tf.keras.layers.ReLu())        
         # Two Dense layers
-        x = Dense(classes, activation='softmax', name='predictions')(x)
+        model.add(Dense(classes, activation='softmax', name='predictions'))
     
-        inputs = img_input
-        # Create model.
-        model = Model(inputs, x, name='cnn_best')
         optimizer = RMSprop(lr=learning_rate)
         model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
@@ -272,7 +269,7 @@ def lstm_best(input_length=700, layer_nb=1, lstm_nodes=64, use_dropout=True, lea
             x = LSTM(lstm_nodes, return_sequences=True)(img_input)
             for i in range(2, layer_nb):
     
-                x = LSTM(lstm_nodes, return_sequences=True)(x)
+                x = LSTM(lstm_nodes, return_sequences=True))
             x = LSTM(lstm_nodes)(x)
     
         if use_dropout:
