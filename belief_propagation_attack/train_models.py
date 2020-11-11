@@ -269,7 +269,7 @@ def lstm_best(input_length=700, layer_nb=1, lstm_nodes=64, use_dropout=True, lea
             x = LSTM(lstm_nodes, return_sequences=True)(img_input)
             for i in range(2, layer_nb):
     
-                x = LSTM(lstm_nodes, return_sequences=True))
+                x = LSTM(lstm_nodes, return_sequences=True)(x)
             x = LSTM(lstm_nodes)(x)
     
         if use_dropout:
