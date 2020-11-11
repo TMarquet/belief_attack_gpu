@@ -208,23 +208,23 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     model.add(Conv1D(128, 11, padding='same', name='block2_conv1'))
     model.add(BatchNormalization(name='block2_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))
+    model.add(AveragePooling1D(2, strides=2, name='block2_pool'))
     # Block 1
     model.add(Conv1D(256, 11, padding='same', name='block3_conv1'))
     model.add(BatchNormalization(name='block3_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))
+    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
             # Block 1
     model.add(Conv1D(512, 11, padding='same', name='block4_conv1'))
     model.add(BatchNormalization(name='block4_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))
+    model.add(AveragePooling1D(2, strides=2, name='block4_pool'))
     
             # Block 1
     model.add(Conv1D(512, 11, padding='same', name='block5_conv1'))
     model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))
+    model.add(AveragePooling1D(2, strides=2, name='block5_pool'))
     # Classification block
     model.add(Dense(dense_units, name='fc1'))
     model.add(BatchNormalization(name='block6_batchnorm'))
@@ -307,7 +307,7 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     # Get the input layer shape
     
     input_layer_shape = model.get_layer(index=0).input_shape
-    print 'Input layer shape :', input_layer_shape
+    
     # Sanity check
     if input_layer_shape[1] != len(X_profiling[0]):
         print("Error: model input shape %d instead of %d is not expected ..." % (input_layer_shape[1], len(X_profiling[0])))
@@ -340,8 +340,6 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
         reshaped_y = Y_profiling
         reshaped_val = validation_data[1]
     
-    print Reshaped_X_profiling.shape
-    print Reshaped_validation_data.shape
     history = model.fit(x=Reshaped_X_profiling, y=reshaped_y, batch_size=batch_size, verbose = progress_bar, epochs=epochs, callbacks=callbacks, validation_data=(Reshaped_validation_data, reshaped_val))
     return history
 
