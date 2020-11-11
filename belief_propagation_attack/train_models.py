@@ -181,7 +181,7 @@ def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, 
     return model
 
 ### CNN From MAKE SOME NOISE (AES_HD)
-def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units=100):
+def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units=200):
     NUM_GPUS = 3
     strategy = tf.distribute.MirroredStrategy()
     print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
