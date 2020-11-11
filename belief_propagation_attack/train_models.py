@@ -202,7 +202,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
         input_shape = (input_length, 1)
         model = tf.keras.Sequential(name='cnn_best')
         # Block 1
-        model.add(Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape)
+        model.add(Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape))
         model.add(BatchNormalization(name='block1_batchnorm'))
         model.add(tf.keras.layers.ReLu())
         # Block 1
