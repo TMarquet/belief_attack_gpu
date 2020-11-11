@@ -2035,6 +2035,9 @@ def tf_median_probability_loss(y_true, y_pred):
     # reshape
     reshaped_tf_range = tf.expand_dims(tf_range, 1)
     # Concatenate range to onehot
+    print reshaped_tf_range.shape
+    print reshaped_onehot.shape
+    
     concatenated_onehot = tf.concat([reshaped_tf_range, reshaped_onehot], 1)
     # Gather the probabilities together!
     gathered = tf.gather_nd(y_pred, concatenated_onehot)
