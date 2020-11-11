@@ -2033,7 +2033,7 @@ def tf_median_probability_loss(y_true, y_pred):
     # get tensor ([0,1,2,...])
     tf_range = tf.range(tf.shape(y_pred)[0], dtype=tf.int32)
     # reshape
-    print reshaped_tf_range.shape
+    print tf_range.shape
     reshaped_tf_range = tf.expand_dims(tf_range, 1)
     # Concatenate range to onehot
     print reshaped_tf_range.shape
