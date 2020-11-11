@@ -201,30 +201,35 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     model = tf.keras.Sequential(name='cnn_best')
     # Block 1
     model.add(Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape))
+    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))
+    
     # Block 1
     model.add(Conv1D(128, 11, padding='same', name='block2_conv1'))
+    model.add(AveragePooling1D(2, strides=2, name='block2_pool'))
     model.add(BatchNormalization(name='block2_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block2_pool'))
+   
     # Block 1
     model.add(Conv1D(256, 11, padding='same', name='block3_conv1'))
+    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
     model.add(BatchNormalization(name='block3_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
+    
             # Block 1
     model.add(Conv1D(512, 11, padding='same', name='block4_conv1'))
+    model.add(AveragePooling1D(2, strides=2, name='block4_pool'))
     model.add(BatchNormalization(name='block4_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block4_pool'))
+    
     
             # Block 1
     model.add(Conv1D(512, 11, padding='same', name='block5_conv1'))
+    model.add(AveragePooling1D(2, strides=2, name='block5_pool'))
     model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block5_pool'))
+    
     # Classification block
     model.add(Dense(dense_units, name='fc1'))
     model.add(BatchNormalization(name='block6_batchnorm'))
@@ -237,7 +242,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
     optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
