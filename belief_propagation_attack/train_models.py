@@ -302,7 +302,7 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     # Get the input layer shape
     
     input_layer_shape = model.get_layer(index=0).input_shape
-
+    print 'Input layer shape :', input_layer_shape
     # Sanity check
     if input_layer_shape[1] != len(X_profiling[0]):
         print("Error: model input shape %d instead of %d is not expected ..." % (input_layer_shape[1], len(X_profiling[0])))
