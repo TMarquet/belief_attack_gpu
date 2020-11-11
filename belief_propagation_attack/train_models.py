@@ -7,7 +7,7 @@ import timing
 from time import time
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.layers import Flatten, Dense, Input, ReLu, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
+from tensorflow.keras.layers import Flatten, Dense, Input, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
 
 from tensorflow.keras import backend as K
 
@@ -204,32 +204,32 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
         # Block 1
         x = Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape)
         x = BatchNormalization(name='block1_batchnorm')(x)
-        x = ReLu()(x)
+        x = tf.keras.layers.ReLu()(x)
         # Block 1
         x = Conv1D(128, 11, padding='same', name='block2_conv1')(x)
         x = BatchNormalization(name='block2_batchnorm')(x)
-        x = ReLu()(x)
+        x = tf.keras.layers.ReLu()(x)
         # Block 1
         x = Conv1D(256, 11, padding='same', name='block3_conv1')(x)
         x = BatchNormalization(name='block3_batchnorm')(x)
-        x = ReLu()(x)
+        x = tf.keras.layers.ReLu()(x)
                 # Block 1
         x = Conv1D(512, 11, padding='same', name='block4_conv1')(x)
         x = BatchNormalization(name='block4_batchnorm')(x)
-        x = ReLu()(x)
+        x = tf.keras.layers.ReLu()(x)
         
                 # Block 1
         x = Conv1D(512, 11, padding='same', name='block5_conv1')(x)
         x = BatchNormalization(name='block5_batchnorm')(x)
-        x = ReLu()(x)
+        x = tf.keras.layers.ReLu()(x)
         # Classification block
         x = Dense(dense_units, name='fc1')(x)
         x = BatchNormalization(name='block6_batchnorm')(x)
-        x = ReLu()(x)
+        x = tf.keras.layers.ReLu()(x)
         
         x = Dense(dense_units, name='fc2')(x)
         x = BatchNormalization(name='block7_batchnorm')(x)
-        x = ReLu()(x)        
+        x = tf.keras.layers.ReLu()(x)        
         # Two Dense layers
         x = Dense(classes, activation='softmax', name='predictions')(x)
     
