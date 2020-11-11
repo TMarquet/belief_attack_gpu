@@ -2027,11 +2027,10 @@ def tf_rank_loss(y_true, y_pred):
 
 def tf_median_probability_loss(y_true, y_pred):
     # undo one-hot
-    print y_true.shape
-    print y_pred.shape
+
     argmaxed_onehot = tf.argmax(y_true, output_type=tf.int32, axis=1)
     # reshape
-    print argmaxed_onehot.shape
+
     reshaped_onehot = tf.expand_dims(argmaxed_onehot, 1)
     # get tensor ([0,1,2,...])
     tf_range = tf.range(tf.shape(y_pred)[0], dtype=tf.int32)
@@ -2039,8 +2038,7 @@ def tf_median_probability_loss(y_true, y_pred):
 
     reshaped_tf_range = tf.expand_dims(tf_range, 1)
     # Concatenate range to onehot
-    print reshaped_tf_range.shape
-    print reshaped_onehot.shape
+
     
     concatenated_onehot = tf.concat([reshaped_tf_range, reshaped_onehot], 1)
     # Gather the probabilities together!
