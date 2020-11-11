@@ -230,6 +230,8 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     
+    model.add(Flatten(name='flatten'))
+    
     # Classification block
     model.add(Dense(dense_units, name='fc1'))
     model.add(BatchNormalization(name='block6_batchnorm'))
