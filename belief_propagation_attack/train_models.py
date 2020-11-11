@@ -153,31 +153,29 @@ def mlp_weighted_bit(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0
 
 #### MLP Best model (6 layers of 200 units)
 def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
-    NUM_GPUS = 3
-    strategy = tf.distribute.MirroredStrategy()
-    with strategy.scope() :
-        if loss_function is None:
-            loss_function='categorical_crossentropy'
-        model = tf.keras.Sequential()
-        model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
-        for i in range(layer_nb-2):
-            model.add(Dense(mlp_nodes, activation='relu'))
-        model.add(Dense(classes, activation='softmax'))
-    
-        # Save image!
-        #plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
-    
-        optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
-        if loss_function=='rank_loss':
-            model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
-        elif loss_function=='median_probability_loss':
-            model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
-        else:
-            try:
-                model.compile(loss=loss_function, optimizer=optimizer, metrics=['accuracy'])
-            except ValueError:
-                print "!!! Loss Function '{}' not recognised, aborting\n".format(loss_function)
-                raise
+
+    if loss_function is None:
+        loss_function='tf_median_probability_loss'
+    model = tf.keras.Sequential()
+    model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
+    for i in range(layer_nb-2):
+        model.add(Dense(mlp_nodes, activation='relu'))
+    model.add(Dense(classes, activation='softmax'))
+
+    # Save image!
+    #plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
+
+    optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
+    if loss_function=='rank_loss':
+        model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+    elif loss_function=='median_probability_loss':
+        model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
+    else:
+        try:
+            model.compile(loss=loss_function, optimizer=optimizer, metrics=['accuracy'])
+        except ValueError:
+            print "!!! Loss Function '{}' not recognised, aborting\n".format(loss_function)
+            raise
     return model
 
 ### CNN From MAKE SOME NOISE (AES_HD)
