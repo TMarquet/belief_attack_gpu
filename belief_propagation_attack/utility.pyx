@@ -2027,6 +2027,7 @@ def tf_rank_loss(y_true, y_pred):
 
 def tf_median_probability_loss(y_true, y_pred):
     # undo one-hot
+    print y_true.shape
     argmaxed_onehot = tf.argmax(y_true, output_type=tf.int32, axis=1)
     # reshape
     print argmaxed_onehot.shape
