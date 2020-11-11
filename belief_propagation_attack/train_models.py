@@ -7,7 +7,7 @@ import timing
 from time import time
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.layers import Flatten, Dense, Input, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
+from tensorflow.keras.layers import Flatten, Dense, Input, ReLu, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
 
 from tensorflow.keras import backend as K
 
@@ -184,39 +184,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
         # From VGG16 design
     input_shape = (input_length, 1)
     model = tf.keras.Sequential(name='cnn_best')
-    
-    
-    model.add( Conv1D(64, 11, activation='relu', padding='same', name='block1_conv1',input_shape = input_shape))
-
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))
-    # Block 2 (350)
-    model.add(Conv1D(128, 11, activation='relu', padding='same', name='block2_conv1'))
-    model.add(AveragePooling1D(2, strides=2, name='block2_pool'))
-    # Block 3 (175)
-    model.add(Conv1D(256, 11, activation='relu', padding='same', name='block3_conv1'))
-
-    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
-    # Block 4 (87)
-    model.add(Conv1D(512, 11, activation='relu', padding='same', name='block4_conv1'))
-    model.add(AveragePooling1D(2, strides=2, name='block4_pool'))
-    # Block 5 (43)
-    model.add(Conv1D(512, 11, activation='relu', padding='same', name='block5_conv1'))
-
-    model.add(AveragePooling1D(2, strides=2, name='block5_pool'))
-
-    # Classification block
-    model.add(Flatten(name='flatten'))
-
-    # One Dense layer
-    model.add(Dense(dense_units, activation='relu', name='fc1'))
-    model.add(Dense(dense_units, activation='relu', name='fc2'))
-    model.add(Dense(dense_units, activation='relu', name='fc3'))
-    # Second Dropout Layer
-
-    # First Dropout Layer
-      
-    # Output layer
-    model.add(Dense(classes, activation='softmax', name='predictions'))
+    x = Conv1D(64, 11, activation='relu', padding='same', name='block1_conv1',input_shape = input_shape)
 
     optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
     model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
@@ -226,7 +194,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
     # return parallel_model
 
 ### CNN Best model
-def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=100):
+def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=4096):
     NUM_GPUS = 3
     strategy =tf.distribute.MirroredStrategy()
     with strategy.scope() :
@@ -234,22 +202,34 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
         input_shape = (input_length, 1)
 
         # Block 1
-        x = Conv1D(64, 11, activation='relu', padding='same', name='block1_conv1',input_shape = input_shape)
-        x = AveragePooling1D(2, strides=2, name='block1_pool')(x)
-        # Block 2
-        x = Conv1D(128, 11, activation='relu', padding='same', name='block2_conv1')(x)
-        x = AveragePooling1D(2, strides=2, name='block2_pool')(x)
-        # Block 3
-        x = Conv1D(256, 11, activation='relu', padding='same', name='block3_conv1')(x)
-        x = AveragePooling1D(2, strides=2, name='block3_pool')(x)
-        # Block 4
-        x = Conv1D(512, 11, activation='relu', padding='same', name='block4_conv1')(x)
-        x = AveragePooling1D(2, strides=2, name='block4_pool')(x)
-        # Block 5
-        x = Conv1D(512, 11, activation='relu', padding='same', name='block5_conv1')(x)
-        x = AveragePooling1D(2, strides=2, name='block5_pool')(x)
+        x = Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape)
+        x = BatchNormalization(name='block1_batchnorm')(x)
+        x = ReLu()(x)
+        # Block 1
+        x = Conv1D(128, 11, padding='same', name='block2_conv1')(x)
+        x = BatchNormalization(name='block2_batchnorm')(x)
+        x = ReLu()(x)
+        # Block 1
+        x = Conv1D(256, 11, padding='same', name='block3_conv1')(x)
+        x = BatchNormalization(name='block3_batchnorm')(x)
+        x = ReLu()(x)
+                # Block 1
+        x = Conv1D(512, 11, padding='same', name='block4_conv1')(x)
+        x = BatchNormalization(name='block4_batchnorm')(x)
+        x = ReLu()(x)
+        
+                # Block 1
+        x = Conv1D(512, 11, padding='same', name='block5_conv1')(x)
+        x = BatchNormalization(name='block5_batchnorm')(x)
+        x = ReLu()(x)
         # Classification block
-        x = Flatten(name='flatten')(x)
+        x = Dense(dense_units, name='fc1')(x)
+        x = BatchNormalization(name='block6_batchnorm')(x)
+        x = ReLu()(x)
+        
+        x = Dense(dense_units, name='fc2')(x)
+        x = BatchNormalization(name='block7_batchnorm')(x)
+        x = ReLu()(x)        
         # Two Dense layers
         x = Dense(classes, activation='softmax', name='predictions')(x)
     
@@ -392,11 +372,11 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
     elif cnn:
         # TODO: Test New CNN!
         # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
-        cnn_best_model = cnn_aes_hd(input_length=input_length, learning_rate=learning_rate, classes=classes)
+        cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
         cnn_epochs = epochs if epochs is not None else 75
         cnn_batchsize = batch_size
         train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
-                    "{}_cnn{}{}_5conv11kernels_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
+                    "{}_cnn{}{}_5conv_w_batchnorm_2dense_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
                         variable, hammingweight_flag, hammingdistance_flag, input_length, cnn_epochs, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
                     epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
                     progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
