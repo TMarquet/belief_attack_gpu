@@ -6,6 +6,9 @@ import numpy as np
 import argparse
 import timing
 from time import time
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import Flatten, Dense, Input, Lambda, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
@@ -24,7 +27,7 @@ from tensorflow.keras.models import load_model
 
 from utility import *
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 
 
 ###########################################################################
