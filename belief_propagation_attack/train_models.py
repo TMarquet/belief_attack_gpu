@@ -199,7 +199,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
 
     
 
-    strategy = tf.distribute.MirroredStrategy(devices = ['/device:GPU:0','/device:GPU:2'])
+    strategy = tf.distribute.MirroredStrategy()
     new_lr = learning_rate * 10000/50
     with strategy.scope() :
 
