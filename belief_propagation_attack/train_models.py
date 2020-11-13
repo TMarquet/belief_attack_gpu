@@ -1,13 +1,17 @@
 import os.path
+import os
 import sys
 import h5py
 import numpy as np
 import argparse
 import timing
 from time import time
+
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
+
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.layers import Flatten, Dense, Input, Lambda, Conv1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
+from tensorflow.keras.layers import Flatten, Dense, Input, Lambda, Conv1D, MaxPooling1D, GlobalMaxPooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
 
 from tensorflow.keras import backend as K
 
@@ -131,22 +135,19 @@ def cnn_ascad(classes=256):
 
 #### MLP Weighted bit model (6 layers of 200 units)
 def mlp_weighted_bit(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='binary_crossentropy'):
-    NUM_GPUS = 3
-    strategy = tf.distribute.MirroredStrategy()
-    with strategy.scope() :
-        if loss_function is None:
-            loss_function='binary_crossentropy'
-        model = Sequential()
-        model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
-        for i in range(layer_nb-2):
-            model.add(Dense(mlp_nodes, activation='relu'))
-        model.add(Dense(8, activation='sigmoid'))
-        optimizer = RMSprop(lr=learning_rate)
-        try:
-            model.compile(loss=loss_function, optimizer=optimizer, metrics=['accuracy'])
-        except ValueError:
-            print "!!! Loss Function '{}' not recognised, aborting\n".format(loss_function)
-            raise
+    if loss_function is None:
+        loss_function='binary_crossentropy'
+    model = Sequential()
+    model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
+    for i in range(layer_nb-2):
+        model.add(Dense(mlp_nodes, activation='relu'))
+    model.add(Dense(8, activation='sigmoid'))
+    optimizer = RMSprop(lr=learning_rate)
+    try:
+        model.compile(loss=loss_function, optimizer=optimizer, metrics=['accuracy'])
+    except ValueError:
+        print "!!! Loss Function '{}' not recognised, aborting\n".format(loss_function)
+        raise
     return model
 
 
@@ -194,59 +195,65 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
 
 ### CNN Best model
 def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=4096):
-
     # From VGG16 design
     input_shape = (input_length, 1)
     model = tf.keras.Sequential(name='cnn_best')
+    
+    # Convolution Blocks
     # Block 1
-    model.add(Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape))
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))
+    model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
+    model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
     
-    # Block 1
-    model.add(Conv1D(128, 11, padding='same', name='block2_conv1'))
-    model.add(AveragePooling1D(2, strides=2, name='block2_pool'))
+    # Block 2
+    model.add(Conv1D(128, 3, padding='same', name='block2_conv1'))    
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block2_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-   
-    # Block 1
-    model.add(Conv1D(256, 11, padding='same', name='block3_conv1'))
-    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
+    model.add(MaxPooling1D(2, strides=2, name='block2_pool'))   
+    
+    # Block 3
+    model.add(Conv1D(256, 3, padding='same', name='block3_conv1'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block3_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
+    model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
     
-            # Block 1
-    model.add(Conv1D(512, 11, padding='same', name='block4_conv1'))
-    model.add(AveragePooling1D(2, strides=2, name='block4_pool'))
+    # Block 4
+    model.add(Conv1D(512, 3, padding='same', name='block4_conv1'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block4_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
+    model.add(MaxPooling1D(2, strides=2, name='block4_pool'))
     
     
-            # Block 1
-    model.add(Conv1D(512, 11, padding='same', name='block5_conv1'))
-    model.add(AveragePooling1D(2, strides=2, name='block5_pool'))
+    # Block 5
+    model.add(Conv1D(512, 3, padding='same', name='block5_conv1'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
+    model.add(MaxPooling1D(2, strides=2, name='block5_pool'))
     
     model.add(Flatten(name='flatten'))
     
-    # Classification block
+    # Two Dense layers
+    
     model.add(Dense(dense_units, name='fc1'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block6_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     
+    #model.add(Dropout(0.5))
+    
     model.add(Dense(dense_units, name='fc2'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block7_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))       
-    # Two Dense layers
+
+    model.add(Dropout(0.5))
+    
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
     optimizer = RMSprop(lr=learning_rate)
@@ -256,48 +263,43 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
 
 ### CNN Previously Trained model
 def cnn_pretrained(input_length=700, learning_rate=0.00001, classes=256):
-    NUM_GPUS = 3
-    strategy = tf.distribute.MirroredStrategy()
-    with strategy.scope() :
+
         # load model
-        cnn_previous = load_model(CNN_ASCAD_FILEPATH)
-        for layer in cnn_previous.layers[:-6]:
-            layer.trainable = False
-        model = Sequential()
-        model.add(cnn_previous)
-        optimizer = RMSprop(lr=learning_rate)
-        model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    cnn_previous = load_model(CNN_ASCAD_FILEPATH)
+    for layer in cnn_previous.layers[:-6]:
+        layer.trainable = False
+    model = Sequential()
+    model.add(cnn_previous)
+    optimizer = RMSprop(lr=learning_rate)
+    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
 
 ### LSTM Best model
 def lstm_best(input_length=700, layer_nb=1, lstm_nodes=64, use_dropout=True, learning_rate=0.00001, classes=256):
-    NUM_GPUS = 3
-    strategy = tf.distribute.MirroredStrategy()
-    with strategy.scope() :
-        # From VGG16 design
-        input_shape = (input_length, 1)
-        img_input = Input(shape=input_shape)
-        # Block 1
-        if layer_nb == 1:
-            x = LSTM(lstm_nodes)(img_input)
-    
-        else:
-            x = LSTM(lstm_nodes, return_sequences=True)(img_input)
-            for i in range(2, layer_nb):
-    
-                x = LSTM(lstm_nodes, return_sequences=True)(x)
-            x = LSTM(lstm_nodes)(x)
-    
-        if use_dropout:
-            x = Dropout(0.5)(x)
-    
-        x = Dense(classes, activation='softmax', name='predictions')(x)
-    
-        inputs = img_input
-        # Create model.
-        model = Model(inputs, x, name='lstm_best')
-        optimizer = RMSprop(lr=learning_rate)
-        model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    # From VGG16 design
+    input_shape = (input_length, 1)
+    img_input = Input(shape=input_shape)
+    # Block 1
+    if layer_nb == 1:
+        x = LSTM(lstm_nodes)(img_input)
+
+    else:
+        x = LSTM(lstm_nodes, return_sequences=True)(img_input)
+        for i in range(2, layer_nb):
+
+            x = LSTM(lstm_nodes, return_sequences=True)(x)
+        x = LSTM(lstm_nodes)(x)
+
+    if use_dropout:
+        x = Dropout(0.5)(x)
+
+    x = Dense(classes, activation='softmax', name='predictions')(x)
+
+    inputs = img_input
+    # Create model.
+    model = Model(inputs, x, name='lstm_best')
+    optimizer = RMSprop(lr=learning_rate)
+    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
 
 def load_sca_model(model_file):
@@ -388,7 +390,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         cnn_epochs = epochs if epochs is not None else 75
         cnn_batchsize = batch_size
         train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
-                    "{}_cnn{}{}_5conv_w_batchnorm_2dense_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
+                    "{}_cnn{}{}_model1_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
                         variable, hammingweight_flag, hammingdistance_flag, input_length, cnn_epochs, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
                     epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
                     progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
