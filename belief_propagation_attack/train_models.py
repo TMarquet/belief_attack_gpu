@@ -435,8 +435,8 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
 
 
 if __name__ == "__main__":
-    device_spec = tf.DeviceSpec(job ="localhost", replica = 0, device_type = "CPU") 
-    with tf.device(device_spec): 
+
+    with tf.device('/device:CPU:0'): 
         parser = argparse.ArgumentParser(description='Trains Neural Network Models')
         parser.add_argument('--MLP', action="store_true", dest="USE_MLP", help='Trains Multi Layer Perceptron',
                             default=False)
