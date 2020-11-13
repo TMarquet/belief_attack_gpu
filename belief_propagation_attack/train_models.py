@@ -1,4 +1,5 @@
 import os.path
+import os
 import sys
 import h5py
 import numpy as np
@@ -23,6 +24,7 @@ from tensorflow.keras.models import load_model
 
 from utility import *
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 
 ###########################################################################
