@@ -251,7 +251,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     model.add(BatchNormalization(name='block7_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))       
 
-    model.add(Dropout(0.5))
+    #model.add(Dropout(0.5))
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
