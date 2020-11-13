@@ -200,6 +200,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
 
     strategy = tf.distribute.MirroredStrategy()
+    new_lr = learning_rate*1000/50
     with strategy.scope() :
 
         # From VGG16 design
@@ -256,7 +257,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
         # Two Dense layers
         model.add(Dense(classes, activation='softmax', name='predictions'))
     
-        optimizer = RMSprop(lr=learning_rate)
+        optimizer = RMSprop(lr=new_lr)
         model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
