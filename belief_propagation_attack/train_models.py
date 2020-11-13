@@ -435,171 +435,169 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Trains Neural Network Models')
+    parser.add_argument('--MLP', action="store_true", dest="USE_MLP", help='Trains Multi Layer Perceptron',
+                        default=False)
+    parser.add_argument('--NORM', action="store_false", dest="NORMALISE", help='Toggles Normalisation Off',
+                        default=True)
+    parser.add_argument('--CNN', action="store_true", dest="USE_CNN",
+                        help='Trains Convolutional Neural Network', default=False)
+    parser.add_argument('--CNNP', '--CNN_PRE', '--CNN_PRETRAINED', action="store_true", dest="USE_CNN_PRETRAINED",
+                        help='ReTrains Pretrained Convolutional Neural Network', default=False)
+    parser.add_argument('--LSTM', action="store_true", dest="USE_LSTM",
+                        help='Trains Long Short Term Memory Neural Network', default=False)
+    parser.add_argument('--N', '--NOISE', action="store_true", dest="ADD_NOISE",
+                        help='Adds noise to the profiling step', default=False)
+    parser.add_argument('-v', '-var', '-variable', action="store", dest="VARIABLE", help='Variable to train',
+                        default='s001')
+    parser.add_argument('-l', '-length', '-input', '-window', action="store", dest="INPUT_LENGTH", help='Input Length (default: 2000)',
+                        type=int, default=2000)
+    parser.add_argument('-lr', '-learn', '-learning_rate', action="store", dest="LEARNING_RATE", help='Learning Rate (default: 0.00001)',
+                        type=float, default=0.00001)
+    parser.add_argument('-e', '-epochs', action="store", dest="EPOCHS", help='Number of Epochs in Training (default: 75 CNN, 100 MLP)',
+                        type=int, default=100)
+    parser.add_argument('-t', '-traces', action="store", dest="TRAINING_TRACES", help='Number of Traces in Training (default: 200000)',
+                        type=int, default=200000)
+    parser.add_argument('-vt', '-validation_traces', action="store", dest="VALIDATION_TRACES", help='Number of Validation Traces in Testing, taken from Training Traces (default: 10000)',
+                        type=int, default=10000)
+    parser.add_argument('-mlp_layers', action="store", dest="MLP_LAYERS", help='Number of Layers in MLP (default: 5)',
+                        type=int, default=5)
+    parser.add_argument('-mlp_nodes', action="store", dest="MLP_NODES", help='Number of Nodes in MLP Layer (default: 200)',
+                        type=int, default=100)
+    parser.add_argument('-lstm_layers', action="store", dest="LSTM_LAYERS",
+                        help='Number of Layers in LSTM (default: 1)',
+                        type=int, default=1)
+    parser.add_argument('-lstm_nodes', action="store", dest="LSTM_NODES",
+                        help='Number of Nodes in LSTM Layer (default: 64)',
+                        type=int, default=64)
+    parser.add_argument('-b', '-batch', '-batch_size', action="store", dest="BATCH_SIZE", help='Size of Training Batch (default: 200)',
+                        type=int, default=50)
+    parser.add_argument('-allvar', '-av', action="store", dest="ALL_VARIABLE",
+                        help='Train all Variables that match (default: None)', default=None)
+    parser.add_argument('-sd', action="store", dest="STANDARD_DEVIATION",
+                        help='Standard Deviation for Data Augmentation (default: 100)',
+                        type=int, default=100)
+    parser.add_argument('-am', '-augment', '-aug', action="store", dest="AUGMENT_METHOD",
+                        help='Method for Data Augmentation: 0 Noise, 1 Shift, 2 Average (default: 0)',
+                        type=int, default=0)
+    parser.add_argument('--PB', '--PROG', '--PROGRESS', action="store_true", dest="PROGRESS_BAR",
+                        help='Prints Progress Bar', default=False)
+    parser.add_argument('--ALLVARS', action="store_true", dest="ALL_VARS",
+                        help='Trains all Variable Nodes', default=False)
+    parser.add_argument('-j', '-jitter', action="store", dest="JITTER",
+                        help='Clock Jitter to use on real traces (default: None)',
+                        type=int, default=None)
+    parser.add_argument('--TEST', '--TEST_VARIABLES', action="store_true", dest="TEST_VARIABLES",
+                        help='Trains only specified Testing Variable Nodes', default=False)
+    parser.add_argument('--MULTILABEL', '--ML', '--M', action="store_true", dest="MULTILABEL",
+                        help='Uses multilabels in binary form', default=False)
+    parser.add_argument('--RV', '--RKV', '--RANDOMKEY_VALIDATION', action="store_false", dest="RANDOMKEY_VALIDATION",
+                        help='Takes validation traces from randomkey set (subtracting from training traces!), default True', default=True)
+    parser.add_argument('--HW', '--HAMMINGWEIGHT', '--HAMMING_WEIGHT', action="store_true", dest="HAMMINGWEIGHT",
+                        help='Trains to match Hamming Weight rather than identity', default=False)
+    parser.add_argument('--HD', '--HAMMINGDISTANCE', '--HAMMING_DISTANCE', action="store_true", dest="HAMMING_DISTANCE_ENCODING",
+                        help='Encodes to scaled Hamming Weight Distance, rather than one hot encoding', default=False)
+    parser.add_argument('--META', '--LOAD_META', '--LOAD_METADATA', action="store_false", dest="LOAD_METADATA",
+                        help='Toggles loading of metadata, default True (bad for mig!)', default=True)
+    parser.add_argument('--SCRATCH', '--SCRATCH_STORAGE', '--S', action="store_true", dest="SCRATCH_STORAGE",
+                        help='Stores neural networks on scratch storage (external hard drive)', default=False)
+    parser.add_argument('--ASCAD', '--USE_ASCAD', action="store_true", dest="USE_ASCAD",
+                        help='Uses ASCAD Default Model, CNN or MLP', default=False)
 
-    with tf.device('/device:CPU:0'): 
-        parser = argparse.ArgumentParser(description='Trains Neural Network Models')
-        parser.add_argument('--MLP', action="store_true", dest="USE_MLP", help='Trains Multi Layer Perceptron',
-                            default=False)
-        parser.add_argument('--NORM', action="store_false", dest="NORMALISE", help='Toggles Normalisation Off',
-                            default=True)
-        parser.add_argument('--CNN', action="store_true", dest="USE_CNN",
-                            help='Trains Convolutional Neural Network', default=False)
-        parser.add_argument('--CNNP', '--CNN_PRE', '--CNN_PRETRAINED', action="store_true", dest="USE_CNN_PRETRAINED",
-                            help='ReTrains Pretrained Convolutional Neural Network', default=False)
-        parser.add_argument('--LSTM', action="store_true", dest="USE_LSTM",
-                            help='Trains Long Short Term Memory Neural Network', default=False)
-        parser.add_argument('--N', '--NOISE', action="store_true", dest="ADD_NOISE",
-                            help='Adds noise to the profiling step', default=False)
-        parser.add_argument('-v', '-var', '-variable', action="store", dest="VARIABLE", help='Variable to train',
-                            default='s001')
-        parser.add_argument('-l', '-length', '-input', '-window', action="store", dest="INPUT_LENGTH", help='Input Length (default: 2000)',
-                            type=int, default=2000)
-        parser.add_argument('-lr', '-learn', '-learning_rate', action="store", dest="LEARNING_RATE", help='Learning Rate (default: 0.00001)',
-                            type=float, default=0.00001)
-        parser.add_argument('-e', '-epochs', action="store", dest="EPOCHS", help='Number of Epochs in Training (default: 75 CNN, 100 MLP)',
-                            type=int, default=100)
-        parser.add_argument('-t', '-traces', action="store", dest="TRAINING_TRACES", help='Number of Traces in Training (default: 200000)',
-                            type=int, default=200000)
-        parser.add_argument('-vt', '-validation_traces', action="store", dest="VALIDATION_TRACES", help='Number of Validation Traces in Testing, taken from Training Traces (default: 10000)',
-                            type=int, default=10000)
-        parser.add_argument('-mlp_layers', action="store", dest="MLP_LAYERS", help='Number of Layers in MLP (default: 5)',
-                            type=int, default=5)
-        parser.add_argument('-mlp_nodes', action="store", dest="MLP_NODES", help='Number of Nodes in MLP Layer (default: 200)',
-                            type=int, default=100)
-        parser.add_argument('-lstm_layers', action="store", dest="LSTM_LAYERS",
-                            help='Number of Layers in LSTM (default: 1)',
-                            type=int, default=1)
-        parser.add_argument('-lstm_nodes', action="store", dest="LSTM_NODES",
-                            help='Number of Nodes in LSTM Layer (default: 64)',
-                            type=int, default=64)
-        parser.add_argument('-b', '-batch', '-batch_size', action="store", dest="BATCH_SIZE", help='Size of Training Batch (default: 200)',
-                            type=int, default=50)
-        parser.add_argument('-allvar', '-av', action="store", dest="ALL_VARIABLE",
-                            help='Train all Variables that match (default: None)', default=None)
-        parser.add_argument('-sd', action="store", dest="STANDARD_DEVIATION",
-                            help='Standard Deviation for Data Augmentation (default: 100)',
-                            type=int, default=100)
-        parser.add_argument('-am', '-augment', '-aug', action="store", dest="AUGMENT_METHOD",
-                            help='Method for Data Augmentation: 0 Noise, 1 Shift, 2 Average (default: 0)',
-                            type=int, default=0)
-        parser.add_argument('--PB', '--PROG', '--PROGRESS', action="store_true", dest="PROGRESS_BAR",
-                            help='Prints Progress Bar', default=False)
-        parser.add_argument('--ALLVARS', action="store_true", dest="ALL_VARS",
-                            help='Trains all Variable Nodes', default=False)
-        parser.add_argument('-j', '-jitter', action="store", dest="JITTER",
-                            help='Clock Jitter to use on real traces (default: None)',
-                            type=int, default=None)
-        parser.add_argument('--TEST', '--TEST_VARIABLES', action="store_true", dest="TEST_VARIABLES",
-                            help='Trains only specified Testing Variable Nodes', default=False)
-        parser.add_argument('--MULTILABEL', '--ML', '--M', action="store_true", dest="MULTILABEL",
-                            help='Uses multilabels in binary form', default=False)
-        parser.add_argument('--RV', '--RKV', '--RANDOMKEY_VALIDATION', action="store_false", dest="RANDOMKEY_VALIDATION",
-                            help='Takes validation traces from randomkey set (subtracting from training traces!), default True', default=True)
-        parser.add_argument('--HW', '--HAMMINGWEIGHT', '--HAMMING_WEIGHT', action="store_true", dest="HAMMINGWEIGHT",
-                            help='Trains to match Hamming Weight rather than identity', default=False)
-        parser.add_argument('--HD', '--HAMMINGDISTANCE', '--HAMMING_DISTANCE', action="store_true", dest="HAMMING_DISTANCE_ENCODING",
-                            help='Encodes to scaled Hamming Weight Distance, rather than one hot encoding', default=False)
-        parser.add_argument('--META', '--LOAD_META', '--LOAD_METADATA', action="store_false", dest="LOAD_METADATA",
-                            help='Toggles loading of metadata, default True (bad for mig!)', default=True)
-        parser.add_argument('--SCRATCH', '--SCRATCH_STORAGE', '--S', action="store_true", dest="SCRATCH_STORAGE",
-                            help='Stores neural networks on scratch storage (external hard drive)', default=False)
-        parser.add_argument('--ASCAD', '--USE_ASCAD', action="store_true", dest="USE_ASCAD",
-                            help='Uses ASCAD Default Model, CNN or MLP', default=False)
-    
-        parser.add_argument('-loss', '-loss_function', action="store", dest="LOSS_FUNCTION", help='Loss Function (default: None (uses standard depending on model structure, usually categorical cross entropy))',
-                            default=None)
-    
-        # Target node here
-        args            = parser.parse_args()
-        USE_MLP         = args.USE_MLP
-        USE_CNN         = args.USE_CNN
-        USE_CNN_PRETRAINED = args.USE_CNN_PRETRAINED
-        USE_LSTM        = args.USE_LSTM
-        VARIABLE        = args.VARIABLE
-        ADD_NOISE       = args.ADD_NOISE
-        INPUT_LENGTH    = args.INPUT_LENGTH
-        EPOCHS          = args.EPOCHS
-        TRAINING_TRACES = args.TRAINING_TRACES
-        MLP_LAYERS      = args.MLP_LAYERS
-        MLP_NODES       = args.MLP_NODES
-        LSTM_LAYERS     = args.LSTM_LAYERS
-        LSTM_NODES      = args.LSTM_NODES
-        BATCH_SIZE      = args.BATCH_SIZE
-        NORMALISE       = args.NORMALISE
-        STANDARD_DEVIATION = args.STANDARD_DEVIATION
-        ALL_VARIABLE    = args.ALL_VARIABLE
-        AUGMENT_METHOD  = args.AUGMENT_METHOD
-        ALL_VARS        = args.ALL_VARS
-        JITTER          = args.JITTER
-        TEST_VARIABLES  = args.TEST_VARIABLES
-        LEARNING_RATE   = args.LEARNING_RATE
-        MULTILABEL      = args.MULTILABEL
-        VALIDATION_TRACES = args.VALIDATION_TRACES
-        RANDOMKEY_VALIDATION = args.RANDOMKEY_VALIDATION
-        HAMMINGWEIGHT = args.HAMMINGWEIGHT
-        LOSS_FUNCTION = args.LOSS_FUNCTION
-        HAMMING_DISTANCE_ENCODING = args.HAMMING_DISTANCE_ENCODING
-        LOAD_METADATA = args.LOAD_METADATA
-        SCRATCH_STORAGE = args.SCRATCH_STORAGE
-        USE_ASCAD = args.USE_ASCAD
-    
-        if not USE_MLP and not USE_CNN and not USE_CNN_PRETRAINED and not USE_LSTM:
-            print "|| No models set to run - setting USE_MLP to True"
-            USE_MLP = True
-    
-        PROGRESS_BAR = 1 if args.PROGRESS_BAR else 0
-    
-        # Handle dodgy input
-        if (INPUT_LENGTH % 2) and INPUT_LENGTH != 1 and INPUT_LENGTH != -1:
-            print "|| Error: input length must be even, adding 1 to fix ({} -> {})".format(INPUT_LENGTH, INPUT_LENGTH+1)
-            INPUT_LENGTH += 1
-    
-        # Handle ASCAD Defaults
-        if USE_ASCAD:
-            print "|| Setting to ASCAD Default Values (epochs etc):"
-            print "|| * INPUT_LENGTH {} -> 700".format(INPUT_LENGTH)
-            INPUT_LENGTH = 700
-    
-    
-        if TEST_VARIABLES:
-            variable_list = ['k001','s001','t001','k004']
-        if ALL_VARS:
-            variable_list = get_variable_list()
-        elif ALL_VARIABLE is None:
-            variable_list = [VARIABLE]
-        else:
-            variable_list = ['{}{}'.format(ALL_VARIABLE, pad_string_zeros(i+1)) for i in range(variable_dict[ALL_VARIABLE])]
-    
-        if RANDOMKEY_VALIDATION:
-            TRAINING_TRACES -= VALIDATION_TRACES
-    
-        for variable in variable_list:
-    
-            print "$$$ Training Neural Networks $$$\nVariable {}, Hamming Weight {} Hamming Distance Encoding {}, MLP {} ({} layers, {} nodes per layer), CNN {} (Pretrained {}), LSTM {} ({} layers, {} nodes per layer), Input Length {}, Learning Rate {}, Noise {}, Jitter {}, Normalising {}\n{} Epochs, Batch Size {}, Training Traces {}, Validation Traces {}, ASCAD {}".format(
-                variable, HAMMINGWEIGHT, HAMMING_DISTANCE_ENCODING, USE_MLP, MLP_LAYERS, MLP_NODES, USE_CNN, USE_CNN_PRETRAINED, USE_LSTM, LSTM_LAYERS, LSTM_NODES, INPUT_LENGTH, LEARNING_RATE, ADD_NOISE, JITTER, NORMALISE, EPOCHS, BATCH_SIZE, TRAINING_TRACES, VALIDATION_TRACES, USE_ASCAD)
-    
-            # Load the profiling traces and the attack traces
-            (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
-                                                                          input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
-                                                                          hammingweight=HAMMINGWEIGHT,
-                                                                          load_metadata=LOAD_METADATA)
-    
-            # Handle Input Length of -1
-            if INPUT_LENGTH < 0:
-                # Set to length of X_profiling
-                print "|| Changing Input Length from {} to {} (max samples)".format(INPUT_LENGTH, X_profiling.shape[1])
-                INPUT_LENGTH = X_profiling.shape[1]
-    
-            train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
-                training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
-                learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
-    
-        # for var, length in variable_dict.iteritems():
-        #     for i in range(length):
-        #         variable = "{}{}".format(var, pad_string_zeros(i+1))
-        #         # print variable
-        #         print "$$$ Training Neural Networks $$$\nVariable {}, MLP {}, CNN {}, Input Length {}, Noise {}\n".format(VARIABLE, USE_MLP,
-        #                                                                                                  USE_CNN, INPUT_LENGTH, ADD_NOISE)
-        #         train_variable_model(VARIABLE, mlp=USE_MLP, cnn=USE_CNN, input_length=INPUT_LENGTH, add_noise=ADD_NOISE)
-    
-        print "$ Done!"
+    parser.add_argument('-loss', '-loss_function', action="store", dest="LOSS_FUNCTION", help='Loss Function (default: None (uses standard depending on model structure, usually categorical cross entropy))',
+                        default=None)
+
+    # Target node here
+    args            = parser.parse_args()
+    USE_MLP         = args.USE_MLP
+    USE_CNN         = args.USE_CNN
+    USE_CNN_PRETRAINED = args.USE_CNN_PRETRAINED
+    USE_LSTM        = args.USE_LSTM
+    VARIABLE        = args.VARIABLE
+    ADD_NOISE       = args.ADD_NOISE
+    INPUT_LENGTH    = args.INPUT_LENGTH
+    EPOCHS          = args.EPOCHS
+    TRAINING_TRACES = args.TRAINING_TRACES
+    MLP_LAYERS      = args.MLP_LAYERS
+    MLP_NODES       = args.MLP_NODES
+    LSTM_LAYERS     = args.LSTM_LAYERS
+    LSTM_NODES      = args.LSTM_NODES
+    BATCH_SIZE      = args.BATCH_SIZE
+    NORMALISE       = args.NORMALISE
+    STANDARD_DEVIATION = args.STANDARD_DEVIATION
+    ALL_VARIABLE    = args.ALL_VARIABLE
+    AUGMENT_METHOD  = args.AUGMENT_METHOD
+    ALL_VARS        = args.ALL_VARS
+    JITTER          = args.JITTER
+    TEST_VARIABLES  = args.TEST_VARIABLES
+    LEARNING_RATE   = args.LEARNING_RATE
+    MULTILABEL      = args.MULTILABEL
+    VALIDATION_TRACES = args.VALIDATION_TRACES
+    RANDOMKEY_VALIDATION = args.RANDOMKEY_VALIDATION
+    HAMMINGWEIGHT = args.HAMMINGWEIGHT
+    LOSS_FUNCTION = args.LOSS_FUNCTION
+    HAMMING_DISTANCE_ENCODING = args.HAMMING_DISTANCE_ENCODING
+    LOAD_METADATA = args.LOAD_METADATA
+    SCRATCH_STORAGE = args.SCRATCH_STORAGE
+    USE_ASCAD = args.USE_ASCAD
+
+    if not USE_MLP and not USE_CNN and not USE_CNN_PRETRAINED and not USE_LSTM:
+        print "|| No models set to run - setting USE_MLP to True"
+        USE_MLP = True
+
+    PROGRESS_BAR = 1 if args.PROGRESS_BAR else 0
+
+    # Handle dodgy input
+    if (INPUT_LENGTH % 2) and INPUT_LENGTH != 1 and INPUT_LENGTH != -1:
+        print "|| Error: input length must be even, adding 1 to fix ({} -> {})".format(INPUT_LENGTH, INPUT_LENGTH+1)
+        INPUT_LENGTH += 1
+
+    # Handle ASCAD Defaults
+    if USE_ASCAD:
+        print "|| Setting to ASCAD Default Values (epochs etc):"
+        print "|| * INPUT_LENGTH {} -> 700".format(INPUT_LENGTH)
+        INPUT_LENGTH = 700
+
+
+    if TEST_VARIABLES:
+        variable_list = ['k001','s001','t001','k004']
+    if ALL_VARS:
+        variable_list = get_variable_list()
+    elif ALL_VARIABLE is None:
+        variable_list = [VARIABLE]
+    else:
+        variable_list = ['{}{}'.format(ALL_VARIABLE, pad_string_zeros(i+1)) for i in range(variable_dict[ALL_VARIABLE])]
+
+    if RANDOMKEY_VALIDATION:
+        TRAINING_TRACES -= VALIDATION_TRACES
+
+    for variable in variable_list:
+
+        print "$$$ Training Neural Networks $$$\nVariable {}, Hamming Weight {} Hamming Distance Encoding {}, MLP {} ({} layers, {} nodes per layer), CNN {} (Pretrained {}), LSTM {} ({} layers, {} nodes per layer), Input Length {}, Learning Rate {}, Noise {}, Jitter {}, Normalising {}\n{} Epochs, Batch Size {}, Training Traces {}, Validation Traces {}, ASCAD {}".format(
+            variable, HAMMINGWEIGHT, HAMMING_DISTANCE_ENCODING, USE_MLP, MLP_LAYERS, MLP_NODES, USE_CNN, USE_CNN_PRETRAINED, USE_LSTM, LSTM_LAYERS, LSTM_NODES, INPUT_LENGTH, LEARNING_RATE, ADD_NOISE, JITTER, NORMALISE, EPOCHS, BATCH_SIZE, TRAINING_TRACES, VALIDATION_TRACES, USE_ASCAD)
+
+        # Load the profiling traces and the attack traces
+        (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
+                                                                      input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
+                                                                      hammingweight=HAMMINGWEIGHT,
+                                                                      load_metadata=LOAD_METADATA)
+
+        # Handle Input Length of -1
+        if INPUT_LENGTH < 0:
+            # Set to length of X_profiling
+            print "|| Changing Input Length from {} to {} (max samples)".format(INPUT_LENGTH, X_profiling.shape[1])
+            INPUT_LENGTH = X_profiling.shape[1]
+
+        train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
+            training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
+            learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
+
+    # for var, length in variable_dict.iteritems():
+    #     for i in range(length):
+    #         variable = "{}{}".format(var, pad_string_zeros(i+1))
+    #         # print variable
+    #         print "$$$ Training Neural Networks $$$\nVariable {}, MLP {}, CNN {}, Input Length {}, Noise {}\n".format(VARIABLE, USE_MLP,
+    #                                                                                                  USE_CNN, INPUT_LENGTH, ADD_NOISE)
+    #         train_variable_model(VARIABLE, mlp=USE_MLP, cnn=USE_CNN, input_length=INPUT_LENGTH, add_noise=ADD_NOISE)
+
+    print "$ Done!"
