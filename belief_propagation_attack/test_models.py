@@ -359,7 +359,7 @@ if __name__ == "__main__":
                         default='s001')
     parser.add_argument('-l', '-length', '-input', action="store", dest="INPUT_LENGTH",
                         help='Input Length (default: 700)',
-                        type=int, default=700)
+                        type=int, default=2000)
     parser.add_argument('-t', '-traces', '-test_traces', action="store", dest="TEST_TRACES",
                         help='Number of Traces to Test with (default 10000)',
                         type=int, default=10000)
