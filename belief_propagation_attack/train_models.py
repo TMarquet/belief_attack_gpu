@@ -7,7 +7,7 @@ import argparse
 import timing
 from time import time
 
-os.environ["CUDA_VISIBLE_DEVICES"]="1"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
