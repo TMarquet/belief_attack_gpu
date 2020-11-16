@@ -3,6 +3,10 @@ from os.path import isfile, join, expanduser
 import sys
 import h5py
 import numpy as np
+import matplotlib
+
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
 import argparse
 from utility import *
