@@ -3,6 +3,8 @@ from os.path import isfile, join, expanduser
 import sys
 import h5py
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import argparse
 from utility import *
@@ -297,8 +299,7 @@ class TestModels:
             if SAVE:
                 save_statistics(model_file, prob_list)
 
-            if self.histogram:
-                plt.clf()
+            if self.histogram :
                 plt.hist(prob_list, bins='auto')
                 plt.title(model_file)
                 plt.savefig('output/probabilityhistogram_{}.svg'.format(model_file.replace('models/', '').replace('.h5', '')), format='svg', dpi=1200)
