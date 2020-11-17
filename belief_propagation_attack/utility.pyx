@@ -2020,9 +2020,6 @@ def tf_rank_loss(y_true, y_pred):
     gathered = tf.gather_nd(argsort2, concatenated_onehot)
     # Take the mean of these ranks (float value)
     mean = tf.cast(tf.reduce_mean(gathered), tf.float32)
-
-    print "Our Rank Mean:\ntype {} ({}), shape {}".format(type(mean), mean.dtype, mean.get_shape())
-    print "Cross Entropy:\ntype {} ({}), shape {}".format(type(return_val), return_val.dtype, return_val.get_shape())
     return return_val + mean
 
 def tf_median_probability_loss(y_true, y_pred):
@@ -2045,7 +2042,7 @@ def tf_median_probability_loss(y_true, y_pred):
     gathered = tf.gather_nd(y_pred, concatenated_onehot)
     # Take the mean of these ranks (float value)
     median = 1 - tf.cast(np.percentile(gathered, 50.0), tf.float32)
-    print 'The median is : ',median
+    # print "Our Rank Median:\ntype {} ({}), shape {}".format(type(median), median.dtype, median.get_shape())
     return median
 
 def get_variable_list():
