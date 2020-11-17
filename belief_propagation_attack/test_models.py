@@ -4,9 +4,9 @@ import sys
 import h5py
 import numpy as np
 import matplotlib
-
+import os
 matplotlib.use('Agg')
-
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 import matplotlib.pyplot as plt
 import argparse
 from utility import *
