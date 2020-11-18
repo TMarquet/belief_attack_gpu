@@ -349,7 +349,7 @@ class TestModels:
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Trains Neural Network Models')
-    parser.add_argument('--ALL', '--ALL_VARS', '--TEST_ALL', action="store_false", dest="TEST_ALL", help='Tests all available models (default True)', default=True)
+    parser.add_argument('--ALL', '--ALL_VARS', '--TEST_ALL', action="store_True", dest="TEST_ALL", help='Tests all available models (default True)', default=False)
     parser.add_argument('--MLP', action="store_true", dest="USE_MLP", help='Tests Multi Layer Perceptron',
                         default=False)
     parser.add_argument('--CNN', action="store_true", dest="USE_CNN",
@@ -416,7 +416,7 @@ if __name__ == "__main__":
 
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
 
-
+    variables_to_test = ['s']
 
     if TEST_ALL:
         # Clear statistics
@@ -429,8 +429,13 @@ if __name__ == "__main__":
     else:
         # Check specific model
         # TODO
-        print "Todo: Check specific model"
-        pass
+        
+        for var in variables_to_test :
+            for (m) in sorted(listdir(MODEL_FOLDER)):
+                if string_starts_with(m, var):
+                    print 'Testing : ', m 
+                    model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE)
+        
 
 # # No argument: check all the trained models
 # if (len(sys.argv) == 1) or (len(sys.argv) == 2):
