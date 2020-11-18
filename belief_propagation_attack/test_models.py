@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib
 import os
 matplotlib.use('Agg')
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+os.environ["CUDA_VISIBLE_DEVICES"]="3"
 import matplotlib.pyplot as plt
 import argparse
 from utility import *
