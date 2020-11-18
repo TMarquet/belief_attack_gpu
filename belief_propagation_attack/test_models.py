@@ -349,7 +349,7 @@ class TestModels:
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Trains Neural Network Models')
-    parser.add_argument('--ALL', '--ALL_VARS', '--TEST_ALL', action="store_True", dest="TEST_ALL", help='Tests all available models (default True)', default=False)
+    parser.add_argument('--ALL', '--ALL_VARS', '--TEST_ALL', action="store_true", dest="TEST_ALL", help='Tests all available models (default True)', default=False)
     parser.add_argument('--MLP', action="store_true", dest="USE_MLP", help='Tests Multi Layer Perceptron',
                         default=False)
     parser.add_argument('--CNN', action="store_true", dest="USE_CNN",
