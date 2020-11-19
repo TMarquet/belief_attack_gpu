@@ -27,7 +27,6 @@ from tensorflow.keras.models import load_model
 
 from utility import *
 
-tf.debugging.set_log_device_placement(True)
 ###########################################################################
 
 class TrainValTensorBoard(TensorBoard):
@@ -91,38 +90,32 @@ def cnn_ascad(classes=256):
 	img_input = Input(shape=input_shape)
 	# Block 1
 	x = Conv1D(64, 11, activation='relu', padding='same', name='block1_conv1')(img_input)
-	print x.get_shape()
 	x = AveragePooling1D(2, strides=2, name='block1_pool')(x)
-	print x.get_shape()
 	# Block 2
 	x = Conv1D(128, 11, activation='relu', padding='same', name='block2_conv1')(x)
-	print x.get_shape()
 	x = AveragePooling1D(2, strides=2, name='block2_pool')(x)
-	print x.get_shape()
+
 	# Block 3
 	x = Conv1D(256, 11, activation='relu', padding='same', name='block3_conv1')(x)
-	print x.get_shape()
 	x = AveragePooling1D(2, strides=2, name='block3_pool')(x)
-	print x.get_shape()
+
 	# Block 4
 	x = Conv1D(512, 11, activation='relu', padding='same', name='block4_conv1')(x)
-	print x.get_shape()
 	x = AveragePooling1D(2, strides=2, name='block4_pool')(x)
-	print x.get_shape()
+
 	# Block 5
 	x = Conv1D(512, 11, activation='relu', padding='same', name='block5_conv1')(x)
-	print x.get_shape()
 	x = AveragePooling1D(2, strides=2, name='block5_pool')(x)
-	print x.get_shape()
+
 	# Classification block
 	x = Flatten(name='flatten')(x)
-	print x.get_shape()
+
 	x = Dense(4096, activation='relu', name='fc1')(x)
-	print x.get_shape()
+
 	x = Dense(4096, activation='relu', name='fc2')(x)
-	print x.get_shape()
+
 	x = Dense(classes, activation='softmax', name='predictions')(x)
-	print x.get_shape()
+
 
 	inputs = img_input
 	# Create model.
@@ -573,7 +566,7 @@ if __name__ == "__main__":
     if ALL_VARS:
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
-        variable_list = ['s001','s002','s003','s004','s005','s006','s007','s008']
+        variable_list = ['s007','s008','k001','k002','k003','k004','k005','k006','k007']
         print variable_list
     else:
         variable_list = ['{}{}'.format(ALL_VARIABLE, pad_string_zeros(i+1)) for i in range(variable_dict[ALL_VARIABLE])]
