@@ -25,11 +25,10 @@ from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import load_model
 
-print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 from utility import *
 
 
-tf.debugging.set_log_device_placement(True)
+
 ###########################################################################
 
 class TrainValTensorBoard(TensorBoard):
