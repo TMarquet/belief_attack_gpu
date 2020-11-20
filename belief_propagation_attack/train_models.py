@@ -6,7 +6,8 @@ import numpy as np
 import argparse
 import timing
 from time import time
-
+import matplotlib
+matplotlib.use('Agg')
 os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 import tensorflow as tf
