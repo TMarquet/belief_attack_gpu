@@ -190,7 +190,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
 
 ### CNN Best model
 def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=4096):
-    with tf.device(/device:GPU:2) :
+    with tf.device('/device:GPU:2') :
         # From VGG16 design
         input_shape = (input_length, 1)
         model = tf.keras.Sequential(name='cnn_best')
