@@ -7,7 +7,7 @@ import argparse
 import timing
 from time import time
 
-os.environ["CUDA_VISIBLE_DEVICES"]="2"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
@@ -27,6 +27,8 @@ from tensorflow.keras.models import load_model
 
 from utility import *
 
+
+tf.debugging.set_log_device_placement(true)
 ###########################################################################
 
 class TrainValTensorBoard(TensorBoard):
