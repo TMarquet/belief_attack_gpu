@@ -11,7 +11,7 @@ matplotlib.use('Agg')
 
 try:
     # Disable all GPUS
-    tf.config.set_visible_devices([], 'GPU')
+
     visible_devices = tf.config.get_visible_devices()
     print visible_devices
     for device in visible_devices:
