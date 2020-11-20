@@ -9,6 +9,16 @@ from time import time
 import matplotlib
 matplotlib.use('Agg')
 
+try:
+    # Disable all GPUS
+    tf.config.set_visible_devices([], 'GPU')
+    visible_devices = tf.config.get_visible_devices()
+    for device in visible_devices:
+        print device
+        assert device.device_type != 'GPU'
+except:
+    # Invalid device or cannot modify virtual devices once initialized.
+    pass
 
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
@@ -190,70 +200,70 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
 
 ### CNN Best model
 def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=4096):
-    with tf.device('/device:GPU:2') :
-        # From VGG16 design
-        input_shape = (input_length, 1)
-        model = tf.keras.Sequential(name='cnn_best')
-        
-        # Convolution Blocks
-        # Block 1
-        model.add(Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape))
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block1_batchnorm'))
-        model.add(tf.keras.layers.Activation('relu'))
-        model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
-        
-        # Block 2
-        model.add(Conv1D(128, 11, padding='same', name='block2_conv1'))    
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block2_batchnorm'))
-        model.add(tf.keras.layers.Activation('relu'))
-        model.add(MaxPooling1D(2, strides=2, name='block2_pool'))   
-        
-        # Block 3
-        model.add(Conv1D(256, 11, padding='same', name='block3_conv1'))
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block3_batchnorm'))
-        model.add(tf.keras.layers.Activation('relu'))
-        model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
-        
-        # Block 4
-        model.add(Conv1D(512, 11, padding='same', name='block4_conv1'))
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block4_batchnorm'))
-        model.add(tf.keras.layers.Activation('relu'))
-        model.add(MaxPooling1D(2, strides=2, name='block4_pool'))
-        
-        
-        # Block 5
-        model.add(Conv1D(512, 11, padding='same', name='block5_conv1'))
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block5_batchnorm'))
-        model.add(tf.keras.layers.Activation('relu'))
-        model.add(MaxPooling1D(2, strides=2, name='block5_pool'))
-        
-        model.add(Flatten(name='flatten'))
-        
-        # Two Dense layers
-        
-        model.add(Dense(dense_units, name='fc1'))
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block6_batchnorm'))
-        model.add(tf.keras.layers.Activation('relu'))
-        
-        #model.add(Dropout(0.5))
-        
-        model.add(Dense(dense_units, name='fc2'))
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block7_batchnorm'))
-        model.add(tf.keras.layers.Activation('relu'))       
+
+    # From VGG16 design
+    input_shape = (input_length, 1)
+    model = tf.keras.Sequential(name='cnn_best')
     
-        #model.add(Dropout(0.5))
-        
-        model.add(Dense(classes, activation='softmax', name='predictions'))
+    # Convolution Blocks
+    # Block 1
+    model.add(Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block1_batchnorm'))
+    model.add(tf.keras.layers.Activation('relu'))
+    model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
     
-        optimizer = RMSprop(lr=learning_rate)
-        model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+    # Block 2
+    model.add(Conv1D(128, 11, padding='same', name='block2_conv1'))    
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block2_batchnorm'))
+    model.add(tf.keras.layers.Activation('relu'))
+    model.add(MaxPooling1D(2, strides=2, name='block2_pool'))   
+    
+    # Block 3
+    model.add(Conv1D(256, 11, padding='same', name='block3_conv1'))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block3_batchnorm'))
+    model.add(tf.keras.layers.Activation('relu'))
+    model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
+    
+    # Block 4
+    model.add(Conv1D(512, 11, padding='same', name='block4_conv1'))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block4_batchnorm'))
+    model.add(tf.keras.layers.Activation('relu'))
+    model.add(MaxPooling1D(2, strides=2, name='block4_pool'))
+    
+    
+    # Block 5
+    model.add(Conv1D(512, 11, padding='same', name='block5_conv1'))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block5_batchnorm'))
+    model.add(tf.keras.layers.Activation('relu'))
+    model.add(MaxPooling1D(2, strides=2, name='block5_pool'))
+    
+    model.add(Flatten(name='flatten'))
+    
+    # Two Dense layers
+    
+    model.add(Dense(dense_units, name='fc1'))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block6_batchnorm'))
+    model.add(tf.keras.layers.Activation('relu'))
+    
+    #model.add(Dropout(0.5))
+    
+    model.add(Dense(dense_units, name='fc2'))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block7_batchnorm'))
+    model.add(tf.keras.layers.Activation('relu'))       
+
+    #model.add(Dropout(0.5))
+    
+    model.add(Dense(classes, activation='softmax', name='predictions'))
+
+    optimizer = RMSprop(lr=learning_rate)
+    model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
