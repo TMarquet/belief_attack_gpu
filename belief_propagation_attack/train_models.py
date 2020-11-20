@@ -28,7 +28,7 @@ from tensorflow.keras.models import load_model
 from utility import *
 
 
-tf.debugging.set_log_device_placement(True)
+#tf.debugging.set_log_device_placement(True)
 ###########################################################################
 
 class TrainValTensorBoard(TensorBoard):
@@ -568,7 +568,7 @@ if __name__ == "__main__":
     if ALL_VARS:
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
-        variable_list = ['k004','t001']
+        variable_list = ['s001']
         print variable_list
     else:
         variable_list = ['{}{}'.format(ALL_VARIABLE, pad_string_zeros(i+1)) for i in range(variable_dict[ALL_VARIABLE])]
