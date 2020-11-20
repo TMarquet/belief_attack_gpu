@@ -25,19 +25,7 @@ from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import load_model
 
-try:
-    # Disable all GPUS
-
-    visible_devices = tf.config.get_visible_devices()
-    print visible_devices
-    for device in visible_devices:
-        
-        assert device.device_type != 'GPU'
-except:
-    # Invalid device or cannot modify virtual devices once initialized.
-    print 'here'
-    pass
-
+print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 from utility import *
 
 
