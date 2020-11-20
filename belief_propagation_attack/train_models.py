@@ -18,6 +18,7 @@ try:
         assert device.device_type != 'GPU'
 except:
     # Invalid device or cannot modify virtual devices once initialized.
+    print 'here'
     pass
 
 import tensorflow as tf
