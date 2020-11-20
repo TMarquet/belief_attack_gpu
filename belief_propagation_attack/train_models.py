@@ -13,8 +13,9 @@ try:
     # Disable all GPUS
     tf.config.set_visible_devices([], 'GPU')
     visible_devices = tf.config.get_visible_devices()
+    print visible_devices
     for device in visible_devices:
-        print device
+        
         assert device.device_type != 'GPU'
 except:
     # Invalid device or cannot modify virtual devices once initialized.
