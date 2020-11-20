@@ -28,7 +28,7 @@ from tensorflow.keras.models import load_model
 from utility import *
 
 
-#tf.debugging.set_log_device_placement(True)
+tf.debugging.set_log_device_placement(True)
 ###########################################################################
 
 class TrainValTensorBoard(TensorBoard):
