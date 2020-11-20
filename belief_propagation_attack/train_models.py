@@ -9,18 +9,7 @@ from time import time
 import matplotlib
 matplotlib.use('Agg')
 
-try:
-    # Disable all GPUS
 
-    visible_devices = tf.config.get_visible_devices()
-    print visible_devices
-    for device in visible_devices:
-        
-        assert device.device_type != 'GPU'
-except:
-    # Invalid device or cannot modify virtual devices once initialized.
-    print 'here'
-    pass
 
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
@@ -36,7 +25,18 @@ from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import load_model
 
+try:
+    # Disable all GPUS
 
+    visible_devices = tf.config.get_visible_devices()
+    print visible_devices
+    for device in visible_devices:
+        
+        assert device.device_type != 'GPU'
+except:
+    # Invalid device or cannot modify virtual devices once initialized.
+    print 'here'
+    pass
 
 from utility import *
 
