@@ -8,7 +8,7 @@ import timing
 from time import time
 import matplotlib
 matplotlib.use('Agg')
-os.environ["CUDA_VISIBLE_DEVICES"]="2"
+
 
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
