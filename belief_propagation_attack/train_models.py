@@ -188,7 +188,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
     # return parallel_model
 
 ### CNN Best model
-def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=2048):
+def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=4096):
 
     # From VGG16 design
     input_shape = (input_length, 1)
@@ -569,7 +569,7 @@ if __name__ == "__main__":
     if ALL_VARS:
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
-        variable_list = ['k001','s001','t001','k004']
+        variable_list = ['p002','p003','p004','p005','p006','p007','p008','s009','s010','s011','s012','s013','s014','s015','s016']
         print variable_list
     else:
         variable_list = ['{}{}'.format(ALL_VARIABLE, pad_string_zeros(i+1)) for i in range(variable_dict[ALL_VARIABLE])]
