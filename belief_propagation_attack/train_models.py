@@ -188,7 +188,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
     # return parallel_model
 
 ### CNN Best model
-def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=4096):
+def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=512):
 
     # From VGG16 design
     input_shape = (input_length, 1)
@@ -200,28 +200,28 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))  
+    model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
     
     # Block 2
     model.add(Conv1D(128, 3, padding='same', name='block2_conv1'))    
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block2_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block2_pool'))   
+    model.add(MaxPooling1D(2, strides=2, name='block2_pool'))   
     
     # Block 3
     model.add(Conv1D(256, 3, padding='same', name='block3_conv1'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block3_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
+    model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
     
     # Block 4
     model.add(Conv1D(512, 3, padding='same', name='block4_conv1'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block4_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block4_pool'))
+    model.add(MaxPooling1D(2, strides=2, name='block4_pool'))
     
     
     # Block 5
@@ -229,7 +229,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block5_pool'))
+    model.add(MaxPooling1D(2, strides=2, name='block5_pool'))
     
     model.add(Flatten(name='flatten'))
     
@@ -569,7 +569,7 @@ if __name__ == "__main__":
     if ALL_VARS:
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
-        variable_list = ['s002','s003','s004','k002','k003','t001','t002','t003','t004','cm001','cm002']
+        variable_list = ['k001','s001','t001','k004']
         print variable_list
     else:
         variable_list = ['{}{}'.format(ALL_VARIABLE, pad_string_zeros(i+1)) for i in range(variable_dict[ALL_VARIABLE])]
