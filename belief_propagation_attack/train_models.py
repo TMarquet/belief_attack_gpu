@@ -188,7 +188,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
     # return parallel_model
 
 ### CNN Best model
-def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=1024):
+def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=2048):
 
     # From VGG16 design
     input_shape = (input_length, 1)
