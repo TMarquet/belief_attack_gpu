@@ -569,7 +569,7 @@ if __name__ == "__main__":
     if ALL_VARS:
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
-        variable_list = ['h007','h008','xt002','xt003','xt004','xt005','xt006','xt007','xt008']
+        variable_list = ['cm002']
         print variable_list
     else:
         variable_list = ['{}{}'.format(ALL_VARIABLE, pad_string_zeros(i+1)) for i in range(variable_dict[ALL_VARIABLE])]
