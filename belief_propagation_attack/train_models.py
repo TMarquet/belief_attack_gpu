@@ -570,8 +570,8 @@ if __name__ == "__main__":
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list = ['h012']
-        for i in range(17,33) :
+        variable_list = []
+        for i in range(21,33) :
             variable_list.append('p0'+str(i))
         # print variable_list
     else:
