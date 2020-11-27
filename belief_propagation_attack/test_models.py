@@ -416,7 +416,9 @@ if __name__ == "__main__":
 
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
 
-    variables_to_test = ['mc']
+    variables_to_test = []
+    for i in range(17,33):
+        variables_to_test.append('mc0'+str(i))
 
     if TEST_ALL:
         # Clear statistics
