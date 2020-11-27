@@ -570,8 +570,8 @@ if __name__ == "__main__":
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list = ['xt005','xt006','xt007','xt008']
-        for i in range(14,17) :
+        variable_list = ['xt009','xt010','xt011','xt012']
+        for i in range(15,17) :
             variable_list.append('cm0'+str(i))
         # print variable_list
     else:
