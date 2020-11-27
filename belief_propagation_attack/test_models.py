@@ -418,7 +418,7 @@ if __name__ == "__main__":
 
     variables_to_test = []
     for i in range(17,33):
-        variables_to_test.append('mc0'+str(i))
+        variables_to_test.append('p0'+str(i))
 
     if TEST_ALL:
         # Clear statistics
