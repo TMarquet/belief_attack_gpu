@@ -419,9 +419,9 @@ if __name__ == "__main__":
     variables_to_test = []
     for i in range(1,17):
         if i < 10 :
-            variables_to_test.append('xt00'+str(i))
+            variables_to_test.append('cm00'+str(i))
         else:
-            variables_to_test.append('xt0'+str(i))
+            variables_to_test.append('cm0'+str(i))
 
     if TEST_ALL:
         # Clear statistics
