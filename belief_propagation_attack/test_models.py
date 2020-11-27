@@ -417,8 +417,11 @@ if __name__ == "__main__":
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
 
     variables_to_test = []
-    for i in range(17,33):
-        variables_to_test.append('p0'+str(i))
+    for i in range(1,17):
+        if i < 10 :
+            variables_to_test.append('xt00'+str(i))
+        else:
+            variables_to_test.append('xt0'+str(i))
 
     if TEST_ALL:
         # Clear statistics
