@@ -571,7 +571,7 @@ if __name__ == "__main__":
     elif ALL_VARIABLE is None:
 
         variable_list = []
-        for i in range(7,17) :
+        for i in range(12,17) :
             if i < 10 :
                 variable_list.append('mc00'+str(i))
             else :
