@@ -170,7 +170,7 @@ class RealTraceHandler:
                     # OLD: TODO FIX
                     # self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes200_window{}_epochs6000_batchsize200_sd100_traces200000_aug0.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
                     # NEW NEURAL NETWORKS 20/5/19                               p016_cnn_model1_window2000_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5
-                    self.neural_network_dict[var_notrace] = load_sca_model('{}{}_cnn_model1_window{}_epochs100_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
+                    self.neural_network_dict[var_notrace] = load_sca_model('{}{}_cnn_model1_window{}_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
                     neural_network = self.neural_network_dict[var_notrace]
                 new_input = np.resize(power_value, (1, power_value.size))
                 out_distribution = neural_network.predict(new_input)[0]
