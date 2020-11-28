@@ -106,8 +106,8 @@ TEMP_FOLDER         = TRACE_FOLDER + 'temp/'
 FEATURECOLUMN_FOLDER = TENSORFLOW_FOLDER + 'featurecolumns/'
 LABEL_FOLDER        = TENSORFLOW_FOLDER + 'labels/'
 OUTPUT_FOLDER       = 'output/'
-MODEL_FOLDER        = 'models/new_best'
-NEURAL_MODEL_FOLDER = 'models/new_best'
+MODEL_FOLDER        = 'models/new_best/'
+NEURAL_MODEL_FOLDER = 'models/new_best/'
 
 ALL_DIRECTORIES     = [TRACE_FOLDER, TIMEPOINTS_FOLDER, # POWERVALUES_FOLDER,
                         LDA_FOLDER, ELASTIC_FOLDER, COEFFICIENT_FOLDER,
