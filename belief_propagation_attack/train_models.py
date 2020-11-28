@@ -571,7 +571,7 @@ if __name__ == "__main__":
     elif ALL_VARIABLE is None:
 
         variable_list = []
-        for i in range(21,33) :
+        for i in range(26,33) :
             variable_list.append('p0'+str(i))
         # print variable_list
     else:
