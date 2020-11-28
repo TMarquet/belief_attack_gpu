@@ -571,8 +571,12 @@ if __name__ == "__main__":
     elif ALL_VARIABLE is None:
 
         variable_list = []
-        for i in range(29,30) :
-            variable_list.append('p0'+str(i))
+        for i in range(1,17) :
+            if i < 10 :
+                variable_list.append('p00'+str(i))
+            else :
+                
+                variable_list.append('p0'+str(i))
         # print variable_list
     else:
         variable_list = ['{}{}'.format(ALL_VARIABLE, pad_string_zeros(i+1)) for i in range(variable_dict[ALL_VARIABLE])]
