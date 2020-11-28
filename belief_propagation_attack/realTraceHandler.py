@@ -172,7 +172,8 @@ class RealTraceHandler:
                     # NEW NEURAL NETWORKS 20/5/19                               p016_cnn_model1_window2000_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5
                     self.neural_network_dict[var_notrace] = load_sca_model('{}{}_cnn_model1_window{}_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
                     neural_network = self.neural_network_dict[var_notrace]
-                new_input = np.resize(power_value, (1, power_value.size))
+                new_input = np.resize(power_value, (1, power_value.size))                
+                new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
                 out_distribution = neural_network.predict(new_input)[0]
         elif best == 'lda' or (best is None and self.use_lda):
             # Load LDA file
