@@ -250,15 +250,19 @@ def run_belief_propagation_attack(margdist=None):
                                                           my_graph.get_all_key_initial_distributions())
                     # print key_distributions.shape, key_distributions
                     my_graph.set_key_distributions(key_distributions)
+                    print 'here1'
                 elif (method == "SEQ") and (trace == 0) and KEY_POWER_VALUE_AVERAGE:
                     key_distributions = my_graph.get_all_key_initial_distributions()
+                    print 'here2'
                 elif (method == "IND") and not KEY_POWER_VALUE_AVERAGE:
                     # Multiply incoming messages to key_distributions
                     key_distributions = array_2d_multiply(key_distributions,
                                                           my_graph.get_all_key_initial_distributions())
+                    print 'here3'
                     key_distributions_sum = array_2d_add(key_distributions_sum,
                                                          my_graph.get_all_key_initial_distributions())
                 elif (method == "IND") and KEY_POWER_VALUE_AVERAGE and (trace == 0):
+                    print 'here4'
                     key_initial_distributions = my_graph.get_all_key_initial_distributions()
 
                 # Start Timer
