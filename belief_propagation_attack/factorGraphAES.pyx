@@ -124,7 +124,6 @@ class FactorGraphAES:
 
         self.rounds_of_aes          = rounds_of_aes
         self.variables              = sorted(variables)
-        print(self.variables)
         self.factors                = sorted(factors)
         self.edges                  = sorted(list(self.G.edges()))
         self.key_nodes              = sorted(key_nodes)
@@ -157,6 +156,7 @@ class FactorGraphAES:
         self.initialise_edges()
 
         if real_traces:
+            print 'HERRRRRRRRRRRRRRRRRE'
             self.handler = rTraceH.RealTraceHandler(no_print=self.no_print, use_nn=use_nn, use_lda=use_lda, use_best=use_best, tprange=tprange, jitter=jitter, auto_realign=auto_realign)
 
         self.averaged_key_values    = None

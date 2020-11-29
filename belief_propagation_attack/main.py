@@ -163,7 +163,7 @@ def run_belief_propagation_attack(margdist=None):
         traces_to_use = TRACES
         if method == "SEQ" or method == "IND":
             traces_to_use = 1
-        print 'init graph'
+        
         my_graph = fG.FactorGraphAES(no_print=NO_PRINT, traces=traces_to_use, removed_nodes=REMOVED_NODES, left_out_nodes=LEFT_OUT_NODES,
                                      key_scheduling=INCLUDE_KEY_SCHEDULING, furious=not USE_ARM_AES,
                                      rounds_of_aes=ROUNDS_OF_AES,
