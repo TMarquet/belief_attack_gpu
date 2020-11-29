@@ -570,13 +570,13 @@ if __name__ == "__main__":
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list = []
-        for i in range(12,17) :
-            if i < 10 :
-                variable_list.append('mc00'+str(i))
-            else :
+        variable_list = ['mc001']
+        # for i in range(12,17) :
+        #     if i < 10 :
+        #         variable_list.append('mc00'+str(i))
+        #     else :
                 
-                variable_list.append('mc0'+str(i))
+        #         variable_list.append('mc0'+str(i))
         # print variable_list
     else:
         variable_list = ['{}{}'.format(ALL_VARIABLE, pad_string_zeros(i+1)) for i in range(variable_dict[ALL_VARIABLE])]
