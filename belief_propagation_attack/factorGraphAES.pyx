@@ -158,7 +158,7 @@ class FactorGraphAES:
         if real_traces:
             print 'HERRRRRRRRRRRRRRRRRE'
             self.handler = rTraceH.RealTraceHandler(no_print=self.no_print, use_nn=use_nn, use_lda=use_lda, use_best=use_best, tprange=tprange, jitter=jitter, auto_realign=auto_realign)
-
+            print 'HEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRRRRRRE'
         self.averaged_key_values    = None
 
         self.badly_leaking_snr      = badly_leaking_snr
