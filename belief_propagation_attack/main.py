@@ -227,7 +227,7 @@ def run_belief_propagation_attack(margdist=None):
                 if method == "SEQ" or method == "IND":
                     specific_trace = trace
 
-                my_graph.set_all_initial_distributions( #specific_trace=specific_trace,
+                my_graph.set_all_initial_distributions( specific_trace=specific_trace,
                                                        no_leak=NOT_LEAKING_NODES, fixed_value=fixed_node_tuple,
                                                        elmo_pow_model=ELMO_POWER_MODEL, real_traces=REAL_TRACES,
                                                        no_noise=NO_NOISE, offset=trace+(rep*TRACES), ignore_bad=IGNORE_BAD_TEMPLATES, trace_id = specific_trace)
