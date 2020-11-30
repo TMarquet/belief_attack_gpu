@@ -181,7 +181,7 @@ def run_belief_propagation_attack(margdist=None):
             # Set Key and snr
             my_graph.set_key(key)
             my_graph.set_snr_exp(SNR_exp)
-            print('HERE')
+
             # Container to hold distributions of key bytes
             key_distributions = np.array([get_no_knowledge_array() for i in range(16)])  # 16 Key Bytes
             key_distributions_sum = np.array([get_no_knowledge_array() for i in range(16)])
@@ -191,7 +191,7 @@ def run_belief_propagation_attack(margdist=None):
                     no_noise=NO_NOISE, offset=(rep*TRACES), ignore_bad=IGNORE_BAD_TEMPLATES)
                 key_initial_distributions = np.array([get_zeros_array() for i in range(16)])  # 16 Key Bytes
                 current_incoming_key_messages = np.array([get_no_knowledge_array() for i in range(16)])  # 16 Key Bytes
-            print('HEREEEEEEEEEEEE')
+
             # Bool to handle early break
             found_before_end = False
 
@@ -363,6 +363,7 @@ def run_belief_propagation_attack(margdist=None):
                         break
                 else:
                     # Print discounted
+                    print 'here'
                     if not ONLY_END and not NO_PRINT:
                         print "!+!+!+!+! Discounting Trace to avoid Error Propagation !+!+!+!+!"
                         print_new_line()
