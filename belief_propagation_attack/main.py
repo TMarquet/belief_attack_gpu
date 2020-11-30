@@ -264,6 +264,7 @@ def run_belief_propagation_attack(margdist=None):
                 elif (method == "IND") and KEY_POWER_VALUE_AVERAGE and (trace == 0):
                     print 'here4'
                     key_initial_distributions = my_graph.get_all_key_initial_distributions()
+                    print key_initial_distributions
 
                 # Start Timer
                 start_time = datetime.now()
