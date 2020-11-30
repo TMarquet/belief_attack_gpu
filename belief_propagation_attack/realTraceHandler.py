@@ -143,6 +143,7 @@ class RealTraceHandler:
             # print "Getting Leakage for {}, trace {}".format(variable, trace)
         tprange = self.tprange
         best = None
+        print 'leakage distrib'
         if self.use_best:
             best = self.get_best_template(variable)
             if best == 'uni':
@@ -218,6 +219,7 @@ class RealTraceHandler:
 
     # Both together
     def get_leakage(self, variable, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1):
+        print 'leakage'
         return self.get_leakage_distribution(variable, self.get_leakage_value(variable, trace=trace, average_power_values=average_power_values, averaged_traces=averaged_traces), trace=trace, normalise=normalise, ignore_bad=ignore_bad)
 
     def get_plaintext_byte_distribution(self, variable, trace=0):

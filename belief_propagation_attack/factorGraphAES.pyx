@@ -471,7 +471,6 @@ class FactorGraphAES:
             # Already stored, do one trace at a time!
             for trace in range(self.traces):
                 # Each var in turn
-                print offset+trace
                 cheat = 0
                 for var in self.variables:
                     # Split name
