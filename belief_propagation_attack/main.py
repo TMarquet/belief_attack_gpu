@@ -261,7 +261,7 @@ def run_belief_propagation_attack(margdist=None):
                     print 'here3'
                     key_distributions_sum = array_2d_add(key_distributions_sum,
                                                          my_graph.get_all_key_initial_distributions())
-                elif (method == "IND") and KEY_POWER_VALUE_AVERAGE and (trace == 0):
+                elif (method == "IND") and KEY_POWER_VALUE_AVERAGE:
                     print 'here4'
                     key_initial_distributions = my_graph.get_all_key_initial_distributions()
                     print len(key_initial_distributions)
