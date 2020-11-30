@@ -266,7 +266,7 @@ def run_belief_propagation_attack(margdist=None):
                     key_initial_distributions = my_graph.get_all_key_initial_distributions()
                     print len(key_initial_distributions)
                     print len(key_initial_distributions[0])
-                    print key_initial_distributions[0][83]
+                    print key_initial_distributions[0][84]
 
                 # Start Timer
                 start_time = datetime.now()
