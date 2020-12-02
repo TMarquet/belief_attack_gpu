@@ -124,6 +124,7 @@ class FactorGraphAES:
 
         self.rounds_of_aes          = rounds_of_aes
         self.variables              = sorted(variables)
+        print len(self.variables)
         print self.variables
         self.factors                = sorted(factors)
         self.edges                  = sorted(list(self.G.edges()))
