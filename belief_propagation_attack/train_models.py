@@ -198,28 +198,28 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     # Block 1
     model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape))
     # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    # model.add(BatchNormalization(name='block1_batchnorm'))
+    model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
     
     # Block 2
     model.add(Conv1D(128, 3, padding='same', name='block2_conv1'))    
     # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    # model.add(BatchNormalization(name='block2_batchnorm'))
+    model.add(BatchNormalization(name='block2_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(MaxPooling1D(2, strides=2, name='block2_pool'))   
     
     # Block 3
     model.add(Conv1D(256, 3, padding='same', name='block3_conv1'))
     # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    # model.add(BatchNormalization(name='block3_batchnorm'))
+    model.add(BatchNormalization(name='block3_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
     
     # Block 4
     model.add(Conv1D(512, 3, padding='same', name='block4_conv1'))
     # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    # model.add(BatchNormalization(name='block4_batchnorm'))
+    model.add(BatchNormalization(name='block4_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(MaxPooling1D(2, strides=2, name='block4_pool'))
     
@@ -227,7 +227,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     # Block 5
     model.add(Conv1D(512, 3, padding='same', name='block5_conv1'))
     # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    # model.add(BatchNormalization(name='block5_batchnorm'))
+    model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(MaxPooling1D(2, strides=2, name='block5_pool'))
     
@@ -237,14 +237,14 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
     model.add(Dense(dense_units, name='fc1'))
     # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    # model.add(BatchNormalization(name='block6_batchnorm'))
+    model.add(BatchNormalization(name='block6_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     
     #model.add(Dropout(0.5))
     
     model.add(Dense(dense_units, name='fc2'))
     # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    # model.add(BatchNormalization(name='block7_batchnorm'))
+    model.add(BatchNormalization(name='block7_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))       
 
     #model.add(Dropout(0.5))
