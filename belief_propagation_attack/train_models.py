@@ -197,39 +197,36 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     # Convolution Blocks
     # Block 1
     model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
-    
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     # Block 2
     model.add(Conv1D(128, 3, padding='same', name='block2_conv1'))    
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block2_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(MaxPooling1D(2, strides=2, name='block2_pool'))   
-    
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     # Block 3
     model.add(Conv1D(256, 3, padding='same', name='block3_conv1'))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block3_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
-    
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     # Block 4
     model.add(Conv1D(512, 3, padding='same', name='block4_conv1'))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block4_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(MaxPooling1D(2, strides=2, name='block4_pool'))
-    
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     
     # Block 5
     model.add(Conv1D(512, 3, padding='same', name='block5_conv1'))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(MaxPooling1D(2, strides=2, name='block5_pool'))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     
     model.add(Flatten(name='flatten'))
     
@@ -253,7 +250,7 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
 
     optimizer = RMSprop(lr=learning_rate)
     model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
-    model.summary()
+   
     return model
 
 
