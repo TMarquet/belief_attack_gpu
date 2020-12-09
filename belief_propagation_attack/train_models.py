@@ -156,9 +156,9 @@ def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, 
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     for i in range(layer_nb-2):
-        model.add(Dense(mlp_nodes, activation='relu'))
+        model.add(Dense(mlp_nodes))
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block1_batchnorm'))
+        model.add(BatchNormalization(name='block{}_batchnorm'.format(str(i))))
         model.add(tf.keras.layers.Activation('relu'))
     model.add(Dense(classes, activation='softmax'))
 
