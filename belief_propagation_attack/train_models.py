@@ -252,7 +252,8 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
     optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
+    model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+    model.summary()
     return model
 
 
