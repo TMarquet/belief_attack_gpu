@@ -151,8 +151,7 @@ def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, 
     if loss_function is None:
         loss_function='median_probability_loss'
     model = tf.keras.Sequential()
-    model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu',kernel_regularizer=l2(0.00001),bias_regularizer=l2(0.00001)))    
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     for i in range(layer_nb-2):
