@@ -1095,7 +1095,7 @@ def load_sca_model(model_file):
         elif string_contains(model_file, 'median'):
             model = load_model(model_file, custom_objects={'tf_median_probability_loss': tf_median_probability_loss})
         else:
-            model = load_model(model_file, custom_objects={'tf_median_probability_loss': tf_median_probability_loss})
+            model = load_model(model_file, custom_objects={'tf_rank_loss': tf_rank_loss})
     except:
         print("Error: can't load Keras model file '%s'" % model_file)
         raise
