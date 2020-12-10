@@ -190,17 +190,17 @@ def mlp_new(input_length=700, learning_rate=0.00001, classes=256, loss_function=
     
     model.add(Dense(512))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block{}_batchnorm'.format(str(i+2))))
+    model.add(BatchNormalization(name='block{}_batchnorm'.format(str(2))))
     model.add(tf.keras.layers.Activation('relu'))
     
     model.add(Dense(1024))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block{}_batchnorm'.format(str(i+2))))
+    model.add(BatchNormalization(name='block{}_batchnorm'.format(str(3))))
     model.add(tf.keras.layers.Activation('relu'))
     
     model.add(Dense(512))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block{}_batchnorm'.format(str(i+2))))
+    model.add(BatchNormalization(name='block{}_batchnorm'.format(str(4))))
     model.add(tf.keras.layers.Activation('relu'))    
     model.add(Dense(classes, activation='softmax'))
     
