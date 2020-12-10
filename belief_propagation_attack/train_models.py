@@ -178,6 +178,50 @@ def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, 
             raise
     return model
 
+def mlp_new(input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
+
+    if loss_function is None:
+        loss_function='median_probability_loss'
+    model = tf.keras.Sequential()
+    model.add(Dense(256, input_dim=input_length, activation='relu'))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block1_batchnorm'))
+    model.add(tf.keras.layers.Activation('relu'))
+    
+    model.add(Dense(512))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block{}_batchnorm'.format(str(i+2))))
+    model.add(tf.keras.layers.Activation('relu'))
+    
+    model.add(Dense(1024))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block{}_batchnorm'.format(str(i+2))))
+    model.add(tf.keras.layers.Activation('relu'))
+    
+    model.add(Dense(512))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='block{}_batchnorm'.format(str(i+2))))
+    model.add(tf.keras.layers.Activation('relu'))    
+    model.add(Dense(classes, activation='softmax'))
+    
+    model.add(Dense(classes, activation='softmax', name='predictions'))
+    # Save image!
+    #plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
+
+    optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
+    if loss_function=='rank_loss':
+        model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+    elif loss_function=='median_probability_loss':
+        model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
+    else:
+        try:
+            model.compile(loss=loss_function, optimizer=optimizer, metrics=['accuracy'])
+        except ValueError:
+            print "!!! Loss Function '{}' not recognised, aborting\n".format(loss_function)
+            raise
+    return model
+
+
 ### CNN From MAKE SOME NOISE (AES_HD)
 def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units=512):
 
@@ -413,7 +457,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         if multilabel:
             mlp_best_model = mlp_weighted_bit(input_length=input_length, layer_nb=mlp_layers, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
         else:
-            mlp_best_model = mlp_best(input_length=input_length, layer_nb=mlp_layers, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
+            mlp_best_model = mlp_new(input_length=input_length, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
         mlp_epochs = epochs if epochs is not None else 200
         mlp_batchsize = batch_size
         train_model(X_profiling, Y_profiling, mlp_best_model, store_directory +
