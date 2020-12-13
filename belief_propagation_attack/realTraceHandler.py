@@ -336,10 +336,10 @@ class RealTraceHandler:
                     leakage = hw_probabilities_to_probability_distribution(leakage)
 
                 probability = leakage[real_val]
-                print probability
+                
                 rank = get_rank_from_prob_dist(leakage, real_val)
                 # print 'Real value: {}, Prob: {}, Rank: {}, Best Value: {} (prob {})'.format(real_val, leakage[real_val], rank, np.argmax(leakage), leakage[np.argmax(leakage)])
-                np.savetxt('output/{}/{}_{}_trace{}_distribution.csv'.format(var_name,var_name,var_number,trace),probability)
+                np.savetxt('output/{}/{}_{}_trace{}_distribution.csv'.format(var_name,var_name,var_number,trace),leakage)
                 rank_list.append(rank)
                 prob_list.append(probability)
                 predicted_values.append(np.argmax(leakage))
