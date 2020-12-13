@@ -280,7 +280,6 @@ class TestModels:
 
     # Check a saved model against one of the bpann databases Attack traces
     def check_model(self, model_file, num_traces=10000, template_attack=False, random_key=False, save=True):
-
         # try:
         rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key)
         if rank_list is not None:
