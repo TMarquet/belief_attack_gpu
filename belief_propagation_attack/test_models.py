@@ -418,6 +418,7 @@ if __name__ == "__main__":
     first_iteration = True
     data = []
     mean = 0
+    median = 0
     for file in listdir('output/cm/'):
         in_file = np.loadtxt('output/cm/' + file)
         mean += np.mean(in_file)
