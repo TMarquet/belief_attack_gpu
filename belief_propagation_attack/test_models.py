@@ -415,11 +415,14 @@ if __name__ == "__main__":
     #     var_list.append('s{}'.format(pad_string_zeros(i+1)))
 
     # print "*** TEST VARIABLE {} ***".format(VARIABLE)
-
+    data = np.array([])
+    for file in listdir('output/cm'):
+        data.append(np.loadtxt(file))
+    print(data.shape)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
 
-
-
+    
+    
     if TEST_ALL:
         # Clear statistics
         if SAVE:
