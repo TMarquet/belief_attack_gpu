@@ -417,12 +417,18 @@ if __name__ == "__main__":
     # print "*** TEST VARIABLE {} ***".format(VARIABLE)
     first_iteration = True
     data = []
+    mean = 0
     for file in listdir('output/cm/'):
-        print 'Open : ',file
         in_file = np.loadtxt('output/cm/' + file)
+        mean += np.mean(in_file)
+        median += np.median(in_file)
         data.append(in_file)
     data_np = np.array(data)
+    mean = mean / 10000
+    median = median / 10000
     print(data_np.shape)
+    print('Mean : ',mean)
+    print('Median : ',median)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
 
     
