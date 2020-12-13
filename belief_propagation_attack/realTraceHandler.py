@@ -345,6 +345,6 @@ class RealTraceHandler:
                 prob_list.append(probability)
                 predicted_values.append(np.argmax(leakage))
             output_list = np.array(leakage_list)
-            np.savetxt('output/{}/{}_distribution.csv'.format(var_name,var_number),output_list)
+            np.savetxt('output/{}/{}_distribution.npy'.format(var_name,var_number),output_list)
             # Return Rank List
             return (rank_list, prob_list, predicted_values)
