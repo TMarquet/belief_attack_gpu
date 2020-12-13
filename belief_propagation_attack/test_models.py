@@ -415,13 +415,14 @@ if __name__ == "__main__":
     #     var_list.append('s{}'.format(pad_string_zeros(i+1)))
 
     # print "*** TEST VARIABLE {} ***".format(VARIABLE)
-
+    first_iteration = True
     for file in listdir('output/cm/'):
         print 'Open : ',file
         in_file = np.loadtxt('output/cm/' + file)
         print in_file.shape
         if first_iteration:
             data = in_file
+            first_iteration = False
         else:     
             data += in_file
     print(data.shape)
