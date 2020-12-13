@@ -415,21 +415,14 @@ if __name__ == "__main__":
     #     var_list.append('s{}'.format(pad_string_zeros(i+1)))
 
     # print "*** TEST VARIABLE {} ***".format(VARIABLE)
-    first_iteration = True
-    data = []
-    mean = 0
-    median = 0
-    for file in listdir('output/cm/'):
-        in_file = np.loadtxt('output/cm/' + file)
-        mean += np.mean(in_file)
-        median += np.median(in_file)
-        data.append(in_file)
-    data_np = np.array(data)
-    mean = mean / 10000
-    median = median / 10000
-    print(data_np.shape)
-    print('Mean : ',mean)
-    print('Median : ',median)
+    # first_iteration = True
+    # data = []
+    # for file in listdir('output/cm/'):
+    #     in_file = np.loadtxt('output/cm/' + file)
+    #     mean += np.mean(in_file)
+    #     median += np.median(in_file)
+    #     data.append(in_file)
+    # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
 
     
@@ -440,8 +433,9 @@ if __name__ == "__main__":
             clear_statistics()
         # Check all models
         for (m) in sorted(listdir(MODEL_FOLDER)):
-            if string_ends_with(m, '.h5'):
+            if string_ends_with(m, '240000_aug0_jitterNone.h5'):
                 model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE)
+                tf.keras.backend.clear_session()
     else:
         # Check specific model
         # TODO
