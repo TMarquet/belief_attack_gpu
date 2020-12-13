@@ -368,7 +368,6 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     # Get the input layer shape
     
     input_layer_shape = model.get_layer(index=0).input_shape
-    print('Y_pro shape : ',Y_profiling.shape)
     # Sanity check
     if input_layer_shape[1] != len(X_profiling[0]):
         print("Error: model input shape %d instead of %d is not expected ..." % (input_layer_shape[1], len(X_profiling[0])))
@@ -397,10 +396,10 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     elif one_hot:
         reshaped_y = to_categorical(Y_profiling, num_classes=9 if hammingweight else 256)
         reshaped_val = to_categorical(validation_data[1], num_classes=9 if hammingweight else 256)
+        print 'here'
     else:
         reshaped_y = Y_profiling
         reshaped_val = validation_data[1]
-    print('reshaped : ',reshaped_y.shape)
     history = model.fit(x=Reshaped_X_profiling, y=reshaped_y, batch_size=batch_size, verbose = progress_bar, epochs=epochs, callbacks=callbacks, validation_data=(Reshaped_validation_data, reshaped_val),use_multiprocessing=True)
     return history
 
