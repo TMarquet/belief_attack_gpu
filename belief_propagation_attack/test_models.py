@@ -416,16 +416,13 @@ if __name__ == "__main__":
 
     # print "*** TEST VARIABLE {} ***".format(VARIABLE)
     first_iteration = True
+    data = []
     for file in listdir('output/cm/'):
         print 'Open : ',file
         in_file = np.loadtxt('output/cm/' + file)
-        print in_file.shape
-        if first_iteration:
-            data = in_file
-            first_iteration = False
-        else:     
-            data += in_file
-    print(data.shape)
+        data.append(in_file)
+    data_np = np.array(data)
+    print(data_np.shape)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
 
     
