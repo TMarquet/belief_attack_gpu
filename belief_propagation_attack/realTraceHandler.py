@@ -310,6 +310,7 @@ class RealTraceHandler:
             rank_list = list()
             prob_list = list()
             predicted_values = list()
+            leakage_list = []
             for trace in range(traces):
                 real_val = self.realvalues[var_name][var_number-1][(self.real_trace_data_maxtraces - trace - 1) if from_end else trace]
 
@@ -336,12 +337,14 @@ class RealTraceHandler:
                     leakage = hw_probabilities_to_probability_distribution(leakage)
 
                 probability = leakage[real_val]
-                
+                leakage_list.append(leakage)
                 rank = get_rank_from_prob_dist(leakage, real_val)
                 # print 'Real value: {}, Prob: {}, Rank: {}, Best Value: {} (prob {})'.format(real_val, leakage[real_val], rank, np.argmax(leakage), leakage[np.argmax(leakage)])
-                np.savetxt('output/{}/{}_trace{}_distribution.csv'.format(var_name,var_number,trace),leakage)
+                
                 rank_list.append(rank)
                 prob_list.append(probability)
                 predicted_values.append(np.argmax(leakage))
+            output_list = np.array(leakage_list)
+            np.savetxt('output/{}/{}_trace{}_distribution.csv'.format(var_name,var_number,trace),output_list)
             # Return Rank List
             return (rank_list, prob_list, predicted_values)
