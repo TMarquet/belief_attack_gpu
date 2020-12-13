@@ -417,7 +417,7 @@ if __name__ == "__main__":
     # print "*** TEST VARIABLE {} ***".format(VARIABLE)
     data = np.array([])
     for file in listdir('output/cm'):
-        data.append(np.loadtxt(file))
+        np.append(data,np.loadtxt(file))
     print(data.shape)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
 
