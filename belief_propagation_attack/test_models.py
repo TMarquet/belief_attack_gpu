@@ -418,7 +418,9 @@ if __name__ == "__main__":
     data = np.array([])
     for file in listdir('output/cm/'):
         print 'Open : ',file
-        np.append(data,np.loadtxt('output/cm/' + file))
+        in_file = np.loadtxt('output/cm/' + file)
+        print in_file.shape
+        np.append(data,in_file)
     print(data.shape)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
 
