@@ -396,7 +396,6 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     elif one_hot:
         reshaped_y = to_categorical(Y_profiling, num_classes=9 if hammingweight else 256)
         reshaped_val = to_categorical(validation_data[1], num_classes=9 if hammingweight else 256)
-        print 'here'
     else:
         reshaped_y = Y_profiling
         reshaped_val = validation_data[1]
