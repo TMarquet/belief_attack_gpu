@@ -303,7 +303,7 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
 
     optimizer = Adagrad(lr=learning_rate)
     model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
-    model.summary()
+    
     return model
 
 
