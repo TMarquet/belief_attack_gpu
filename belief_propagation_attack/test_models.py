@@ -4,6 +4,7 @@ import sys
 import h5py
 import numpy as np
 import matplotlib
+
 import os
 matplotlib.use('Agg')
 os.environ["CUDA_VISIBLE_DEVICES"]="2"
@@ -300,8 +301,7 @@ class TestModels:
             if SAVE:
                 save_statistics(model_file, prob_list)
 
-            if self.histogram:
-                plt.clf()
+            if self.histogram :
                 plt.hist(prob_list, bins='auto')
                 plt.title(model_file)
                 plt.savefig('output/probabilityhistogram_{}.svg'.format(model_file.replace('models/', '').replace('.h5', '')), format='svg', dpi=1200)
@@ -351,7 +351,7 @@ class TestModels:
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Trains Neural Network Models')
-    parser.add_argument('--ALL', '--ALL_VARS', '--TEST_ALL', action="store_false", dest="TEST_ALL", help='Tests all available models (default True)', default=True)
+    parser.add_argument('--ALL', '--ALL_VARS', '--TEST_ALL', action="store_true", dest="TEST_ALL", help='Tests all available models (default True)', default=False)
     parser.add_argument('--MLP', action="store_true", dest="USE_MLP", help='Tests Multi Layer Perceptron',
                         default=False)
     parser.add_argument('--CNN', action="store_true", dest="USE_CNN",
@@ -425,8 +425,6 @@ if __name__ == "__main__":
     # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
 
-    
-    
     if TEST_ALL:
         # Clear statistics
         if SAVE:
@@ -439,8 +437,13 @@ if __name__ == "__main__":
     else:
         # Check specific model
         # TODO
-        print "Todo: Check specific model"
-        pass
+        
+        for var in variables_to_test :
+            for (m) in sorted(listdir(MODEL_FOLDER)):
+                if string_starts_with(m, var):
+                    print 'Testing : ', m 
+                    model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE)
+        
 
 # # No argument: check all the trained models
 # if (len(sys.argv) == 1) or (len(sys.argv) == 2):
