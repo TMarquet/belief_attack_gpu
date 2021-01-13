@@ -401,16 +401,16 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
         print("Error: model input shape %d instead of %d is not expected ..." % (input_layer_shape[1], len(X_profiling[0])))
         sys.exit(-1)
     # Adapt the data shape according our model input
-    # if len(input_layer_shape) == 2:
-    #     # This is a MLP
-    #     Reshaped_X_profiling = X_profiling
-    #     Reshaped_validation_data = validation_data[0]
+    if len(input_layer_shape) == 3:
+        # This is a MLP
+        Reshaped_X_profiling = X_profiling
+        Reshaped_validation_data = validation_data[0]
     # elif len(input_layer_shape) == 3:
     #     # This is a CNN: expand the dimensions
     #     Reshaped_X_profiling = X_profiling.reshape((X_profiling.shape[0], X_profiling.shape[1], 1))
     #     Reshaped_validation_data = validation_data[0].reshape((validation_data[0].shape[0], validation_data[0].shape[1], 1))
-    # else:
-    #     print("Error: model input shape length %d is not expected ..." % len(input_layer_shape))
+    else:
+        print("Error: model input shape length %d is not expected ..." % len(input_layer_shape))
     #     sys.exit(-1)
 
     # Split up for debug
