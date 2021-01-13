@@ -660,6 +660,7 @@ if __name__ == "__main__":
                 dictofy[list(Y).index(max(Y))] = 0
             else:
                 dictofy[list(Y).index(max(Y))] += 1
+        print(dictofy)
         # Handle Input Length of -1
         if INPUT_LENGTH < 0:
             # Set to length of X_profiling
