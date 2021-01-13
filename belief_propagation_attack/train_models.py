@@ -673,10 +673,10 @@ if __name__ == "__main__":
         # Load the profiling traces and the attack traces
         
         if not USE_DATA_ASCAD:
-        (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
-                                                                      input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
-                                                                   hammingweight=HAMMINGWEIGHT,
-                                                                  load_metadata=LOAD_METADATA)
+            (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
+                                                                          input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
+                                                                       hammingweight=HAMMINGWEIGHT,
+                                                                      load_metadata=LOAD_METADATA)
         else:
             
             ASCAD_data_folder = "/root/Projets/ASCAD/ATMEGA_AES_v1/ATM_AES_v1_variable_key/ASCAD_data/ASCAD_databases"
