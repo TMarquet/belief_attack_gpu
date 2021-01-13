@@ -767,13 +767,13 @@ if __name__ == "__main__":
         
         temp = []
         for elem in X_profiling:
-            middle = INPUT_LENGTH/2
+            middle = INPUT_LENGTH
             temp_elem = elem[int(middle*0.5):int(middle*1.5)]
             temp.append(temp_elem)
         X_profiling = np.array(temp)
         temp = []
         for elem in X_validation:
-            middle = INPUT_LENGTH/2
+            middle = INPUT_LENGTH
             temp_elem = elem[int(middle*0.5):int(middle*1.5)]
             temp.append(temp_elem)
         X_validation = np.array(temp)
