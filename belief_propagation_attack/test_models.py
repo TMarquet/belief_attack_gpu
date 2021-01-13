@@ -433,7 +433,7 @@ if __name__ == "__main__":
             clear_statistics()
         # Check all models
         for (m) in sorted(listdir(MODEL_FOLDER)):
-            if string_ends_with(m, '240000_aug0_jitterNone.h5'):
+            if string_ends_with(m, '.h5'):
                 model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE)
                 tf.keras.backend.clear_session()
     else:
