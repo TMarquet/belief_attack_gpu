@@ -692,20 +692,55 @@ if __name__ == "__main__":
             
             
             # Load the profiling traces
-            (X_profiling, Y_profiling), (X_attack, Y_attack), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
+            (X_profiling_temp, Y_profiling_temp), (X_attack, Y_attack), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
             
             # Shuffle data
-            (X_profiling, Y_profiling) = shuffle_data(X_profiling, Y_profiling)
+            (X_profiling_temp, Y_profiling_temp) = shuffle_data(X_profiling_temp, Y_profiling_temp)
             
-            X_profiling = X_profiling.astype('float32')
+            X_profiling_temp = X_profiling_temp.astype('float32')
             X_attack = X_attack.astype('float32')
             
             #Traces Scaling (between 0 and 1)
             scaler = preprocessing.MinMaxScaler(feature_range=(0,1))
-            X_profiling = scaler.fit_transform(X_profiling)
+            X_profiling_temp = scaler.fit_transform(X_profiling_temp)
             # X_attack = scaler.transform(X_attack)
             
-            # X_attack = X_attack.reshape((X_attack.shape[0], X_attack.shape[1], 1))            
+            # X_attack = X_attack.reshape((X_attack.shape[0], X_attack.shape[1], 1))
+            X_validation = X_profiling_temp[:round(len(X_profiling_temp)*0.95)]
+            Y_validation = Y_profiling_temp[:round(len(X_profiling_temp)*0.95)]
+            X_profiling_before_aug = X_profiling_temp[round(len(X_profiling_temp)*0.95):]
+            Y_profiling_before_aug = Y_profiling_temp[round(len(X_profiling_temp)*0.95):]
+            traces = len(X_profiling_before_aug)
+            if training_traces > traces:
+                print 'Augmenting {} Traces!'.format(training_traces - traces)
+        
+                # X_profiling = np.empty((training_traces, data_length), dtype=type)
+                X_profiling = np.memmap('{}tmp_{}_{}_sd{}_window{}_aug{}.mmap'.format(ASCAD_data_folder, variable, training_traces, sd, input_length, augment_method), shape=(training_traces, data_length), mode='w+', dtype=type)
+                Y_profiling = np.empty(training_traces, dtype=int)
+        
+                X_profiling[:traces] = X_profiling_before_aug
+                Y_profiling[:traces] = Y_profiling_before_aug
+        
+                for train_trace in range(traces, training_traces):
+        
+                    # AUGMENT METHODS
+                    # 0 - gaussian noise
+                    # 1 - time warping
+                    # 2 - averaging traces
+        
+                    # Get Random Number
+                    random_number = np.random.randint(0, traces)
+        
+                    # Add label
+                    Y_profiling[train_trace] = Y_profiling_before_aug[random_number]
+        
+                    if AUGMENT_METHOD == 0:
+        
+                        # GAUSSIAN NOISE
+                        random_noise = np.random.normal(0, sd, data_length).round().astype(int)
+        
+                        # Add to Profiling after applying noise
+                        X_profiling[train_trace] = (X_profiling_before_aug[random_number] + random_noise).astype(type)
             
             
             
@@ -715,7 +750,7 @@ if __name__ == "__main__":
             print "|| Changing Input Length from {} to {} (max samples)".format(INPUT_LENGTH, X_profiling.shape[1])
             INPUT_LENGTH = X_profiling.shape[1]
 
-        train_variable_model(variable, X_profiling[:190000], Y_profiling[:190000], X_profiling[190000:], Y_profiling[190000:], mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
+        train_variable_model(variable, X_profiling, Y_profiling, X_validation, Y_validation, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
             training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
             learning_rate=LEARNING_RATE,weight_init=weight_method_test, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
 
