@@ -301,7 +301,7 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
-    optimizer = Adagrad(lr=learning_rate)
+    optimizer = Adagrad(lr=learning_rate*10)
     model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
     
     return model
