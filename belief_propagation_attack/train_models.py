@@ -69,6 +69,26 @@ def check_file_exists(file_path):
         print("Error: provided file path '%s' does not exist!" % file_path)
         sys.exit(-1)
     return
+def load_ascad(ascad_database_file, load_metadata=False):
+    check_file_exists(ascad_database_file)
+    # Open the ASCAD database HDF5 for reading
+    try:
+        in_file  = h5py.File(ascad_database_file, "r")
+    except:
+        print("Error: can't open HDF5 file '%s' for reading (it might be malformed) ..." % ascad_database_file)
+        sys.exit(-1)
+    # Load profiling traces
+    X_profiling = np.array(in_file['Profiling_traces/traces'], dtype=np.float64)
+    # Load profiling labels
+    Y_profiling = np.array(in_file['Profiling_traces/labels'])
+    # Load attacking traces
+    X_attack = np.array(in_file['Attack_traces/traces'], dtype=np.float64)
+    # Load attacking labels
+    Y_attack = np.array(in_file['Attack_traces/labels'])
+    if load_metadata == False:
+        return (X_profiling, Y_profiling), (X_attack, Y_attack)
+    else:
+        return (X_profiling, Y_profiling), (X_attack, Y_attack), (in_file['Profiling_traces/metadata']['plaintext'], in_file['Attack_traces/metadata']['plaintext'])
 
 ############# Loss functions #############
 
@@ -381,17 +401,17 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
         print("Error: model input shape %d instead of %d is not expected ..." % (input_layer_shape[1], len(X_profiling[0])))
         sys.exit(-1)
     # Adapt the data shape according our model input
-    if len(input_layer_shape) == 2:
-        # This is a MLP
-        Reshaped_X_profiling = X_profiling
-        Reshaped_validation_data = validation_data[0]
-    elif len(input_layer_shape) == 3:
-        # This is a CNN: expand the dimensions
-        Reshaped_X_profiling = X_profiling.reshape((X_profiling.shape[0], X_profiling.shape[1], 1))
-        Reshaped_validation_data = validation_data[0].reshape((validation_data[0].shape[0], validation_data[0].shape[1], 1))
-    else:
-        print("Error: model input shape length %d is not expected ..." % len(input_layer_shape))
-        sys.exit(-1)
+    # if len(input_layer_shape) == 2:
+    #     # This is a MLP
+    #     Reshaped_X_profiling = X_profiling
+    #     Reshaped_validation_data = validation_data[0]
+    # elif len(input_layer_shape) == 3:
+    #     # This is a CNN: expand the dimensions
+    #     Reshaped_X_profiling = X_profiling.reshape((X_profiling.shape[0], X_profiling.shape[1], 1))
+    #     Reshaped_validation_data = validation_data[0].reshape((validation_data[0].shape[0], validation_data[0].shape[1], 1))
+    # else:
+    #     print("Error: model input shape length %d is not expected ..." % len(input_layer_shape))
+    #     sys.exit(-1)
 
     # Split up for debug
     if multilabel:
@@ -567,7 +587,8 @@ if __name__ == "__main__":
                         help='Stores neural networks on scratch storage (external hard drive)', default=False)
     parser.add_argument('--ASCAD', '--USE_ASCAD', action="store_true", dest="USE_ASCAD",
                         help='Uses ASCAD Default Model, CNN or MLP', default=False)
-
+    parser.add_argument('--DATA_ASCAD', '--USE_DATA_ASCAD', action="store_true", dest="USE_DATA_ASCAD",
+                        help='Uses data of ASCAD', default=False)
     parser.add_argument('-loss', '-loss_function', action="store", dest="LOSS_FUNCTION", help='Loss Function (default: None (uses standard depending on model structure, usually categorical cross entropy))',
                         default=None)
 
@@ -604,7 +625,7 @@ if __name__ == "__main__":
     LOAD_METADATA = args.LOAD_METADATA
     SCRATCH_STORAGE = args.SCRATCH_STORAGE
     USE_ASCAD = args.USE_ASCAD
-
+    USE_DATA_ASCAD = args.USE_DATA_ASCAD
     if not USE_MLP and not USE_CNN and not USE_CNN_PRETRAINED and not USE_LSTM:
         print "|| No models set to run - setting USE_MLP to True"
         USE_MLP = True
@@ -650,11 +671,38 @@ if __name__ == "__main__":
             variable, HAMMINGWEIGHT, HAMMING_DISTANCE_ENCODING, USE_MLP, MLP_LAYERS, MLP_NODES, USE_CNN, USE_CNN_PRETRAINED, USE_LSTM, LSTM_LAYERS, LSTM_NODES, INPUT_LENGTH, LEARNING_RATE, ADD_NOISE, JITTER, NORMALISE, EPOCHS, BATCH_SIZE, TRAINING_TRACES, VALIDATION_TRACES, USE_ASCAD)
 
         # Load the profiling traces and the attack traces
+        
+        if not USE_DATA_ASCAD:
         (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
                                                                       input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
-                                                                      hammingweight=HAMMINGWEIGHT,
+                                                                   hammingweight=HAMMINGWEIGHT,
                                                                   load_metadata=LOAD_METADATA)
+        else:
+            
+            ASCAD_data_folder = "/root/Projets/ASCAD/ATMEGA_AES_v1/ATM_AES_v1_variable_key/ASCAD_data/ASCAD_databases"
+            
+            # Choose the name of the model
 
+            
+            
+            # Load the profiling traces
+            (X_profiling, Y_profiling), (X_attack, Y_attack), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
+            
+            # Shuffle data
+            (X_profiling, Y_profiling) = shuffle_data(X_profiling, Y_profiling)
+            
+            X_profiling = X_profiling.astype('float32')
+            X_attack = X_attack.astype('float32')
+            
+            #Traces Scaling (between 0 and 1)
+            scaler = preprocessing.MinMaxScaler(feature_range=(0,1))
+            X_profiling = scaler.fit_transform(X_profiling)
+            X_attack = scaler.transform(X_attack)
+            
+            X_attack = X_attack.reshape((X_attack.shape[0], X_attack.shape[1], 1))            
+            
+            
+            
         # Handle Input Length of -1
         if INPUT_LENGTH < 0:
             # Set to length of X_profiling
