@@ -89,7 +89,13 @@ def load_ascad(ascad_database_file, load_metadata=False):
         return (X_profiling, Y_profiling), (X_attack, Y_attack)
     else:
         return (X_profiling, Y_profiling), (X_attack, Y_attack), (in_file['Profiling_traces/metadata']['plaintext'], in_file['Attack_traces/metadata']['plaintext'])
-
+def shuffle_data(profiling_x,label_y):
+    l = list(zip(profiling_x,label_y))
+    random.shuffle(l)
+    shuffled_x,shuffled_y = list(zip(*l))
+    shuffled_x = np.array(shuffled_x)
+    shuffled_y = np.array(shuffled_y)
+    return (shuffled_x, shuffled_y)
 ############# Loss functions #############
 
 
