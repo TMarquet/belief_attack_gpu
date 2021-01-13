@@ -656,8 +656,8 @@ if __name__ == "__main__":
                                                                   load_metadata=LOAD_METADATA)
         dictofy = {}  
         for Y in Y_profiling:
-            print(Y)
-            if list(Y).index(max(Y)) not in dictofy:
+            
+            if Y not in dictofy:
                 dictofy[list(Y).index(max(Y))] = 0
             else:
                 dictofy[list(Y).index(max(Y))] += 1
