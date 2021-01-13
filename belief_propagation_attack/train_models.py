@@ -255,7 +255,7 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     
     # Convolution Blocks
     # Block 1
-    model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method)
+    model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
