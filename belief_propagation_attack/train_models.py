@@ -700,8 +700,8 @@ if __name__ == "__main__":
             X_attack = X_attack.astype('float32')
             
             #Traces Scaling (between 0 and 1)
-            scaler = preprocessing.MinMaxScaler(feature_range=(0,1))
-            X_profiling_temp = scaler.fit_transform(X_profiling_temp)
+            
+            X_profiling_temp = normalise_traces(X_profiling_temp)
             # X_attack = scaler.transform(X_attack)
             
             # X_attack = X_attack.reshape((X_attack.shape[0], X_attack.shape[1], 1))
