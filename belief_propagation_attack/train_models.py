@@ -653,7 +653,8 @@ if __name__ == "__main__":
         (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
                                                                       input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
                                                                       hammingweight=HAMMINGWEIGHT,
-        dictofy = {}                                                            load_metadata=LOAD_METADATA)
+                                                                  load_metadata=LOAD_METADATA)
+        dictofy = {}  
         for Y in Y_profiling:
             if list(Y).index(max(Y)) not in dictofy:
                 dictofy[list(Y).index(max(Y))] = 0
