@@ -14,7 +14,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]="2"
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import Flatten, Dense, Input, Lambda, Conv1D, MaxPooling1D, GlobalMaxPooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
-
+from sklearn import preprocessing
 from tensorflow.keras import backend as K
 
 
