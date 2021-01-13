@@ -738,7 +738,7 @@ if __name__ == "__main__":
                     if AUGMENT_METHOD == 0:
         
                         # GAUSSIAN NOISE
-                        random_noise = np.random.normal(0, STANDARD_DEVIATION, data_length).round().astype(int)
+                        random_noise = np.random.normal(0, STANDARD_DEVIATION, INPUT_LENGTH).round().astype(int)
         
                         # Add to Profiling after applying noise
                         X_profiling[train_trace] = (X_profiling_before_aug[random_number] + random_noise).astype(type)
