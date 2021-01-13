@@ -742,7 +742,9 @@ if __name__ == "__main__":
         
                         # Add to Profiling after applying noise
                         X_profiling[train_trace] = (X_profiling_before_aug[random_number] + random_noise).astype(type)
-            
+            else:
+                X_profiling = X_profiling_before_aug
+                Y_profiling = Y_profiling_before_aug
             
             
         # Handle Input Length of -1
