@@ -310,7 +310,7 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
-    optimizer = RMSprop(lr=learning_rate)
+    optimizer = Adagrad(lr=learning_rate*10)
     model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
     
     return model
@@ -644,6 +644,7 @@ if __name__ == "__main__":
     if RANDOMKEY_VALIDATION:
         TRAINING_TRACES -= VALIDATION_TRACES
     weight_method_test = ['lecunn','lecunu','heu','hen']
+    weight_method_test = None
     for variable in variable_list:
 
         print "$$$ Training Neural Networks $$$\nVariable {}, Hamming Weight {} Hamming Distance Encoding {}, MLP {} ({} layers, {} nodes per layer), CNN {} (Pretrained {}), LSTM {} ({} layers, {} nodes per layer), Input Length {}, Learning Rate {}, Noise {}, Jitter {}, Normalising {}\n{} Epochs, Batch Size {}, Training Traces {}, Validation Traces {}, ASCAD {}".format(
