@@ -716,7 +716,7 @@ if __name__ == "__main__":
                 print 'Augmenting {} Traces!'.format(training_traces - traces)
         
                 # X_profiling = np.empty((training_traces, data_length), dtype=type)
-                X_profiling = np.memmap('{}tmp_{}_{}_sd{}_window{}_aug{}.mmap'.format(ASCAD_data_folder, variable, training_traces, STANDARD_DEVIATION, input_length, augment_method), shape=(training_traces, data_length), mode='w+', dtype=type)
+                X_profiling = np.memmap('{}tmp_{}_{}_sd{}_window{}_aug{}.mmap'.format(ASCAD_data_folder, variable, training_traces, STANDARD_DEVIATION, INPUT_LENGTH, augment_method), shape=(training_traces, data_length), mode='w+', dtype=type)
                 Y_profiling = np.empty(training_traces, dtype=int)
         
                 X_profiling[:traces] = X_profiling_before_aug
