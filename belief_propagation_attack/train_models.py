@@ -701,7 +701,7 @@ if __name__ == "__main__":
             
             #Traces Scaling (between 0 and 1)
             
-            X_profiling_temp = normalise_traces(X_profiling_temp)
+            X_profiling_temp = normalise_neural_traces(X_profiling_temp)
             # X_attack = scaler.transform(X_attack)
             
             # X_attack = X_attack.reshape((X_attack.shape[0], X_attack.shape[1], 1))
