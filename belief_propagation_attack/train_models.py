@@ -765,13 +765,18 @@ if __name__ == "__main__":
             print "|| Changing Input Length from {} to {} (max samples)".format(INPUT_LENGTH, X_profiling.shape[1])
             INPUT_LENGTH = X_profiling.shape[1]
         
-        
+        temp = []
         for elem in X_profiling:
             middle = INPUT_LENGTH/2
-            elem = elem[int(middle*0.5):int(middle*1.5)]
+            temp_elem = elem[int(middle*0.5):int(middle*1.5)]
+            temp.append(temp_elem)
+        X_profiling = np.array(temp)
+        temp = []
         for elem in X_validation:
             middle = INPUT_LENGTH/2
-            elem = elem[int(middle*0.5):int(middle*1.5)]       
+            temp_elem = elem[int(middle*0.5):int(middle*1.5)]
+            temp.append(temp_elem)
+        X_validation = np.array(temp)
         print(X_profiling.shape)
         train_variable_model(variable, X_profiling, Y_profiling, X_validation, Y_validation, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
             training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
