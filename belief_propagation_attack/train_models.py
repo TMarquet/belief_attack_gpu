@@ -654,14 +654,7 @@ if __name__ == "__main__":
                                                                       input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
                                                                       hammingweight=HAMMINGWEIGHT,
                                                                   load_metadata=LOAD_METADATA)
-        dictofy = {}  
-        for Y in Y_profiling:
-            
-            if Y not in dictofy:
-                dictofy[Y] = 0
-            else:
-                dictofy[Y] += 1
-        print(dictofy)
+
         # Handle Input Length of -1
         if INPUT_LENGTH < 0:
             # Set to length of X_profiling
