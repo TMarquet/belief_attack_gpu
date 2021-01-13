@@ -658,9 +658,9 @@ if __name__ == "__main__":
         for Y in Y_profiling:
             
             if Y not in dictofy:
-                dictofy[list(Y).index(max(Y))] = 0
+                dictofy[Y] = 0
             else:
-                dictofy[list(Y).index(max(Y))] += 1
+                dictofy[Y] += 1
         print(dictofy)
         # Handle Input Length of -1
         if INPUT_LENGTH < 0:
