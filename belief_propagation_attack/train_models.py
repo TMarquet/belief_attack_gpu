@@ -742,6 +742,17 @@ if __name__ == "__main__":
         
                         # Add to Profiling after applying noise
                         X_profiling[train_trace] = (X_profiling_before_aug[random_number] + random_noise).astype(type)
+                    elif AUGMENT_METHOD == 1:
+        
+                        # TIME WARPING
+                        random_shift = 0
+                        while random_shift == 0:
+                            random_shift = np.random.randint(-MAX_SHIFT, MAX_SHIFT)
+                            
+        
+                        X_profiling[train_trace] = roll_and_pad(X_profiling_before_aug[random_number], random_shift)
+
+
             else:
                 X_profiling = X_profiling_before_aug
                 Y_profiling = Y_profiling_before_aug
