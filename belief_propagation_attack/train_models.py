@@ -702,12 +702,12 @@ if __name__ == "__main__":
             #Traces Scaling (between 0 and 1)
             
             X_profiling_temp = normalise_neural_traces(X_profiling_temp)
-            # X_attack = scaler.transform(X_attack)
+            X_attack = normalise_neural_traces(X_attack)
             
             # X_attack = X_attack.reshape((X_attack.shape[0], X_attack.shape[1], 1))
             
-            X_validation = X_profiling_temp[int(round(len(X_profiling_temp)*0.95)):]
-            Y_validation = Y_profiling_temp[int(round(len(X_profiling_temp)*0.95)):]
+            X_validation = X_attack[:VALIDATION_TRACES]
+            Y_validation = Y_attack[:VALIDATION_TRACES]
             X_profiling_before_aug = X_profiling_temp[:int(round(len(X_profiling_temp)*0.95))]
             Y_profiling_before_aug = Y_profiling_temp[:int(round(len(X_profiling_temp)*0.95))]
             traces = len(X_profiling_before_aug)
