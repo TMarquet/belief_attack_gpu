@@ -265,79 +265,30 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
 
 ### CNN Best model
 def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4096,weight_method = 'glorotu'):
-    weight_init_method = tf.keras.initializers.glorot_uniform()
-    if not weight_method == 'glorotu':
-        if weight_method == 'lecunn':
-            weight_init_method = tf.keras.initializers.lecun_normal()
-        elif weight_method == 'lecunu': 
-            weight_init_method = tf.keras.initializers.lecun_uniform()
-        elif weight_method == 'heu':
-            weight_init_method = tf.keras.initializers.he_uniform()
-        else:
-            weight_init_method = tf.keras.initializers.he_normal()
-    # From VGG16 design
-    input_shape = (input_length, 1)
-    model = tf.keras.Sequential(name='cnn_best')
-    
-    # Convolution blocks
-    # Block 1
-    model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block1_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))  
-    
-    # Block 2
+    input_shape = (input_length,1)
+    img_input = Input(shape=input_shape, dtype='float32')
 
-    model.add(Conv1D(128, 3, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block2_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block2_pool'))  
+    # 1st convolutional block
+    x = Conv1D(4, 1, kernel_initializer='he_uniform', activation='selu', padding='same', name='block1_conv1')(img_input)
+    x = BatchNormalization()(x)
+    x = AveragePooling1D(2, strides=2, name='block1_pool')(x)
     
-    # Block 3
-    model.add(Conv1D(256, 3, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block3_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
-    
-    # Block 4
-    model.add(Conv1D(512, 3, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block4_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block4_pool'))    
-    
-    # Block 5
-    model.add(Conv1D(512, 3, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block5_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block5_pool')) 
-    
-    model.add(Flatten(name='flatten'))
-        
-    # Two Dense layers
-    
-    model.add(Dense(dense_units, name='fc1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block6_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    
-    #model.add(Dropout(0.5))
-    
-    model.add(Dense(dense_units, name='fc2',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block7_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))       
+    x = Flatten(name='flatten')(x)
 
-    #model.add(Dropout(0.5))
+    # Classification layer
+    x = Dense(10, kernel_initializer='he_uniform', activation='selu', name='fc1')(x)
+    x = Dense(10, kernel_initializer='he_uniform', activation='selu', name='fc2')(x)
     
-    model.add(Dense(classes, activation='softmax', name='predictions'))
+    # Logits layer
+    score_layer = Dense(classes, activation=None, name='score')(x)
+    predictions = Activation('softmax')(score_layer)
 
-    optimizer = Adagrad(lr=learning_rate*10)
-    model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+    # Create model
+    inputs = img_input
+    model = Model(inputs, predictions, name='ascad')
+    optimizer = Adam(lr=learning_rate)
+
+    model.compile(loss=rank_loss,optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
