@@ -691,7 +691,7 @@ if __name__ == "__main__":
             
             
             # Load the profiling traces
-            (X_profiling_temp, Y_profiling_temp), (X_attack, Y_attack), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
+            (X_profiling_temp, Y_profiling_temp), (X_attack, Y_attack), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ATMega8515_raw_traces.h5", load_metadata=True)
             
             # Shuffle data
             (X_profiling_temp, Y_profiling_temp) = shuffle_data(X_profiling_temp, Y_profiling_temp)
@@ -768,13 +768,13 @@ if __name__ == "__main__":
         temp = []
         for elem in X_profiling:
             middle = INPUT_LENGTH
-            temp_elem = elem[int(middle*0.5):int(middle*1.5)]
+            temp_elem = elem[45750-int(middle*0.5):45750 + int(middle*0.5)]
             temp.append(temp_elem)
         X_profiling = np.array(temp)
         temp = []
         for elem in X_validation:
             middle = INPUT_LENGTH
-            temp_elem = elem[int(middle*0.5):int(middle*1.5)]
+            temp_elem = elem[45750-int(middle*0.5):45750 + int(middle*0.5)]
             temp.append(temp_elem)
         X_validation = np.array(temp)
         print(X_profiling.shape)
