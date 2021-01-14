@@ -265,7 +265,8 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
 
 ### CNN Best model
 def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4096,weight_method = 'glorotu'):
-    input_shape = (input_length,1)
+    input_shape = (1,input_length)
+    
     img_input = Input(shape=input_shape, dtype='float32')
 
     # 1st convolutional block
