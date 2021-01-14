@@ -754,8 +754,8 @@ if __name__ == "__main__":
 
 
             else:
-                X_profiling = X_profiling_before_aug
-                Y_profiling = Y_profiling_before_aug
+                X_profiling = X_profiling_before_aug[:training_traces]
+                Y_profiling = Y_profiling_before_aug[:training_traces]
             
             
         # Handle Input Length of -1
