@@ -287,7 +287,7 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     model = Model(inputs, predictions, name='ascad')
     optimizer = Adam(lr=learning_rate)
 
-    model.compile(loss=rank_loss,optimizer=optimizer, metrics=['accuracy'])
+    model.compile(loss=tf_rank_loss,optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
