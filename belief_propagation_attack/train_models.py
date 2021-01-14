@@ -265,7 +265,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
 
 ### CNN Best model
 def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4096,weight_method = 'glorotu'):
-    input_shape = (1,input_length)
+    input_shape = (input_length,1)
     
     img_input = Input(shape=input_shape, dtype='float32')
 
@@ -354,9 +354,9 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
   
     input_layer_shape = model.get_layer(index=0).input_shape
     # Sanity check
-    if input_layer_shape[1] != len(X_profiling[0]):
-        print("Error: model input shape %d instead of %d is not expected ..." % (input_layer_shape[1], len(X_profiling[0])))
-        sys.exit(-1)
+    # if input_layer_shape[1] != len(X_profiling[0]):
+    #     print("Error: model input shape %d instead of %d is not expected ..." % (input_layer_shape[1], len(X_profiling[0])))
+    #     sys.exit(-1)
     # Adapt the data shape according our model input
     if len(input_layer_shape) == 2:
         # This is a MLP
