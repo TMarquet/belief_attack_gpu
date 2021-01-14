@@ -708,8 +708,8 @@ if __name__ == "__main__":
             
             X_validation = X_attack[:VALIDATION_TRACES]
             Y_validation = Y_attack[:VALIDATION_TRACES]
-            X_profiling_before_aug = X_profiling_temp[:int(round(len(X_profiling_temp)*0.95))]
-            Y_profiling_before_aug = Y_profiling_temp[:int(round(len(X_profiling_temp)*0.95))]
+            X_profiling_before_aug = X_profiling_temp
+            Y_profiling_before_aug = Y_profiling_temp
             traces = len(X_profiling_before_aug)
             training_traces = TRAINING_TRACES
             if training_traces > traces:
