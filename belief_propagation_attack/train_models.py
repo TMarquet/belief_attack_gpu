@@ -708,6 +708,18 @@ if __name__ == "__main__":
             
             X_validation = X_attack[:VALIDATION_TRACES]
             Y_validation = Y_attack[:VALIDATION_TRACES]
+            temp = []
+            for elem in X_profiling_temp:
+                middle = INPUT_LENGTH
+                temp_elem = elem[2500-int(middle*0.5):2500+ int(middle*0.5)]
+                temp.append(temp_elem)
+            X_profiling_temp = np.array(temp)
+            temp = []
+            for elem in X_validation:
+                middle = INPUT_LENGTH
+                temp_elem = elem[2500-int(middle*0.5):2500+ int(middle*0.5)]
+                temp.append(temp_elem)
+            X_validation = np.array(temp)            
             X_profiling_before_aug = X_profiling_temp
             Y_profiling_before_aug = Y_profiling_temp
             traces = len(X_profiling_before_aug)
@@ -765,19 +777,8 @@ if __name__ == "__main__":
             print "|| Changing Input Length from {} to {} (max samples)".format(INPUT_LENGTH, X_profiling.shape[1])
             INPUT_LENGTH = X_profiling.shape[1]
         
-        temp = []
-        for elem in X_profiling:
-            middle = INPUT_LENGTH
-            temp_elem = elem[2500-int(middle*0.5):2500+ int(middle*0.5)]
-            temp.append(temp_elem)
-        X_profiling = np.array(temp)
-        temp = []
-        for elem in X_validation:
-            middle = INPUT_LENGTH
-            temp_elem = elem[2500-int(middle*0.5):2500+ int(middle*0.5)]
-            temp.append(temp_elem)
-        X_validation = np.array(temp)
-        print(X_profiling.shape)
+
+
         train_variable_model(variable, X_profiling, Y_profiling, X_validation, Y_validation, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
             training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
             learning_rate=LEARNING_RATE,weight_init=weight_method_test, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
