@@ -264,7 +264,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
     # return parallel_model
 
 ### CNN Best model
-def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4096,weight_method = 'heu'):
+def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4096,weight_method = 'glorotu'):
     weight_init_method = None
     if not weight_method == 'glorotu':
         if weight_method == 'lecunn':
@@ -337,7 +337,7 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
     optimizer = Adagrad(lr=learning_rate*10)
-    model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+    model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
