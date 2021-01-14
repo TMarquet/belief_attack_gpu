@@ -19,7 +19,7 @@ from tensorflow.keras import backend as K
 
 
 
-from tensorflow.keras.optimizers import RMSprop,Adagrad
+from tensorflow.keras.optimizers import RMSprop,Adagrad,Adam
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.utils import to_categorical
