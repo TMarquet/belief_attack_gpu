@@ -697,7 +697,7 @@ if __name__ == "__main__":
             (X_profiling_temp, Y_profiling_temp) = shuffle_data(X_profiling_temp, Y_profiling_temp)
             
             X_profiling_temp = X_profiling_temp.astype('float32')
-            X_attack_temp = X_attack.astype('float32')
+            X_attack_temp = X_attack_temp.astype('float32')
             
             #Traces Scaling (between 0 and 1)
             
