@@ -384,7 +384,7 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     else:
         reshaped_y = Y_profiling
         reshaped_val = validation_data[1]
-    history = model.fit(x=Reshaped_X_profiling, y=reshaped_y, batch_size=batch_size, verbose = progress_bar, epochs=epochs, callbacks=callbacks, validation_data=(Reshaped_validation_data, reshaped_val),use_multiprocessing=True)
+    history = model.fit(x=X_profiling, y=reshaped_y, batch_size=batch_size, verbose = progress_bar, epochs=epochs, callbacks=callbacks, validation_data=(Reshaped_validation_data, reshaped_val),use_multiprocessing=True)
     return history
 
 # def train_svm()
