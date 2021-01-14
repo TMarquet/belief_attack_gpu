@@ -13,7 +13,7 @@ os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.layers import Flatten, Dense, Input, Lambda, Conv1D, MaxPooling1D, GlobalMaxPooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
+from tensorflow.keras.layers import Activation,Flatten, Dense, Input, Lambda, Conv1D, MaxPooling1D, GlobalMaxPooling1D, GlobalMaxPooling1D, AveragePooling1D, LSTM, Dropout, BatchNormalization
 from sklearn import preprocessing
 from tensorflow.keras import backend as K
 
@@ -274,7 +274,6 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     x = AveragePooling1D(2, strides=2, name='block1_pool')(x)
     
     x = Flatten(name='flatten')(x)
-
     # Classification layer
     x = Dense(10, kernel_initializer='he_uniform', activation='selu', name='fc1')(x)
     x = Dense(10, kernel_initializer='he_uniform', activation='selu', name='fc2')(x)
