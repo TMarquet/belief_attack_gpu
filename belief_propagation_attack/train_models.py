@@ -713,13 +713,13 @@ if __name__ == "__main__":
                 middle = INPUT_LENGTH
                 temp_elem = elem[2500-int(middle*0.5):2500+ int(middle*0.5)]
                 temp.append(temp_elem)
-            X_profiling = np.array(temp)
+            X_profiling_temp = np.array(temp)
             temp = []
             for elem in X_validation:
                 middle = INPUT_LENGTH
                 temp_elem = elem[2500-int(middle*0.5):2500+ int(middle*0.5)]
                 temp.append(temp_elem)
-            X_validation = np.array(temp)            
+            X_validation_temp = np.array(temp)            
             X_profiling_before_aug = X_profiling_temp
             Y_profiling_before_aug = Y_profiling_temp
             traces = len(X_profiling_before_aug)
