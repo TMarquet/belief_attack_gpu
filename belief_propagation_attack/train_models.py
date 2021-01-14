@@ -691,23 +691,23 @@ if __name__ == "__main__":
             
             
             # Load the profiling traces
-            (X_profiling_temp, Y_profiling_temp), (X_attack, Y_attack), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD_big.h5", load_metadata=True)
+            (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD_big.h5", load_metadata=True)
             
             # Shuffle data
             (X_profiling_temp, Y_profiling_temp) = shuffle_data(X_profiling_temp, Y_profiling_temp)
             
             X_profiling_temp = X_profiling_temp.astype('float32')
-            X_attack = X_attack.astype('float32')
+            X_attack_temp = X_attack.astype('float32')
             
             #Traces Scaling (between 0 and 1)
             
             X_profiling_temp = normalise_neural_traces(X_profiling_temp)
-            X_attack = normalise_neural_traces(X_attack)
+            X_attack_temp = normalise_neural_traces(X_attack_temp)
             
             # X_attack = X_attack.reshape((X_attack.shape[0], X_attack.shape[1], 1))
             
-            X_validation = X_attack[:VALIDATION_TRACES]
-            Y_validation = Y_attack[:VALIDATION_TRACES]
+            X_attack = X_attack_temp[:VALIDATION_TRACES]
+            Y_attack = Y_attack_temp[:VALIDATION_TRACES]
             temp = []
             for elem in X_profiling_temp:
                 middle = INPUT_LENGTH
