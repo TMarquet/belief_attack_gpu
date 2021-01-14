@@ -265,7 +265,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
 
 ### CNN Best model
 def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4096,weight_method = 'heu'):
-    
+    weight_init_method = None
     if not weight_method == 'glorotu':
         if weight_method == 'lecunn':
             weight_init_method = tf.keras.initializers.lecun_normal()
