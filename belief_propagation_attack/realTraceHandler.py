@@ -262,7 +262,7 @@ class RealTraceHandler:
         # Return Rank List
         return rank_list
 
-    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False):
+    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False):
         # Get variable of model
         model_name = model_file.replace(MODEL_FOLDER, '')
         variable = model_name.split('_')[0]
@@ -306,19 +306,48 @@ class RealTraceHandler:
             #     sys.exit(-1)
 
 
+            if ASCAD:
+                ASCAD_data_folder = "/root/Projets/ASCAD/ATMEGA_AES_v1/ATM_AES_v1_variable_key/ASCAD_data/ASCAD_databases/"
+            
+                # Choose the name of the model
+    
+                
+                
+                # Load the profiling traces
+                (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD_big.h5", load_metadata=True)
+                
+                # Shuffle data
 
+                
+
+                X_attack_temp = X_attack_temp.astype('float32')
+                
+                #Traces Scaling (between 0 and 1)
+                
+
+                X_attack_temp = normalise_neural_traces(X_attack_temp)
+                
+                # X_attack = X_attack.reshape((X_attack.shape[0], X_attack.shape[1], 1))
+                
+                X_attack = X_attack_temp[10000:]
+                Y_attack = Y_attack_temp[10000:]
             rank_list = list()
             prob_list = list()
             predicted_values = list()
             leakage_list = []
             for trace in range(traces):
-                real_val = self.realvalues[var_name][var_number-1][(self.real_trace_data_maxtraces - trace - 1) if from_end else trace]
+                
+                if not ASCAD:
+                    real_val = self.realvalues[var_name][var_number-1][(self.real_trace_data_maxtraces - trace - 1) if from_end else trace]
 
                 # if trace < 3:
                 #     print "Real Value {}: {}".format(trace, real_val)
 
                 # leakage = self.get_leakage(variable, trace=trace)
-                power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 1) if from_end else trace, nn_normalise=True, window=window_size)
+                    power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 1) if from_end else trace, nn_normalise=True, window=window_size)
+                else:
+                    real_val = Y_attack[i]
+                    power_value = X_attack[i]
                 new_input = np.resize(power_value, (1, power_value.size))
 
                 ### IF CNN, NEED TO CHANGE INPUT SHAPE

@@ -264,7 +264,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
     # return parallel_model
 
 ### CNN Best model
-def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4096,weight_method = 'glorotu'):
+def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=4096,weight_method = 'glorotu'):
     weight_init_method = None
     if not weight_method == 'glorotu':
         if weight_method == 'lecunn':
@@ -281,40 +281,40 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     
     # Convolution blocks
     # Block 1
-    model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
+    model.add(Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
+    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))  
     
     # Block 2
 
-    model.add(Conv1D(128, 3, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
+    model.add(Conv1D(128, 11, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block2_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(MaxPooling1D(2, strides=2, name='block2_pool'))  
+    model.add(AveragePooling1D(2, strides=2, name='block2_pool'))  
     
     # Block 3
-    model.add(Conv1D(256, 3, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
+    model.add(Conv1D(256, 11, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block3_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
+    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
     
     # Block 4
-    model.add(Conv1D(512, 3, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
+    model.add(Conv1D(512, 11, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block4_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(MaxPooling1D(2, strides=2, name='block4_pool'))    
+    model.add(AveragePooling1D(2, strides=2, name='block4_pool'))    
     
     # Block 5
-    model.add(Conv1D(512, 3, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
+    model.add(Conv1D(512, 11, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(MaxPooling1D(2, strides=2, name='block5_pool')) 
+    model.add(AveragePooling1D(2, strides=2, name='block5_pool')) 
     model.add(Dropout(0.5))
     model.add(Flatten(name='flatten'))
         
@@ -336,7 +336,7 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
-    optimizer = Adagrad(lr=learning_rate*100)
+    optimizer = RMSprop(lr=learning_rate)
     model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
