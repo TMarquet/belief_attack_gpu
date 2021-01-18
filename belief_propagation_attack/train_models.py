@@ -315,7 +315,7 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(AveragePooling1D(2, strides=2, name='block5_pool')) 
-    
+    model.add(Dropout(0.5))
     model.add(Flatten(name='flatten'))
         
     # Two Dense layers
@@ -325,7 +325,7 @@ def cnn_best(input_length=2000, learning_rate=0.0001, classes=256, dense_units=4
     model.add(BatchNormalization(name='block6_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     
-    #model.add(Dropout(0.5))
+    
     
     model.add(Dense(dense_units, name='fc2',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
