@@ -722,7 +722,7 @@ if __name__ == "__main__":
             X_profiling_before_aug = X_profiling_temp
             Y_profiling_before_aug = Y_profiling_temp
             traces = len(X_profiling_before_aug)
-            type = trace_data.dtype
+            type = X_profiling_before_aug.dtype
             training_traces = TRAINING_TRACES
             if training_traces > traces:
                 print 'Augmenting {} Traces!'.format(training_traces - traces)
