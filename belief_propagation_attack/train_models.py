@@ -696,8 +696,7 @@ if __name__ == "__main__":
             # Shuffle data
             (X_profiling_temp, Y_profiling_temp) = shuffle_data(X_profiling_temp, Y_profiling_temp)
             
-            X_profiling_temp = X_profiling_temp.astype('float32')
-            X_attack_temp = X_attack_temp.astype('float32')
+
             
             #Traces Scaling (between 0 and 1)
             
@@ -708,7 +707,18 @@ if __name__ == "__main__":
             
             X_attack = X_attack_temp[:VALIDATION_TRACES]
             Y_attack = Y_attack_temp[:VALIDATION_TRACES]
-         
+            temp = []
+            for elem in X_profiling_temp:
+                middle = INPUT_LENGTH
+                temp_elem = elem[700-int(middle*0.5):700+ int(middle*0.5)]
+                temp.append(temp_elem)
+            X_profiling_temp = np.array(temp)
+            temp = []
+            for elem in X_attack:
+                middle = INPUT_LENGTH
+                temp_elem = elem[700-int(middle*0.5):700+ int(middle*0.5)]
+                temp.append(temp_elem)
+            X_attack = np.array(temp)            
             X_profiling_before_aug = X_profiling_temp
             Y_profiling_before_aug = Y_profiling_temp
             traces = len(X_profiling_before_aug)
