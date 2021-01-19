@@ -348,7 +348,7 @@ class RealTraceHandler:
                 else:
                     middle = len(X_attack[trace])
                     real_val = Y_attack[trace]
-                    power_value = X_attack[trace][middle - window_size*0.5 : middle + window_size * 0.5]
+                    power_value = X_attack[trace][middle - int(window_size*0.5) : middle + int(window_size * 0.5)]
                 new_input = np.resize(power_value, (1, power_value.size))
 
                 ### IF CNN, NEED TO CHANGE INPUT SHAPE
