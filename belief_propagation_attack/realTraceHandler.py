@@ -331,6 +331,14 @@ class RealTraceHandler:
                 
                 X_attack = X_attack_temp[10000:]
                 Y_attack = Y_attack_temp[10000:]
+                
+                middle = int(len(X_profiling_temp[0])*0.5)
+
+                temp = []
+                for elem in X_attack:
+                    temp_elem = elem[middle-int(INPUT_LENGTH*0.5):middle+ int(INPUT_LENGTH*0.5)]
+                    temp.append(temp_elem)
+                X_attack = np.array(temp)                     
             rank_list = list()
             prob_list = list()
             predicted_values = list()
