@@ -8,8 +8,21 @@ import cPickle as Pickle
 from datetime import datetime
 import timing
 import matplotlib.pyplot as plt
+from numpy import savetxt
 os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 CHOSEN_KEY = [0x54, 0x68, 0x61, 0x74, 0x73, 0x20, 0x6D, 0x79, 0x20, 0x4B, 0x75, 0x6E, 0x67, 0x20, 0x46, 0x75]
+
+
+
+
+def save_probability_list_for_model(model,num_traces):
+    
+    for model_file in sorted(listdir(ASCAD_MODEL_FOLDER)):
+        var = get_variable_name(model_file) + get_variable_number(model_file)
+        print 'Saving probabilities for : ' + var
+        rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces,ASCAD= True)
+        savetxt('var.csv', prob_list, delimiter=',')
+
 
 def run_belief_propagation_attack(margdist=None):
     global key_distributions
