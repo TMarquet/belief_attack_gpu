@@ -23,3 +23,6 @@ def save_probability_list(num_traces):
         if not get_variable_name(model_file) in listdir(OUTPUT_FOLDER):
             os.mkdir(OUTPUT_FOLDER + var_name + '/')
         savetxt(OUTPUT_FOLDER + var_name + '/' + var +'.csv', prob_list, delimiter=',')
+        
+
+save_probability_list(10000)
