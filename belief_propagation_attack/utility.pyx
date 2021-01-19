@@ -34,7 +34,7 @@ DTYPE = np.float32
 ctypedef np.float32_t DTYPE_t
 import os.path
 import platform
-
+import h5py
 
 
 # FROM TRAIN MODELS
