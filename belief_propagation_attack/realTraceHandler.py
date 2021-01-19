@@ -417,4 +417,7 @@ class RealTraceHandler:
             output_list = np.array(leakage_list)
             np.savetxt('output/{}/{}_distribution.npz'.format(var_name,var_number),output_list)
             # Return Rank List
+            print(rank_list)
+            print(prob_list)
+            print(predicted_values)
             return (rank_list, prob_list, predicted_values)
