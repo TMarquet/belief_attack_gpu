@@ -388,6 +388,8 @@ if __name__ == "__main__":
     parser.add_argument('--H', '--HIST', '--HISTOGRAM', action="store_true", dest="HISTOGRAM",
                         help='Plots histogram of probabilities', default=False)
 
+    parser.add_argument('--ASCAD', action="store_true", dest="ASCAD",
+                        help='Plots histogram of probabilities', default=False)
 
     # Target node here
     args = parser.parse_args()
@@ -406,7 +408,7 @@ if __name__ == "__main__":
     DEBUG = args.DEBUG
     VERBOSE = args.VERBOSE
     HISTOGRAM = args.HISTOGRAM
-
+    ASCAD = args.ASCAD
     # var_list = list()
     # for v in variable_dict:
     #     var_list.append('{}001'.format(v))
@@ -432,7 +434,7 @@ if __name__ == "__main__":
         # Check all models
         for (m) in sorted(listdir(MODEL_FOLDER)):
             if string_ends_with(m, '.h5'):
-                model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE)
+                model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD)
                 tf.keras.backend.clear_session()
     else:
         # Check specific model
@@ -442,7 +444,7 @@ if __name__ == "__main__":
             for (m) in sorted(listdir(MODEL_FOLDER)):
                 if string_starts_with(m, var):
                     print 'Testing : ', m 
-                    model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE)
+                    model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD)
         
 
 # # No argument: check all the trained models
