@@ -21,7 +21,7 @@ def save_probability_list_for_model(model,num_traces):
         var = get_variable_name(model_file) + get_variable_number(model_file)
         print 'Saving probabilities for : ' + var
         rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces,ASCAD= True)
-        savetxt('var.csv', prob_list, delimiter=',')
+        savetxt(var+'.csv', prob_list, delimiter=',')
 
 
 def run_belief_propagation_attack(margdist=None):
