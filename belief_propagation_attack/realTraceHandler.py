@@ -417,8 +417,10 @@ class RealTraceHandler:
                 rank_list.append(rank)
                 prob_list.append(probability)
                 predicted_values.append(np.argmax(leakage))
-            output_list = np.array(leakage_list)
-            np.savetxt('output/{}/{}_distribution.npz'.format(var_name,var_number),output_list)
+            if ASCAD:
+            
+                output_list = np.array(leakage_list)
+                return output_list
             # Return Rank List
-
-            return (rank_list, prob_list, predicted_values)
+            else:
+                return (rank_list, prob_list, predicted_values)
