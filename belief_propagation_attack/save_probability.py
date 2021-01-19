@@ -14,7 +14,7 @@ import timing
 
 from numpy import savetxt
 def save_probability_list(num_traces):
-    model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
+    model_tester = TestModels()
     handler = model_tester.real_trace_handler
     
     for model_file in sorted(listdir(MODEL_FOLDER + 'adagrad/')):
