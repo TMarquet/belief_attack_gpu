@@ -342,7 +342,7 @@ class RealTraceHandler:
                 
                 
                 # Load the profiling traces
-                (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD_big.h5", load_metadata=True)
+                (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
                 
                 # Shuffle data
 
@@ -374,8 +374,10 @@ class RealTraceHandler:
                 # leakage = self.get_leakage(variable, trace=trace)
                     power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 1) if from_end else trace, nn_normalise=True, window=window_size)
                 else:
-                    real_val = Y_attack[i]
-                    power_value = X_attack[i]
+                    middle = int(len(X_attack[trace])/2)
+                    
+                    real_val = Y_attack[trace]
+                    power_value = X_attack[trace][middle - int(window_size*0.5) : middle + int(window_size * 0.5)]
                 new_input = np.resize(power_value, (1, power_value.size))
 
                 ### IF CNN, NEED TO CHANGE INPUT SHAPE

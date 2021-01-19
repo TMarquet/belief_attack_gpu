@@ -69,26 +69,7 @@ def check_file_exists(file_path):
         print("Error: provided file path '%s' does not exist!" % file_path)
         sys.exit(-1)
     return
-def load_ascad(ascad_database_file, load_metadata=False):
-    check_file_exists(ascad_database_file)
-    # Open the ASCAD database HDF5 for reading
-    try:
-        in_file  = h5py.File(ascad_database_file, "r")
-    except:
-        print("Error: can't open HDF5 file '%s' for reading (it might be malformed) ..." % ascad_database_file)
-        sys.exit(-1)
-    # Load profiling traces
-    X_profiling = np.array(in_file['Profiling_traces/traces'], dtype=np.float64)
-    # Load profiling labels
-    Y_profiling = np.array(in_file['Profiling_traces/labels'])
-    # Load attacking traces
-    X_attack = np.array(in_file['Attack_traces/traces'], dtype=np.float64)
-    # Load attacking labels
-    Y_attack = np.array(in_file['Attack_traces/labels'])
-    if load_metadata == False:
-        return (X_profiling, Y_profiling), (X_attack, Y_attack)
-    else:
-        return (X_profiling, Y_profiling), (X_attack, Y_attack), (in_file['Profiling_traces/metadata']['plaintext'], in_file['Attack_traces/metadata']['plaintext'])
+
 def shuffle_data(profiling_x,label_y):
     l = list(zip(profiling_x,label_y))
     random.shuffle(l)
@@ -281,40 +262,40 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
     # Convolution blocks
     # Block 1
-    model.add(Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
+    model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))  
+    model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
     
     # Block 2
 
-    model.add(Conv1D(128, 11, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
+    model.add(Conv1D(128, 3, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block2_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block2_pool'))  
+    model.add(MaxPooling1D(2, strides=2, name='block2_pool'))  
     
     # Block 3
-    model.add(Conv1D(256, 11, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
+    model.add(Conv1D(256, 3, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block3_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
+    model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
     
     # Block 4
-    model.add(Conv1D(512, 11, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
+    model.add(Conv1D(512, 3, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block4_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block4_pool'))    
+    model.add(MaxPooling1D(2, strides=2, name='block4_pool'))    
     
     # Block 5
-    model.add(Conv1D(512, 11, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
+    model.add(Conv1D(512, 3, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block5_pool')) 
+    model.add(MaxPooling1D(2, strides=2, name='block5_pool')) 
     
     model.add(Flatten(name='flatten'))
         
@@ -336,8 +317,8 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
-    optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    optimizer = Adagrad(lr=learning_rate*10)
+    model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
@@ -688,10 +669,14 @@ if __name__ == "__main__":
             
             # Choose the name of the model
 
-            
+            if INPUT_LENGTH > 1400:
             
             # Load the profiling traces
-            (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
+                (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD_big.h5", load_metadata=True)
+            
+            else:
+            
+                (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
             
             # Shuffle data
             (X_profiling_temp, Y_profiling_temp) = shuffle_data(X_profiling_temp, Y_profiling_temp)
@@ -708,15 +693,14 @@ if __name__ == "__main__":
             X_attack = X_attack_temp[:VALIDATION_TRACES]
             Y_attack = Y_attack_temp[:VALIDATION_TRACES]
             temp = []
-            for elem in X_profiling_temp:
-                middle = INPUT_LENGTH
-                temp_elem = elem[700-int(middle*0.5):700+ int(middle*0.5)]
+            middle = int(len(X_profiling_temp[0])*0.5)
+            for elem in X_profiling_temp:                               
+                temp_elem = elem[middle-int(INPUT_LENGTH*0.5):middle+ int(INPUT_LENGTH*0.5)]
                 temp.append(temp_elem)
             X_profiling_temp = np.array(temp)
             temp = []
             for elem in X_attack:
-                middle = INPUT_LENGTH
-                temp_elem = elem[700-int(middle*0.5):700+ int(middle*0.5)]
+                temp_elem = elem[middle-int(INPUT_LENGTH*0.5):middle+ int(INPUT_LENGTH*0.5)]
                 temp.append(temp_elem)
             X_attack = np.array(temp)            
             X_profiling_before_aug = X_profiling_temp
