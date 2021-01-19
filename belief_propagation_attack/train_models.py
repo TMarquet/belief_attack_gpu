@@ -69,26 +69,7 @@ def check_file_exists(file_path):
         print("Error: provided file path '%s' does not exist!" % file_path)
         sys.exit(-1)
     return
-def load_ascad(ascad_database_file, load_metadata=False):
-    check_file_exists(ascad_database_file)
-    # Open the ASCAD database HDF5 for reading
-    try:
-        in_file  = h5py.File(ascad_database_file, "r")
-    except:
-        print("Error: can't open HDF5 file '%s' for reading (it might be malformed) ..." % ascad_database_file)
-        sys.exit(-1)
-    # Load profiling traces
-    X_profiling = np.array(in_file['Profiling_traces/traces'], dtype=np.float64)
-    # Load profiling labels
-    Y_profiling = np.array(in_file['Profiling_traces/labels'])
-    # Load attacking traces
-    X_attack = np.array(in_file['Attack_traces/traces'], dtype=np.float64)
-    # Load attacking labels
-    Y_attack = np.array(in_file['Attack_traces/labels'])
-    if load_metadata == False:
-        return (X_profiling, Y_profiling), (X_attack, Y_attack)
-    else:
-        return (X_profiling, Y_profiling), (X_attack, Y_attack), (in_file['Profiling_traces/metadata']['plaintext'], in_file['Attack_traces/metadata']['plaintext'])
+
 def shuffle_data(profiling_x,label_y):
     l = list(zip(profiling_x,label_y))
     random.shuffle(l)

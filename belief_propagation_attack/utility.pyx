@@ -259,6 +259,27 @@ def my_mult2(v1, v2, v3):
 
 #################################################################
 
+def load_ascad(ascad_database_file, load_metadata=False):
+    check_file_exists(ascad_database_file)
+    # Open the ASCAD database HDF5 for reading
+    try:
+        in_file  = h5py.File(ascad_database_file, "r")
+    except:
+        print("Error: can't open HDF5 file '%s' for reading (it might be malformed) ..." % ascad_database_file)
+        sys.exit(-1)
+    # Load profiling traces
+    X_profiling = np.array(in_file['Profiling_traces/traces'], dtype=np.float64)
+    # Load profiling labels
+    Y_profiling = np.array(in_file['Profiling_traces/labels'])
+    # Load attacking traces
+    X_attack = np.array(in_file['Attack_traces/traces'], dtype=np.float64)
+    # Load attacking labels
+    Y_attack = np.array(in_file['Attack_traces/labels'])
+    if load_metadata == False:
+        return (X_profiling, Y_profiling), (X_attack, Y_attack)
+    else:
+        return (X_profiling, Y_profiling), (X_attack, Y_attack), (in_file['Profiling_traces/metadata']['plaintext'], in_file['Attack_traces/metadata']['plaintext'])
+
 def get_shifted_tracedata_filepath(extra=False,shifted=50):
     if shifted is None or shifted == 0:
         return TRACEDATA_EXTRA_FILEPATH if extra else TRACEDATA_FILEPATH
