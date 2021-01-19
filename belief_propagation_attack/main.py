@@ -15,9 +15,9 @@ CHOSEN_KEY = [0x54, 0x68, 0x61, 0x74, 0x73, 0x20, 0x6D, 0x79, 0x20, 0x4B, 0x75, 
 
 
 
-def save_probability_list_for_model(model,num_traces):
+def save_probability_list(num_traces):
     
-    for model_file in sorted(listdir(ASCAD_MODEL_FOLDER)):
+    for model_file in sorted(listdir(MODEL_FOLDER + 'adagrad')):
         var_name = get_variable_name(model_file)
         var = var_name + get_variable_number(model_file)
         print 'Saving probabilities for : ' + var
