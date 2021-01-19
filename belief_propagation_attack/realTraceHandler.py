@@ -340,9 +340,12 @@ class RealTraceHandler:
                 # Choose the name of the model
     
                 
-                
+                if window_size > 1400:
+                    (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD_big.h5", load_metadata=True)
+                    
+                else:
                 # Load the profiling traces
-                (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
+                    (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
                 
                 # Shuffle data
 
@@ -364,7 +367,7 @@ class RealTraceHandler:
 
                 temp = []
                 for elem in X_attack:
-                    temp_elem = elem[middle-int(INPUT_LENGTH*0.5):middle+ int(INPUT_LENGTH*0.5)]
+                    temp_elem = elem[middle-int(window_size*0.5):middle+ int(window_size*0.5)]
                     temp.append(temp_elem)
                 X_attack = np.array(temp)                     
             rank_list = list()
