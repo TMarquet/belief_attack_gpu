@@ -292,12 +292,14 @@ class RealTraceHandler:
 
     def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False):
         # Get variable of model
-        model_name = model_file.replace(MODEL_FOLDER, '')
+        if ASCAD:
+            model_name = model_file.replace(MODEL_FOLDER+'adagrad/', '')
+        else:
+            model_name = model_file.replace(MODEL_FOLDER, '')
         variable = model_name.split('_')[0]
         if not self.no_print:
             print "\n* Checking model {} (variable {}) {}*\n".format(model_name, variable, 'WITH VALIDATION TRACES' if from_end else '')
-        if not check_file_exists(model_file):
-            print('Here')
+        if not check_file_exists(model_file):            
             if not self.no_print:
                 print "!!! Doesn't exist!"
             return (None, None)
@@ -418,7 +420,5 @@ class RealTraceHandler:
             output_list = np.array(leakage_list)
             np.savetxt('output/{}/{}_distribution.npz'.format(var_name,var_number),output_list)
             # Return Rank List
-            print(rank_list)
-            print(prob_list)
-            print(predicted_values)
+
             return (rank_list, prob_list, predicted_values)
