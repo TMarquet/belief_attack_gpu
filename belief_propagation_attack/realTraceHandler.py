@@ -294,6 +294,7 @@ class RealTraceHandler:
         # Get variable of model
         if ASCAD:
             model_name = model_file.replace(MODEL_FOLDER+'adagrad/', '')
+            print(model_name)
         else:
             model_name = model_file.replace(MODEL_FOLDER, '')
         variable = model_name.split('_')[0]

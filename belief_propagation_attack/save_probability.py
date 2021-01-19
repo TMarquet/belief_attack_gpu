@@ -18,7 +18,7 @@ def save_probability_list(num_traces):
     handler = model_tester.real_trace_handler
     
     for model_file in sorted(listdir(MODEL_FOLDER + 'adagrad/')):
-        print('model_file')
+        print(model_file)
         var_name = get_variable_name(model_file)
         var = var_name + str(get_variable_number(model_file))
         print 'Saving probabilities for : ' + var
