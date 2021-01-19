@@ -346,8 +346,8 @@ class RealTraceHandler:
                 # leakage = self.get_leakage(variable, trace=trace)
                     power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 1) if from_end else trace, nn_normalise=True, window=window_size)
                 else:
-                    real_val = Y_attack[i]
-                    power_value = X_attack[i]
+                    real_val = Y_attack[trace]
+                    power_value = X_attack[trace]
                 new_input = np.resize(power_value, (1, power_value.size))
 
                 ### IF CNN, NEED TO CHANGE INPUT SHAPE
