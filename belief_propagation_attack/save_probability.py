@@ -17,7 +17,7 @@ def save_probability_list(num_traces):
     
     for model_file in sorted(listdir(MODEL_FOLDER + 'adagrad/')):
         var_name = get_variable_name(model_file)
-        var = var_name + get_variable_number(model_file)
+        var = var_name + str(get_variable_number(model_file))
         print 'Saving probabilities for : ' + var
         rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces,ASCAD= True)
         if not get_variable_name(model_file) in listdir(OUTPUT_FOLDER):
