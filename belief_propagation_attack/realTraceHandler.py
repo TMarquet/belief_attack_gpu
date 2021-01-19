@@ -297,6 +297,7 @@ class RealTraceHandler:
         if not self.no_print:
             print "\n* Checking model {} (variable {}) {}*\n".format(model_name, variable, 'WITH VALIDATION TRACES' if from_end else '')
         if not check_file_exists(model_file):
+            print('Here')
             if not self.no_print:
                 print "!!! Doesn't exist!"
             return (None, None)
