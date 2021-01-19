@@ -669,10 +669,14 @@ if __name__ == "__main__":
             
             # Choose the name of the model
 
-            
+            if INPUT_LENGTH > 1400:
             
             # Load the profiling traces
-            (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
+                (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD_big.h5", load_metadata=True)
+            
+            else:
+            
+                (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
             
             # Shuffle data
             (X_profiling_temp, Y_profiling_temp) = shuffle_data(X_profiling_temp, Y_profiling_temp)
@@ -689,15 +693,14 @@ if __name__ == "__main__":
             X_attack = X_attack_temp[:VALIDATION_TRACES]
             Y_attack = Y_attack_temp[:VALIDATION_TRACES]
             temp = []
-            for elem in X_profiling_temp:
-                middle = INPUT_LENGTH
-                temp_elem = elem[700-int(middle*0.5):700+ int(middle*0.5)]
+            middle = int(len(X_profiling_temp[0])*0.5)
+            for elem in X_profiling_temp:                               
+                temp_elem = elem[middle-int(INPUT_LENGTH*0.5):middle+ int(INPUT_LENGTH*0.5)]
                 temp.append(temp_elem)
             X_profiling_temp = np.array(temp)
             temp = []
             for elem in X_attack:
-                middle = INPUT_LENGTH
-                temp_elem = elem[700-int(middle*0.5):700+ int(middle*0.5)]
+                temp_elem = elem[middle-int(INPUT_LENGTH*0.5):middle+ int(INPUT_LENGTH*0.5)]
                 temp.append(temp_elem)
             X_attack = np.array(temp)            
             X_profiling_before_aug = X_profiling_temp
