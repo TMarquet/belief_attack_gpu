@@ -137,7 +137,7 @@ class RealTraceHandler:
 
         return power_value
 
-    def get_leakage_distribution(self, variable, power_value, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1):
+    def get_leakage_distribution(self, variable, power_value, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1,load_distributions = False):
         # myvarlist = ["k001-K", "k001"]
         # if variable in myvarlist:
             # print "Getting Leakage for {}, trace {}".format(variable, trace)
@@ -161,50 +161,30 @@ class RealTraceHandler:
                 if not self.no_print:
                     print "> Ignoring NN for Variable {} as below threshold".format(variable)
             else:
+                
+                if not load_distributions :
                 # Use neural network to predict value
-                try:
-                    neural_network = self.neural_network_dict[var_notrace]
-                except KeyError:
-                    # Add to dict!
-                    if not self.no_print:
-                        print "> Loading NN for Variable {}...".format(var_notrace)
-                    # OLD: TODO FIX
-                    # self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes200_window{}_epochs6000_batchsize200_sd100_traces200000_aug0.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
-                    # NEW NEURAL NETWORKS 20/5/19                               p016_cnn_model1_window2000_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5
-                    # self.neural_network_dict[var_notrace] = load_sca_model('{}{}_cnn_model1_window{}_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes100_window{}_epochs100_batchsize50_lr1e-05_sd100_traces190000_aug0_jitterNone_defaultloss_best.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
-                    
-                    neural_network = self.neural_network_dict[var_notrace]
-                new_input = np.resize(power_value, (1, power_value.size))                
-                #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
-                out_distribution = neural_network.predict(new_input)[0]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    try:
+                        neural_network = self.neural_network_dict[var_notrace]
+                    except KeyError:
+                        # Add to dict!
+                        if not self.no_print:
+                            print "> Loading NN for Variable {}...".format(var_notrace)
+                        # OLD: TODO FIX
+                        # self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes200_window{}_epochs6000_batchsize200_sd100_traces200000_aug0.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
+                        # NEW NEURAL NETWORKS 20/5/19                               p016_cnn_model1_window2000_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5
+                        # self.neural_network_dict[var_notrace] = load_sca_model('{}{}_cnn_model1_window{}_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
+ 
+                        self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes100_window{}_epochs100_batchsize50_lr1e-05_sd100_traces190000_aug0_jitterNone_defaultloss_best.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
+                        
+                        neural_network = self.neural_network_dict[var_notrace]
+                    new_input = np.resize(power_value, (1, power_value.size))                
+                    #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
+                    out_distribution = neural_network.predict(new_input)[0]
+                else:
+                    var_name = get_variable_name(variable)
+                    var_number = get_variable_number(variable)
+                    out_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + var_number + '.csv', delimiter=',')[trace]
 
         elif best == 'lda' or (best is None and self.use_lda):
             # Load LDA file
@@ -246,9 +226,9 @@ class RealTraceHandler:
             return out_distribution
 
     # Both together
-    def get_leakage(self, variable, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1):
+    def get_leakage(self, variable, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1,load_probability = False):
         print 'leakage'
-        return self.get_leakage_distribution(variable, self.get_leakage_value(variable, trace=trace, average_power_values=average_power_values, averaged_traces=averaged_traces), trace=trace, normalise=normalise, ignore_bad=ignore_bad)
+        return self.get_leakage_distribution(variable, self.get_leakage_value(variable, trace=trace, average_power_values=average_power_values, averaged_traces=averaged_traces), trace=trace, normalise=normalise, ignore_bad=ignore_bad,load_probability)
 
     def get_plaintext_byte_distribution(self, variable, trace=0):
         # print 'For variable {}:\n{}\n\n'.format(variable, get_plaintext_array(self.plaintexts[trace][get_variable_number(variable) - 1]))
@@ -290,7 +270,7 @@ class RealTraceHandler:
         # Return Rank List
         return rank_list
 
-    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False):
+    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False ,save = False):
         # Get variable of model
         if ASCAD:
             model_name = model_file.replace(MODEL_FOLDER+'adagrad/', '')            
@@ -417,7 +397,7 @@ class RealTraceHandler:
                 rank_list.append(rank)
                 prob_list.append(probability)
                 predicted_values.append(np.argmax(leakage))
-            if ASCAD:
+            if ASCAD and save:
             
                 output_list = np.array(leakage_list)
                 return output_list

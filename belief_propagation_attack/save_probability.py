@@ -22,7 +22,7 @@ def save_probability_list(num_traces):
         var_name = get_variable_name(model_file)
         var = var_name + str(get_variable_number(model_file))
         print 'Saving probabilities for : ' + var
-        output_list = handler.get_leakage_rank_list_with_specific_model(MODEL_FOLDER + 'adagrad/'+model_file, traces=num_traces,ASCAD= True)
+        output_list = handler.get_leakage_rank_list_with_specific_model(MODEL_FOLDER + 'adagrad/'+model_file, traces=num_traces,ASCAD= True,save = True)
         if not var_name in listdir(OUTPUT_FOLDER):
             os.mkdir(OUTPUT_FOLDER + var_name + '/')
         savetxt(OUTPUT_FOLDER + var_name + '/' + var +'.csv', output_list, delimiter=',')

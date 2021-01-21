@@ -233,7 +233,7 @@ def run_belief_propagation_attack(margdist=None):
                 my_graph.set_all_initial_distributions( #specific_trace=specific_trace,
                                                         no_leak=NOT_LEAKING_NODES, fixed_value=fixed_node_tuple,
                                                         elmo_pow_model=ELMO_POWER_MODEL, real_traces=REAL_TRACES,
-                                                        no_noise=NO_NOISE, offset=trace+(rep*TRACES), ignore_bad=IGNORE_BAD_TEMPLATES, trace_id = specific_trace)
+                                                        no_noise=NO_NOISE, offset=trace+(rep*TRACES), ignore_bad=IGNORE_BAD_TEMPLATES, trace_id = specific_trace, load_probability = LOAD_PROBABILITY)
 
                 if PRINT_ALL_KEY_RANKS:
                     print "-~-~-~-~-~-~- Trace {} -~-~-~-~-~-~-".format(trace)
@@ -933,7 +933,8 @@ if __name__ == "__main__":
 
     parser.add_argument('--REALIGN', '--AUTO_REALIGN', '--ALIGN', '--DTW', '--AR', action="store_true", dest="AUTO_REALIGN",
                             help='Auto Realigns Jittery Traces using FastDTW', default=False)
-
+    parser.add_argument('--LOAD_PROBA_CNN', action="store_true", dest="LOAD_PROBABILITY",
+                            help='load probabilities when all models cannot be loaded', default=False)
 
 
 
@@ -1017,6 +1018,7 @@ if __name__ == "__main__":
     JITTER = args.JITTER
     ERRONEOUS_BAD = args.ERRONEOUS_BAD
     AUTO_REALIGN = args.AUTO_REALIGN
+    LOAD_PROBABILITY = args.LOAD_PROBABILITY
 
     if MY_KEY is not None:
         CHOSEN_KEY = hex_string_to_int_array(MY_KEY)
