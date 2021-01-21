@@ -270,7 +270,7 @@ class RealTraceHandler:
         # Return Rank List
         return rank_list
 
-    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False ,save = False):
+    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False ,save_proba = False):
         # Get variable of model
         if ASCAD:
             model_name = model_file.replace(MODEL_FOLDER+'adagrad/', '')            
