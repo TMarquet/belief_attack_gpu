@@ -228,7 +228,7 @@ class RealTraceHandler:
     # Both together
     def get_leakage(self, variable, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1,load_probability = False):
         print 'leakage'
-        return self.get_leakage_distribution(variable, self.get_leakage_value(variable, trace=trace, average_power_values=average_power_values, averaged_traces=averaged_traces), trace=trace, normalise=normalise, ignore_bad=ignore_bad,load_probability)
+        return self.get_leakage_distribution(variable, self.get_leakage_value(variable, trace=trace, average_power_values=average_power_values, averaged_traces=averaged_traces), trace=trace, normalise=normalise, ignore_bad=ignore_bad,load_probability=load_probability)
 
     def get_plaintext_byte_distribution(self, variable, trace=0):
         # print 'For variable {}:\n{}\n\n'.format(variable, get_plaintext_array(self.plaintexts[trace][get_variable_number(variable) - 1]))
