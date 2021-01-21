@@ -9,7 +9,7 @@ from time import time
 import matplotlib
 matplotlib.use('Agg')
 
-os.environ["CUDA_VISIBLE_DEVICES"]="1"
+os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
@@ -263,40 +263,54 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     # Convolution blocks
     # Block 1
     model.add(Conv1D(64, 11, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
+
+    model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block1_pool'))  
+    model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
     
     # Block 2
 
     model.add(Conv1D(128, 11, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
+
+    model.add(BatchNormalization(name='block2_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block2_pool'))  
+    model.add(MaxPooling1D(2, strides=2, name='block2_pool'))  
     
     # Block 3
     model.add(Conv1D(256, 11, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
+
+    model.add(BatchNormalization(name='block3_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
+    model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
     
     # Block 4
     model.add(Conv1D(512, 11, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
+
+    model.add(BatchNormalization(name='block4_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block4_pool'))    
+    model.add(MaxPooling1D(2, strides=2, name='block4_pool'))    
     
     # Block 5
     model.add(Conv1D(512, 11, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
+
+    model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block5_pool')) 
+    model.add(MaxPooling1D(2, strides=2, name='block5_pool')) 
     
     model.add(Flatten(name='flatten'))
         
     # Two Dense layers
     
     model.add(Dense(dense_units, name='fc1',kernel_initializer = weight_init_method))
+
+    model.add(BatchNormalization(name='block6_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     
     
     
     model.add(Dense(dense_units, name='fc2',kernel_initializer = weight_init_method))
+
+    model.add(BatchNormalization(name='block7_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))       
 
     #model.add(Dropout(0.5))
