@@ -317,8 +317,8 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
-    optimizer = Adagrad(lr=learning_rate)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    optimizer = Adagrad(lr=learning_rate*10)
+    model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
@@ -632,7 +632,7 @@ if __name__ == "__main__":
 
 
     if TEST_VARIABLES:
-        variable_list = ['cm001','cm002','cm003','cm004']
+        variable_list = ['cm005','cm006','cm007','cm008']
     if ALL_VARS:
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
