@@ -638,7 +638,7 @@ if __name__ == "__main__":
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list = ['p017','p018','p019','p020','p021','p022','p023','p024']
+        variable_list = ['p024','p025','p026','p027','p028','p029','p030','p031']
         # for i in range(12,17) :
         #     if i < 10 :
         #         variable_list.append('mc00'+str(i))
