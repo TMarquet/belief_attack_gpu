@@ -13,6 +13,11 @@ from utility import *
 import timing
 
 from numpy import savetxt
+
+
+##### ATTENTION #############
+# cm 5 ->8 a refaire (pas♣ de x10 dans l'optimizer sans doute)
+
 def save_probability_list(num_traces):
     model_tester = TestModels(use_extra = False)
     handler = model_tester.real_trace_handler
@@ -21,9 +26,12 @@ def save_probability_list(num_traces):
         
         print(model_file)
         var_name = get_variable_name(model_file)
-        if var_name == 'cm':
+        if var_name == 'cm' or var_name == 'h' :
             continue
         var = var_name + str(get_variable_number(model_file))
+        out_list = [1,2,3,4]
+        if var_name == 'k' and get_variable_number(model_file) in out_list:
+            continue
         print 'Saving probabilities for : ' + var
         output_list , prob_list , rank_list = handler.get_leakage_rank_list_with_specific_model(MODEL_FOLDER +model_file, traces=num_traces,ASCAD= False,save_proba = True)
         print "> Median Rank: {}".format(np.median(rank_list))
