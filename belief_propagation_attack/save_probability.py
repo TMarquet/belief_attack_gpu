@@ -30,7 +30,7 @@ def save_probability_list(num_traces):
             continue
         var = var_name + str(get_variable_number(model_file))
         out_list = []
-        for i in range( 0,7):
+        for i in range( 0,8):
             out_list.append(i)
         if var_name == 't' and get_variable_number(model_file) in out_list:
             continue
