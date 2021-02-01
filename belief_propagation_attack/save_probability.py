@@ -22,7 +22,7 @@ def save_probability_list(num_traces):
         var_name = get_variable_name(model_file)
         var = var_name + str(get_variable_number(model_file))
         print 'Saving probabilities for : ' + var
-        output_list , prob_list , rank_list = handler.get_leakage_rank_list_with_specific_model(MODEL_FOLDER +model_file, traces=num_traces,ASCAD= True,save_proba = True)
+        output_list , prob_list , rank_list = handler.get_leakage_rank_list_with_specific_model(MODEL_FOLDER +model_file, traces=num_traces,ASCAD= False,save_proba = True)
         print "> Median Rank: {}".format(np.median(rank_list))
         print "> Median Prob: {}".format(np.median(prob_list))
         if not var_name in listdir(OUTPUT_FOLDER):
