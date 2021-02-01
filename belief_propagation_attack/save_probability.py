@@ -26,7 +26,7 @@ def save_probability_list(num_traces):
         
         print(model_file)
         var_name = get_variable_name(model_file)
-        if var_name == 'cm' or var_name == 'h' or var_name == 'k' or var_name == 'mc' or var_name == 'p' and var_name == 's':
+        if var_name == 'cm' or var_name == 'h' or var_name == 'k' or var_name == 'mc' or var_name == 'p' or var_name == 's':
             continue
         var = var_name + str(get_variable_number(model_file))
         out_list = []
