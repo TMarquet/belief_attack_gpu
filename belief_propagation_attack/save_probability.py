@@ -16,7 +16,7 @@ from numpy import savetxt
 def save_probability_list(num_traces):
     model_tester = TestModels()
     handler = model_tester.real_trace_handler
-    
+    print MODEL_FOLDER
     for model_file in sorted(listdir(MODEL_FOLDER)):
         print(model_file)
         var_name = get_variable_name(model_file)
