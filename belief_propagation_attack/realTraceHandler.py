@@ -400,7 +400,7 @@ class RealTraceHandler:
             if ASCAD and save_proba:
             
                 output_list = np.array(leakage_list)
-                return output_list
-            # Return Rank List
+                return (output_list , prob_list , rank_list)
+            # Return Rank List 
             else:
                 return (rank_list, prob_list, predicted_values)
