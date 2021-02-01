@@ -17,15 +17,15 @@ def save_probability_list(num_traces):
     model_tester = TestModels()
     handler = model_tester.real_trace_handler
     
-    for model_file in sorted(listdir(MODEL_FOLDER + 'adagrad/')):
+    for model_file in sorted(listdir(MODEL_FOLDER)):
         print(model_file)
         var_name = get_variable_name(model_file)
         var = var_name + str(get_variable_number(model_file))
         print 'Saving probabilities for : ' + var
-        output_list = handler.get_leakage_rank_list_with_specific_model(MODEL_FOLDER + 'adagrad/'+model_file, traces=num_traces,ASCAD= True,save_proba = True)
+        output_list = handler.get_leakage_rank_list_with_specific_model(MODEL_FOLDER +model_file, traces=num_traces,ASCAD= True,save_proba = True)
         if not var_name in listdir(OUTPUT_FOLDER):
             os.mkdir(OUTPUT_FOLDER + var_name + '/')
         savetxt(OUTPUT_FOLDER + var_name + '/' + var +'.csv', output_list, delimiter=',')
         
 
-save_probability_list(10000)
+save_probability_list(1)
