@@ -26,13 +26,13 @@ def save_probability_list(num_traces):
         
         print(model_file)
         var_name = get_variable_name(model_file)
-        if var_name == 'cm' or var_name == 'h' or var_name == 'k' or var_name == 'mc' or var_name == 'p':
+        if var_name == 'cm' or var_name == 'h' or var_name == 'k' or var_name == 'mc' or var_name == 'p' and var_name == 's':
             continue
         var = var_name + str(get_variable_number(model_file))
         out_list = []
-        for i in range( 0,8):
+        for i in range( 0,7):
             out_list.append(i)
-        if var_name == 's' and get_variable_number(model_file) in out_list:
+        if var_name == 't' and get_variable_number(model_file) in out_list:
             continue
         print 'Saving probabilities for : ' + var
         output_list , prob_list , rank_list = handler.get_leakage_rank_list_with_specific_model(MODEL_FOLDER +model_file, traces=num_traces,ASCAD= False,save_proba = True)
