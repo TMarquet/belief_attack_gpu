@@ -30,6 +30,8 @@ def save_probability_list(num_traces):
             continue
         var = var_name + str(get_variable_number(model_file))
         out_list = [1,2,3,4,5,6]
+        for i in range( 7,23):
+            out_list.append(i)
         if var_name == 'p' and get_variable_number(model_file) in out_list:
             continue
         print 'Saving probabilities for : ' + var
