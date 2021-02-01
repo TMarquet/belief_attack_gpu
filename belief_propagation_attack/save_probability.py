@@ -16,7 +16,7 @@ from numpy import savetxt
 
 
 ##### ATTENTION #############
-# cm 5 ->8 a refaire (pas♣ de x10 dans l'optimizer sans doute)
+# cm 5 ->8 a refaire (pas♣ de x10 dans l'optimizer sans doute) mc 7 8
 
 def save_probability_list(num_traces):
     model_tester = TestModels(use_extra = False)
@@ -26,11 +26,11 @@ def save_probability_list(num_traces):
         
         print(model_file)
         var_name = get_variable_name(model_file)
-        if var_name == 'cm' or var_name == 'h' or var_name == 'k':
+        if var_name == 'cm' or var_name == 'h' or var_name == 'k' or var_name == 'mc':
             continue
         var = var_name + str(get_variable_number(model_file))
-        out_list = [1,2,3,4]
-        if var_name == 'mc' and get_variable_number(model_file) in out_list:
+        out_list = [1,2,3,4,5,6]
+        if var_name == 'p' and get_variable_number(model_file) in out_list:
             continue
         print 'Saving probabilities for : ' + var
         output_list , prob_list , rank_list = handler.get_leakage_rank_list_with_specific_model(MODEL_FOLDER +model_file, traces=num_traces,ASCAD= False,save_proba = True)
