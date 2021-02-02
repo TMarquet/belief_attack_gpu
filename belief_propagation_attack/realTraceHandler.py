@@ -194,7 +194,7 @@ class RealTraceHandler:
                         self.loaded_proba[var_name+str(var_number)] = all_distribution
 
                         out_distribution = all_distribution[trace]
-                    print(out_distribution.shape)
+                    
                     print("Loaded distributions for {} ".format(var_notrace))
 
         elif best == 'lda' or (best is None and self.use_lda):
