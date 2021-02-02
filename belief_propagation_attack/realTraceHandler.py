@@ -186,7 +186,7 @@ class RealTraceHandler:
                     var_name = get_variable_name(variable)
                     var_number = get_variable_number(variable)     
                     
-                    if var_name+str(var_number) in self.load_proba:
+                    if var_name+str(var_number) in self.loaded_proba:
                         out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
                     else:
 
