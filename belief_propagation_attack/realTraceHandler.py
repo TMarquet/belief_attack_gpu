@@ -162,7 +162,7 @@ class RealTraceHandler:
                     print "> Ignoring NN for Variable {} as below threshold".format(variable)
             else:
                 
-                if not load_distributions :
+                if not load_probability() :
                 # Use neural network to predict value
                     try:
                         neural_network = self.neural_network_dict[var_notrace]
