@@ -185,7 +185,7 @@ class RealTraceHandler:
                 else:
                     var_name = get_variable_name(variable)
                     var_number = get_variable_number(variable)     
-                    print(self.loaded_already())
+                    print(self.loaded_already)
                     if self.loaded_already:
                         out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
                     else:
