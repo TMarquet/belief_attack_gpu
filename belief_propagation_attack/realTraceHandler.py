@@ -181,7 +181,7 @@ class RealTraceHandler:
                     new_input = np.resize(power_value, (1, power_value.size))                
                     #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
                     out_distribution = neural_network.predict(new_input)[0]
-                    print(type(out_distribution))
+                    print(type(out_distribution[0]))
                 else:
                     var_name = get_variable_name(variable)
                     var_number = get_variable_number(variable)
