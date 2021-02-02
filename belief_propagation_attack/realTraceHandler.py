@@ -143,7 +143,7 @@ class RealTraceHandler:
             # print "Getting Leakage for {}, trace {}".format(variable, trace)
         tprange = self.tprange
         best = None
-        print 'leakage distrib'
+
         if self.use_best:
             best = self.get_best_template(variable)
             if best == 'uni':
@@ -181,12 +181,12 @@ class RealTraceHandler:
                     new_input = np.resize(power_value, (1, power_value.size))                
                     #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
                     out_distribution = neural_network.predict(new_input)[0]
-                    print(type(out_distribution[0]))
+
                 else:
                     var_name = get_variable_name(variable)
                     var_number = get_variable_number(variable)
                     out_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',')[trace].astype(np.float32)
-
+                    print(out_distribution.shape)
         elif best == 'lda' or (best is None and self.use_lda):
             # Load LDA file
             try:
@@ -228,7 +228,6 @@ class RealTraceHandler:
 
     # Both together
     def get_leakage(self, variable, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1,load_probability = False):
-        print 'leakage'
         return self.get_leakage_distribution(variable, self.get_leakage_value(variable, trace=trace, average_power_values=average_power_values, averaged_traces=averaged_traces), trace=trace, normalise=normalise, ignore_bad=ignore_bad,load_probability=load_probability)
 
     def get_plaintext_byte_distribution(self, variable, trace=0):
