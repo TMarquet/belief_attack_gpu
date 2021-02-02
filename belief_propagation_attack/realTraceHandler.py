@@ -137,7 +137,7 @@ class RealTraceHandler:
 
         return power_value
 
-    def get_leakage_distribution(self, variable, power_value, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1,load_distributions = False):
+    def get_leakage_distribution(self, variable, power_value, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1,load_probability = False):
         # myvarlist = ["k001-K", "k001"]
         # if variable in myvarlist:
             # print "Getting Leakage for {}, trace {}".format(variable, trace)
