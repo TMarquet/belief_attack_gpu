@@ -184,7 +184,7 @@ class RealTraceHandler:
                 else:
                     var_name = get_variable_name(variable)
                     var_number = get_variable_number(variable)
-                    out_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',',dtype=np.float64_t)[trace]
+                    out_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',',dtype=np.float64)[trace]
 
         elif best == 'lda' or (best is None and self.use_lda):
             # Load LDA file
