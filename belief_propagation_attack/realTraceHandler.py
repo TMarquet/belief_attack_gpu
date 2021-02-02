@@ -187,7 +187,7 @@ class RealTraceHandler:
                     var_number = get_variable_number(variable)
                     out_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',')[trace].astype(np.float32)
                     print("Loaded distributions for {} ".format(var_notrace))
-                    print(out_distribution.shape)
+
         elif best == 'lda' or (best is None and self.use_lda):
             # Load LDA file
             try:
