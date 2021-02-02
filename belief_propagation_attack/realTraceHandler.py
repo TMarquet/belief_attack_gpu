@@ -37,8 +37,8 @@ class RealTraceHandler:
                     self.realvalues[var] = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var))
 
         self.real_trace_data_maxtraces, self.real_trace_data_len = self.real_trace_data.shape
-
-
+        self.loaded_already = False
+        self.loaded_proba = {}
         if not no_print:
             print "Preloading all timepoints, may take a while..."
         self.timepoints = dict()
@@ -184,8 +184,17 @@ class RealTraceHandler:
 
                 else:
                     var_name = get_variable_name(variable)
-                    var_number = get_variable_number(variable)
-                    out_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',')[trace].astype(np.float32)
+                    var_number = get_variable_number(variable)     
+                    print(self.loaded_already())
+                    if self.loaded_already:
+                        out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
+                    else:
+
+                        all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',').astype(np.float32)
+                        self.loaded_proba[var_name+str(var_number)] = all_distribution
+                        self.loaded_already = True
+                        out_distribution = all_distribution[trace]
+                    print(out_distribution.shape)
                     print("Loaded distributions for {} ".format(var_notrace))
 
         elif best == 'lda' or (best is None and self.use_lda):
