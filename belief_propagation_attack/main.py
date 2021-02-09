@@ -350,7 +350,7 @@ def run_belief_propagation_attack(margdist=None):
                             for j_ in range(256):
                                 incoming_messages_list[i_][j_][trace] = incoming_messages[i_][j_]
                     elif method == "IND" and KEY_POWER_VALUE_AVERAGE:
-                        print 'MULTIPLY'
+                        
                         # Multiply the incoming messages
                         current_incoming_key_messages = array_2d_multiply(current_incoming_key_messages,
                                                               my_graph.get_all_key_incoming_messages())
