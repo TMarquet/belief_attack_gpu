@@ -178,6 +178,7 @@ class RealTraceHandler:
                         self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes100_window{}_epochs100_batchsize50_lr1e-05_sd100_traces190000_aug0_jitterNone_defaultloss_best.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
                         
                         neural_network = self.neural_network_dict[var_notrace]
+                    print(trace)
                     new_input = np.resize(power_value, (1, power_value.size))                
                     #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
                     out_distribution = neural_network.predict(new_input)[0]
