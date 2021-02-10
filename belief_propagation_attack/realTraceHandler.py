@@ -186,7 +186,7 @@ class RealTraceHandler:
                 else:
                     var_name = get_variable_name(variable)
                     var_number = get_variable_number(variable)     
-                    
+                    print(trace)
                     if var_name+str(var_number) in self.loaded_proba:
                         out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
                     else:
@@ -196,7 +196,7 @@ class RealTraceHandler:
                         print("Loaded distributions for {} ".format(var_notrace))
                         
                         out_distribution = all_distribution[trace]
-                print(trace)    
+                            
                     
 
         elif best == 'lda' or (best is None and self.use_lda):
