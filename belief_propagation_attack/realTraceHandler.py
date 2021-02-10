@@ -196,7 +196,7 @@ class RealTraceHandler:
                         print("Loaded distributions for {} ".format(var_notrace))
                         
                         out_distribution = all_distribution[trace]
-                print(out_distribution.shape)    
+                print(trace)    
                     
 
         elif best == 'lda' or (best is None and self.use_lda):
