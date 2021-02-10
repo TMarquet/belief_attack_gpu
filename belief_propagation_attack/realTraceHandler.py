@@ -181,6 +181,7 @@ class RealTraceHandler:
                     new_input = np.resize(power_value, (1, power_value.size))                
                     #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
                     out_distribution = neural_network.predict(new_input)[0]
+                    
 
                 else:
                     var_name = get_variable_name(variable)
@@ -193,9 +194,9 @@ class RealTraceHandler:
                         all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',').astype(np.float32)
                         self.loaded_proba[var_name+str(var_number)] = all_distribution
                         print("Loaded distributions for {} ".format(var_notrace))
-                        print(trace)
+                        
                         out_distribution = all_distribution[trace]
-                    
+                print(out_distribution.shape)    
                     
 
         elif best == 'lda' or (best is None and self.use_lda):
