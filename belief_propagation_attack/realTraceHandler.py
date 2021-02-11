@@ -163,7 +163,7 @@ class RealTraceHandler:
             else:
                 var_name, var_number, _ = split_variable_name(variable)
                 real_val = self.realvalues[var_name][var_number-1][trace]
-                print(real_val[var_name].shape)
+                print(real_val[var_name][var_number-1].shape)
                 if not load_probability :
                 # Use neural network to predict value
                     try:
