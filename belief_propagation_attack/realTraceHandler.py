@@ -161,7 +161,8 @@ class RealTraceHandler:
                 if not self.no_print:
                     print "> Ignoring NN for Variable {} as below threshold".format(variable)
             else:
-                
+                var_name, var_number, _ = split_variable_name(variable)
+                real_val = self.realvalues[var_name][var_number-1][(self.real_trace_data_maxtraces - trace - 1) if from_end else trace]
                 if not load_probability :
                 # Use neural network to predict value
                     try:
@@ -197,8 +198,9 @@ class RealTraceHandler:
                         print("Loaded distributions for {} ".format(var_notrace))
                         
                         out_distribution = all_distribution[trace]
-                  
-                    
+                rank = get_rank_from_prob_dist(out_distribution, real_val)
+                print('Rank of var {} for trace {} : '.format(variable,trace),rank)
+                print('Proba of var {} for trace {} : '.format(variable,trace),out_distribution[real_val])   
 
         elif best == 'lda' or (best is None and self.use_lda):
             # Load LDA file
