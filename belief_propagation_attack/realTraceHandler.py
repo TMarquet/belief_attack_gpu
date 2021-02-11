@@ -188,19 +188,24 @@ class RealTraceHandler:
                 else:
                     var_name = get_variable_name(variable)
                     var_number = get_variable_number(variable)     
-                   
-                    if var_name+str(var_number) in self.loaded_proba:
-                        out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
-                    else:
+                    cnn_test = load_sca_model('models/adagrad/k001_cnn_model1_window2000_epochs6_batchsize50_lr0.0001_sd100_traces240000_aug0_jitterNone_initwglorotu.h5')
+                    # if var_name+str(var_number) in self.loaded_proba:
+                    #     out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
+                    # else:
 
-                        all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',').astype(np.float32)
-                        self.loaded_proba[var_name+str(var_number)] = all_distribution
-                        print("Loaded distributions for {} ".format(var_notrace))
+                    #     all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',').astype(np.float32)
+                    #     self.loaded_proba[var_name+str(var_number)] = all_distribution
+                    #     print("Loaded distributions for {} ".format(var_notrace))
                         
-                        out_distribution = all_distribution[trace]
+                    #     out_distribution = all_distribution[trace]
+                    new_input = np.resize(power_value, (1, power_value.size))    
+                    new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
+                    #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
+                    out_distribution = neural_network.predict(new_input)[0]
+
                 rank = get_rank_from_prob_dist(out_distribution, real_val)
-                print('Rank of var {} for trace {} : '.format(variable,trace),rank)
-                print('Proba of var {} for trace {} : '.format(variable,trace),out_distribution[real_val])   
+                print('Rank for variable {} and trace {} : '.format(variable,trace), rank)
+                print('Proba for variable {} and trace {} : '.format(variable,trace), out_distribution[real_val])
 
         elif best == 'lda' or (best is None and self.use_lda):
             # Load LDA file
