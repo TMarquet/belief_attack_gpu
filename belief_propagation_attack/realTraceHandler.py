@@ -35,7 +35,7 @@ class RealTraceHandler:
                 self.realvalues = dict()
                 for var in variable_dict:
                     self.realvalues[var] = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var))
-
+                    print(self.realvalues[var].shape)
         self.real_trace_data_maxtraces, self.real_trace_data_len = self.real_trace_data.shape
 
         self.loaded_proba = {}
@@ -162,7 +162,7 @@ class RealTraceHandler:
                     print "> Ignoring NN for Variable {} as below threshold".format(variable)
             else:
                 var_name, var_number, _ = split_variable_name(variable)
-                real_val = self.realvalues[var_name][var_number-1][(self.real_trace_data_maxtraces - trace - 1) if from_end else trace]
+                real_val = self.realvalues[var_name][var_number-1][trace]
                 if not load_probability :
                 # Use neural network to predict value
                     try:
