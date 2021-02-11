@@ -35,7 +35,7 @@ class RealTraceHandler:
                 self.realvalues = dict()
                 for var in variable_dict:
                     self.realvalues[var] = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var))
-                    print(self.realvalues[var].shape)
+                    
         self.real_trace_data_maxtraces, self.real_trace_data_len = self.real_trace_data.shape
 
         self.loaded_proba = {}
@@ -163,6 +163,7 @@ class RealTraceHandler:
             else:
                 var_name, var_number, _ = split_variable_name(variable)
                 real_val = self.realvalues[var_name][var_number-1][trace]
+                print(real_val[var_name].shape)
                 if not load_probability :
                 # Use neural network to predict value
                     try:
@@ -207,9 +208,9 @@ class RealTraceHandler:
                             print("Loaded distributions for {} ".format(var_notrace))
                         
                         out_distribution = all_distribution[trace]
-                rank = get_rank_from_prob_dist(out_distribution, real_val)
-                print('Rank for variable {} and trace {} : '.format(variable,trace), rank)
-                print('Proba for variable {} and trace {} : '.format(variable,trace), out_distribution[real_val])
+                # rank = get_rank_from_prob_dist(out_distribution, real_val)
+                # print('Rank for variable {} and trace {} : '.format(variable,trace), rank)
+                # print('Proba for variable {} and trace {} : '.format(variable,trace), out_distribution[real_val])
 
         elif best == 'lda' or (best is None and self.use_lda):
             # Load LDA file
