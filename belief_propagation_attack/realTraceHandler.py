@@ -427,5 +427,5 @@ class RealTraceHandler:
                 return (output_list , prob_list , rank_list)
             # Return Rank List 
             else:
-                print(rank_list.shape)
+                print(len(rank_list))
                 return (rank_list, prob_list, predicted_values)
