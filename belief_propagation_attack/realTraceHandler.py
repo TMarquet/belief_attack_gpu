@@ -174,9 +174,9 @@ class RealTraceHandler:
                         # OLD: TODO FIX
                         # self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes200_window{}_epochs6000_batchsize200_sd100_traces200000_aug0.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
                         # NEW NEURAL NETWORKS 20/5/19                               p016_cnn_model1_window2000_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5
-                        # self.neural_network_dict[var_notrace] = load_sca_model('{}{}_cnn_model1_window{}_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
- 
-                        self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes100_window{}_epochs100_batchsize50_lr1e-05_sd100_traces190000_aug0_jitterNone_defaultloss_best.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
+                        self.neural_network_dict[var_notrace] = load_sca_model('{}{}_cnn_model1_window{}_epochs6_batchsize50_lr0.0001_sd100_traces240000_aug0_jitterNone_initwglorotu.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
+
+                        #self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes100_window{}_epochs100_batchsize50_lr1e-05_sd100_traces190000_aug0_jitterNone_defaultloss_best.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
                         
                         neural_network = self.neural_network_dict[var_notrace]
                    
@@ -194,7 +194,7 @@ class RealTraceHandler:
                     if var_name+str(var_number) in self.loaded_proba:
                         out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
                     else:
-                        print(OUTPUT_FOLDER + var_name + '/' + variable + '.csv')
+                        
                         all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + '0'+(str(var_number) if len(str(var_number)) == 2 else '0'+str(var_number)) + '.csv', delimiter=',').astype(np.float32)
                         self.loaded_proba[var_name+str(var_number)] = all_distribution
                         print("Loaded distributions for {} ".format(var_notrace))
