@@ -195,7 +195,7 @@ class RealTraceHandler:
                         out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
                     else:
                         print(OUTPUT_FOLDER + var_name + '/' + variable + '.csv')
-                        all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + variable + '.csv', delimiter=',').astype(np.float32)
+                        all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + '0'+(var_number if len(var_number) == 2 else '0'+var_number) + '.csv', delimiter=',').astype(np.float32)
                         self.loaded_proba[var_name+str(var_number)] = all_distribution
                         print("Loaded distributions for {} ".format(var_notrace))
                     
