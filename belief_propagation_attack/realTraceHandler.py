@@ -424,8 +424,7 @@ class RealTraceHandler:
             if save_proba:
             
                 output_list = np.array(leakage_list)
-                return (output_list , prob_list , rank_list)
+                return(rank_list, prob_list, predicted_values,output_list)
             # Return Rank List 
             else:
-                print(len(rank_list))
                 return (rank_list, prob_list, predicted_values)

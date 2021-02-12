@@ -282,7 +282,17 @@ class TestModels:
     # Check a saved model against one of the bpann databases Attack traces
     def check_model(self, model_file, num_traces=10000, template_attack=False, random_key=False, save=True,ASCAD = False,save_proba = False):
         # try:
-        rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba)
+        if save_proba:
+            rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba)
+        else:
+            rank_list, prob_list, predicted_values,output_list = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba)
+            print 'Saving probabilities for : ' + var
+            model_name = model_file.replace(MODEL_FOLDER, '')
+            variable = model_name.split('_')[0] 
+            var_name, var_number, _ = split_variable_name(variable)
+            if not var_name in listdir(OUTPUT_FOLDER):
+                os.mkdir(OUTPUT_FOLDER + var_name + '/')
+            savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'.csv', output_list, delimiter=',')            
         if rank_list is not None:
 
             print "\n\nModel: {}".format(model_file)
@@ -368,6 +378,8 @@ if __name__ == "__main__":
                         type=int, default=10000)
     parser.add_argument('--S', '--SAVE', action="store_true", dest="SAVE",
                         help='Saves Output', default=False)
+    parser.add_argument('--SAVE_PROBA', action="store_true", dest="SAVE_PROBA",
+                        help='Saves Output probability for attack', default=False)    
     parser.add_argument('--T', '--TEMPLATE', '--TEMPLATE_ATTACK', action="store_true", dest="TEMPLATE_ATTACK",
                         help='Performs Template Attack on Data', default=False)
     parser.add_argument('-j', '-jitter', action="store", dest="JITTER",
@@ -401,6 +413,7 @@ if __name__ == "__main__":
     TEST_TRACES = args.TEST_TRACES
     TEST_ALL = args.TEST_ALL
     SAVE = args.SAVE
+    SAVE_PROBA = args.SAVE_PROBA
     TEMPLATE_ATTACK = args.TEMPLATE_ATTACK
     JITTER = args.JITTER
     USE_EXTRA = args.USE_EXTRA
@@ -426,7 +439,7 @@ if __name__ == "__main__":
     #     data.append(in_file)
     # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
-    variables_to_test = ['k001','k002','k003','k004','k005','k006','k007','k008']
+    variables_to_test = ['k001','k002','k003','k004','k005','k006','k007','k008','k009','k010','k011','k012','k013','k014','k015','k016']
     if TEST_ALL:
         # Clear statistics
         if SAVE:
@@ -444,7 +457,7 @@ if __name__ == "__main__":
             for (m) in sorted(listdir(MODEL_FOLDER)):
                 if string_starts_with(m, var):
                     print 'Testing : ', m 
-                    model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD)
+                    model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
         
 
 # # No argument: check all the trained models
