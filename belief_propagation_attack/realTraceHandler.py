@@ -181,7 +181,7 @@ class RealTraceHandler:
                         neural_network = self.neural_network_dict[var_notrace]
                    
                     new_input = np.resize(power_value, (1, power_value.size))                
-                    #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
+                    new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
                     out_distribution = neural_network.predict(new_input)[0]
                     
 
