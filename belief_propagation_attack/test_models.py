@@ -439,7 +439,7 @@ if __name__ == "__main__":
     #     data.append(in_file)
     # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
-    variables_to_test = ['cm001','cm002','cm003','cm004','cm005','cm006','cm007','cm008','cm009','cm010','cm011','cm012']
+    variables_to_test = ['mc001','mc002','mc003','mc004','mc005','mc006','mc007','mc008','mc009','mc010','mc011','mc012']
     if TEST_ALL:
         # Clear statistics
         if SAVE:
