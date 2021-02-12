@@ -189,23 +189,16 @@ class RealTraceHandler:
                     
                     var_name = get_variable_name(variable)
                     var_number = get_variable_number(variable) 
-                    if var_name == 'k':
-                        cnn_test = load_sca_model('models/adagrad/k001_cnn_model1_window2000_epochs6_batchsize50_lr0.0001_sd100_traces240000_aug0_jitterNone_initwglorotu.h5')
-    
-                        new_input = np.resize(power_value, (1, power_value.size))    
-                        new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
-                        #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
-                        out_distribution = cnn_test.predict(new_input)[0]
+
+                        
+                    if var_name+str(var_number) in self.loaded_proba:
+                        out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
                     else:
-                        
-                        if var_name+str(var_number) in self.loaded_proba:
-                            out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
-                        else:
-                            print(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv')
-                            all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',').astype(np.float32)
-                            self.loaded_proba[var_name+str(var_number)] = all_distribution
-                            print("Loaded distributions for {} ".format(var_notrace))
-                        
+                        print(OUTPUT_FOLDER + var_name + '/' + variable + '.csv')
+                        all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + str(var_number) + '.csv', delimiter=',').astype(np.float32)
+                        self.loaded_proba[var_name+str(var_number)] = all_distribution
+                        print("Loaded distributions for {} ".format(var_notrace))
+                    
                         out_distribution = all_distribution[trace]
                 # rank = get_rank_from_prob_dist(out_distribution, real_val)
                 # print('Rank for variable {} and trace {} : '.format(variable,trace), rank)
