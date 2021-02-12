@@ -292,7 +292,7 @@ class TestModels:
             var_name, var_number, _ = split_variable_name(variable)
             if not var_name in listdir(OUTPUT_FOLDER):
                 os.mkdir(OUTPUT_FOLDER + var_name + '/')
-            savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'.csv', output_list, delimiter=',')            
+            np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'.csv', output_list, delimiter=',')            
         if rank_list is not None:
 
             print "\n\nModel: {}".format(model_file)
