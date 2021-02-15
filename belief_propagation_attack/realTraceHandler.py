@@ -424,7 +424,7 @@ class RealTraceHandler:
                 if trace == 0:
                     all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + '0'+(str(var_number) if len(str(var_number)) == 2 else '0'+str(var_number)) + '.csv', delimiter=',').astype(np.float32)
                     print(probability)
-                    print(all_distribution[self.real_trace_data_maxtraces - trace - 1][real_val])
+                    print(all_distribution[10000 - trace - 1][real_val])
                 leakage_list.append(leakage)
                 rank = get_rank_from_prob_dist(leakage, real_val)
                 # print 'Real value: {}, Prob: {}, Rank: {}, Best Value: {} (prob {})'.format(real_val, leakage[real_val], rank, np.argmax(leakage), leakage[np.argmax(leakage)])
