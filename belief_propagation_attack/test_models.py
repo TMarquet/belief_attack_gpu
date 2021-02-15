@@ -454,10 +454,10 @@ if __name__ == "__main__":
         # TODO
         
         for var in variables_to_test :
-            for (m) in sorted(listdir(NEURAL_MODEL_FOLDER)):
+            for (m) in sorted(listdir(MODEL_FOLDER)):
                 if string_starts_with(m, var):
                     print 'Testing : ', m 
-                    model_tester.check_model(NEURAL_MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
+                    model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
         
 
 # # No argument: check all the trained models
