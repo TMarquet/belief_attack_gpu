@@ -167,6 +167,7 @@ class RealTraceHandler:
                 # Use neural network to predict value
                     try:
                         neural_network = self.neural_network_dict[var_notrace]
+                        out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
                     except KeyError:
                         # Add to dict!
                         if not self.no_print:
@@ -180,10 +181,22 @@ class RealTraceHandler:
                         
                         neural_network = self.neural_network_dict[var_notrace]
                    
+                        var_name = get_variable_name(variable)
+                        var_number = get_variable_number(variable)                         
+                        all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + '0'+(str(var_number) if len(str(var_number)) == 2 else '0'+str(var_number)) + '.csv', delimiter=',').astype(np.float32)
+                        self.loaded_proba[var_name+str(var_number)] = all_distribution
+                        print("Loaded distributions for {} ".format(var_notrace)) 
+                        
                     new_input = np.resize(power_value, (1, power_value.size))                
                     new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
                     out_distribution = neural_network.predict(new_input)[0]
-                    
+
+         
+
+                
+                    out_distribution_loaded = all_distribution[trace]   
+                    print('Value for neural network : ',out_distribution)
+                    print('Value for saved proba : ',out_distribution_loaded)
 
                 else:
                     
