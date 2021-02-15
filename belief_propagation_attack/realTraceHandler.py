@@ -396,6 +396,7 @@ class RealTraceHandler:
                 #     print "Real Value {}: {}".format(trace, real_val)
 
                 # leakage = self.get_leakage(variable, trace=trace)
+                    print(from_end)
                     power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 1) if from_end else trace, nn_normalise=True, window=window_size)
                 else:
                     middle = int(len(X_attack[trace])/2)
