@@ -24,10 +24,10 @@ class RealTraceHandler:
         if use_extra:
             self.real_trace_data = load_trace_data(filepath=TRACEDATA_EXTRA_FILEPATH if jitter is None else get_shifted_tracedata_filepath(extra=True, shifted=jitter), memory_mapped=memory_mapped)
             self.plaintexts = np.load(PLAINTEXT_EXTRA_FILEPATH)
+            print('Debug : ', debug)
             if debug:
                 self.realvalues = dict()
                 for var in variable_dict:
-                    print('here')
                     self.realvalues[var] = np.load('{}extra_{}.npy'.format(REALVALUES_FOLDER, var))
         else:
             self.real_trace_data = load_trace_data(filepath=TRACEDATA_FILEPATH if jitter is None else get_shifted_tracedata_filepath(extra=False, shifted=jitter), memory_mapped=memory_mapped)
@@ -397,7 +397,6 @@ class RealTraceHandler:
                 #     print "Real Value {}: {}".format(trace, real_val)
 
                 # leakage = self.get_leakage(variable, trace=trace)
-                    print(self.real_trace_data_maxtraces - trace - 1)
                     power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 1) if from_end else trace, nn_normalise=True, window=window_size)
                 else:
                     middle = int(len(X_attack[trace])/2)
