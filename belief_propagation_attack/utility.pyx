@@ -1741,7 +1741,7 @@ def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length
     traces, data_length = trace_data.shape
     type = trace_data.dtype
     real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name), allow_pickle=True)[var_number-1,:]
-
+    print(traces)
     if training_traces > traces:
         print 'Augmenting {} Traces!'.format(training_traces - traces)
 
