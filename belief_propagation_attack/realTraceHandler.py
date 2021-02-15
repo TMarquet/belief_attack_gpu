@@ -423,6 +423,7 @@ class RealTraceHandler:
 
                 probability = leakage[real_val]
                 if trace == 0:
+                    print(0.0041679107 in leakage)
                     print(probability)
                     print(real_val)
 
