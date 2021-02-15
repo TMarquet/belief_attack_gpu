@@ -396,7 +396,7 @@ class RealTraceHandler:
                 #     print "Real Value {}: {}".format(trace, real_val)
 
                 # leakage = self.get_leakage(variable, trace=trace)
-                    print(from_end)
+                    print(self.real_trace_data_maxtraces - trace - 1)
                     power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 1) if from_end else trace, nn_normalise=True, window=window_size)
                 else:
                     middle = int(len(X_attack[trace])/2)
@@ -424,7 +424,7 @@ class RealTraceHandler:
                 if trace == 0:
                     all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + '0'+(str(var_number) if len(str(var_number)) == 2 else '0'+str(var_number)) + '.csv', delimiter=',').astype(np.float32)
                     print(probability)
-                    print(all_distribution[trace][0])
+                    print(all_distribution[self.real_trace_data_maxtraces - trace - 1][real_val])
                 leakage_list.append(leakage)
                 rank = get_rank_from_prob_dist(leakage, real_val)
                 # print 'Real value: {}, Prob: {}, Rank: {}, Best Value: {} (prob {})'.format(real_val, leakage[real_val], rank, np.argmax(leakage), leakage[np.argmax(leakage)])
