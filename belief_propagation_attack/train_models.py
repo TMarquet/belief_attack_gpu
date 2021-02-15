@@ -318,7 +318,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
-    optimizer = Adagrad(lr=learning_rate*10)
+    optimizer = RMSProp(lr=learning_rate)
     model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
@@ -633,12 +633,12 @@ if __name__ == "__main__":
 
 
     if TEST_VARIABLES:
-        variable_list = ['cm005','cm006','cm007','cm008']
+        variable_list = ['s001','k001','k004','t001']
     if ALL_VARS:
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list = ['p032']
+        variable_list = ['s001','k001','k004','t001']
         # for i in range(12,17) :
         #     if i < 10 :
         #         variable_list.append('mc00'+str(i))
