@@ -195,8 +195,8 @@ class RealTraceHandler:
 
                 
                     out_distribution_loaded = all_distribution[trace]   
-                    print('Value for neural network : ',out_distribution)
-                    print('Value for saved proba : ',out_distribution_loaded)
+                    print('Value for neural network : ',normalise_array(out_distribution)[real_val])
+                    print('Value for saved proba : ',normalise_array(out_distribution_loaded)[real_val])
 
                 else:
                     
