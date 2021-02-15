@@ -1750,8 +1750,8 @@ def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length
         X_profiling = np.memmap('{}tmp_{}_{}_sd{}_window{}_aug{}.mmap'.format(TRACE_FOLDER, variable, training_traces, sd, input_length, augment_method), shape=(training_traces, data_length), mode='w+', dtype=type)
         Y_profiling = np.empty(training_traces, dtype=int)
 
-        X_profiling[:traces] = trace_data
-        Y_profiling[:traces] = real_values
+        X_profiling[:traces] = trace_data[:traces]
+        Y_profiling[:traces] = real_values[:traces]
 
         for train_trace in range(traces, training_traces):
 
