@@ -259,7 +259,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
             weight_init_method = tf.keras.initializers.he_normal()
     # From VGG16 design
     input_shape = (input_length, 1)
-    model = tf.keras.Sequential(name='cnn_best')
+    model = tf.keras.Sequential(name='cnn_small')
     
     # Convolution blocks
     # Block 1
