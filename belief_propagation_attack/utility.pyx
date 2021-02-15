@@ -106,7 +106,7 @@ TEMP_FOLDER         = TRACE_FOLDER + 'temp/'
 FEATURECOLUMN_FOLDER = TENSORFLOW_FOLDER + 'featurecolumns/'
 LABEL_FOLDER        = TENSORFLOW_FOLDER + 'labels/'
 OUTPUT_FOLDER       = 'output/'
-MODEL_FOLDER        = 'models/adagrad/'
+MODEL_FOLDER        = 'models/'
 ASCAD_MODEL_FOLDER  = MODEL_FOLDER + 'ASCAD/'
 NEURAL_MODEL_FOLDER = TRACE_FOLDER + 'models/'
 
