@@ -308,6 +308,7 @@ class RealTraceHandler:
         else:
             model_name = model_file.replace(MODEL_FOLDER, '')
         variable = model_name.split('_')[0]
+        print(from_end)
         if not self.no_print:
             print "\n* Checking model {} (variable {}) {}*\n".format(model_name, variable, 'WITH VALIDATION TRACES' if from_end else '')
         if not check_file_exists(model_file):            
