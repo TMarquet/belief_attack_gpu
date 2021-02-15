@@ -30,6 +30,7 @@ class RealTraceHandler:
                 for var in variable_dict:
                     self.realvalues[var] = np.load('{}extra_{}.npy'.format(REALVALUES_FOLDER, var))
         else:
+            print('Debug not use extra : ', debug)
             self.real_trace_data = load_trace_data(filepath=TRACEDATA_FILEPATH if jitter is None else get_shifted_tracedata_filepath(extra=False, shifted=jitter), memory_mapped=memory_mapped)
             self.plaintexts = np.load(PLAINTEXT_FILEPATH)
             if debug:
