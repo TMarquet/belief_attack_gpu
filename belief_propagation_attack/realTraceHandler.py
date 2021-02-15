@@ -420,6 +420,8 @@ class RealTraceHandler:
                     leakage = hw_probabilities_to_probability_distribution(leakage)
 
                 probability = leakage[real_val]
+                if trace == 0:
+                    print(probability)
                 leakage_list.append(leakage)
                 rank = get_rank_from_prob_dist(leakage, real_val)
                 # print 'Real value: {}, Prob: {}, Rank: {}, Best Value: {} (prob {})'.format(real_val, leakage[real_val], rank, np.argmax(leakage), leakage[np.argmax(leakage)])
