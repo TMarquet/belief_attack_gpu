@@ -263,58 +263,84 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
     # Convolution blocks
     # Block 1
-    model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block1_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
+    # model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
+    # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    # model.add(BatchNormalization(name='block1_batchnorm'))
+    # model.add(tf.keras.layers.Activation('relu'))
+    # model.add(MaxPooling1D(2, strides=2, name='block1_pool'))  
     
-    # Block 2
+    # # Block 2
 
-    model.add(Conv1D(128, 3, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block2_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(MaxPooling1D(2, strides=2, name='block2_pool'))  
+    # model.add(Conv1D(128, 3, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
+    # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    # model.add(BatchNormalization(name='block2_batchnorm'))
+    # model.add(tf.keras.layers.Activation('relu'))
+    # model.add(MaxPooling1D(2, strides=2, name='block2_pool'))  
     
-    # Block 3
-    model.add(Conv1D(256, 3, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block3_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
+    # # Block 3
+    # model.add(Conv1D(256, 3, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
+    # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    # model.add(BatchNormalization(name='block3_batchnorm'))
+    # model.add(tf.keras.layers.Activation('relu'))
+    # model.add(MaxPooling1D(2, strides=2, name='block3_pool'))
     
-    # Block 4
-    model.add(Conv1D(512, 3, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block4_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(MaxPooling1D(2, strides=2, name='block4_pool'))    
+    # # Block 4
+    # model.add(Conv1D(512, 3, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
+    # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    # model.add(BatchNormalization(name='block4_batchnorm'))
+    # model.add(tf.keras.layers.Activation('relu'))
+    # model.add(MaxPooling1D(2, strides=2, name='block4_pool'))    
     
-    # Block 5
-    model.add(Conv1D(512, 3, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block5_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(MaxPooling1D(2, strides=2, name='block5_pool')) 
+    # # Block 5
+    # model.add(Conv1D(512, 3, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
+    # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    # model.add(BatchNormalization(name='block5_batchnorm'))
+    # model.add(tf.keras.layers.Activation('relu'))
+    # model.add(MaxPooling1D(2, strides=2, name='block5_pool')) 
     
-    model.add(Flatten(name='flatten'))
+    # model.add(Flatten(name='flatten'))
         
-    # Two Dense layers
+    # # Two Dense layers
     
-    model.add(Dense(dense_units, name='fc1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block6_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
+    # model.add(Dense(dense_units, name='fc1',kernel_initializer = weight_init_method))
+    # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    # model.add(BatchNormalization(name='block6_batchnorm'))
+    # model.add(tf.keras.layers.Activation('relu'))
     
     
     
-    model.add(Dense(dense_units, name='fc2',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block7_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))       
+    # model.add(Dense(dense_units, name='fc2',kernel_initializer = weight_init_method))
+    # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    # model.add(BatchNormalization(name='block7_batchnorm'))
+    # model.add(tf.keras.layers.Activation('relu'))       
 
     #model.add(Dropout(0.5))
+    model.add(Conv1D(22, 3, padding='same', name='conv1',input_shape = input_shape))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name = 'batch_norm1'))
+    model.add(tf.keras.layers.Activation('relu'))
+    
+    model.add(Conv1D(44, 3, padding='same', name='conv2'))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name = 'batch_norm2'))
+    model.add(tf.keras.layers.Activation('relu'))
+    
+    model.add(Conv1D(22, 3, padding='same', name='conv3'))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name = 'batch_norm3'))
+    model.add(tf.keras.layers.Activation('relu'))
+    model.add(AveragePooling1D(2, strides=2, name='pooling'))
+    
+
+    model.add(Flatten(name = 'flatten'))
+    
+
+    model.add(Dense(dense_units, name='dense'))
+    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+    model.add(BatchNormalization(name='batch_norm_dense'))
+    model.add(tf.keras.layers.Activation('relu'))    
+
+
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
