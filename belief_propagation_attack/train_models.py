@@ -263,7 +263,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
     # Convolution blocks
     # Block 1
-    model.add(Conv1D(64, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
+    model.add(Conv1D(8, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
@@ -271,28 +271,28 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
     # Block 2
 
-    model.add(Conv1D(64, 3, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
+    model.add(Conv1D(16, 3, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block2_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
   
     
     # Block 3
-    model.add(Conv1D(128, 3, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
+    model.add(Conv1D(64, 3, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block3_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
     model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
     
     # Block 4
-    model.add(Conv1D(512, 3, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
+    model.add(Conv1D(64, 3, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block4_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
    
     
     # Block 5
-    model.add(Conv1D(512, 3, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
+    model.add(Conv1D(128, 3, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block5_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
