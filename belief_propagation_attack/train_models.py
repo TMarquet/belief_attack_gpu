@@ -246,7 +246,7 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
     # return parallel_model
 
 ### CNN Best model
-def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=4096,weight_method = 'glorotu'):
+def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=2048,weight_method = 'glorotu'):
     weight_init_method = None
     if not weight_method == 'glorotu':
         if weight_method == 'lecunn':
@@ -301,12 +301,12 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     model.add(Flatten(name='flatten'))
         
     # Two Dense layers
-    
+    model.add(Dropout(0.5))
     model.add(Dense(dense_units, name='fc1',kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block6_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
-    
+    model.add(Dropout(0.5))
     
     
     model.add(Dense(dense_units, name='fc2',kernel_initializer = weight_init_method))
@@ -379,8 +379,8 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     check_file_exists(os.path.dirname(save_file_name))
     # Save model every epoch
     save_model = ModelCheckpoint(filepath = save_file_name,
-                                monitor='val_accuracy',
-                            mode='max',
+                                monitor='val_loss',
+                            mode='min',
                             save_best_only=True)
     # tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
     callbacks=[save_model, TrainValTensorBoard(write_graph=True)]
