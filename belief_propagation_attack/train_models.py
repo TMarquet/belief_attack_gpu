@@ -389,88 +389,88 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
     classes = 9 if hammingweight else 256
     hammingweight_flag = '_hw' if hammingweight else ''
     hammingdistance_flag = '_hamdistencode' if hamming_distance_encoding else ''
-        if add_noise:
-            standard_deviation = 10
-            seed = 1
-            np.random.seed(seed)
-            X_profiling = X_profiling + np.round(np.random.normal(0, standard_deviation, X_profiling.shape)).astype(int)
-            X_attack = X_attack + np.round(np.random.normal(0, standard_deviation, X_attack.shape)).astype(int)
-    
-        if use_ascad:
-            # Done slightly differently
-            ascad_model = cnn_ascad() if cnn else mlp_ascad()
-            train_model(X_profiling, Y_profiling, ascad_model, store_directory + '{}_{}_ASCAD.h5'.format(variable, 'cnn' if cnn else 'mlp'), epochs=75 if cnn else 200, batch_size=200 if cnn else 100, validation_data=(X_attack, Y_attack),
-            progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
-    
-        ### CNN training
-        elif cnn:
-            # TODO: Test New CNN!
-            # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
-            sizes = [[20,40,80,40,80],[20,40,80],[64,128,256,512,512],[256,512,512]]
-            pooling = [[0,1,2,3,4],[2,4]]
-            filters = [3,11]
-            dense_layers = [1,2,3]
-            dense_units = [1000,1500,2000,4000]            
-            for size in sizes:
-                for pool in pooling:
-                    for filter_cnn in filters:
-                        for layer in dense_layers:
-                            for unit in dense_units:
-                                cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes,size=size,dense_layers= = layer,dense_units=unit,pooling = pool,filters = filter_cnn)
-                                cnn_epochs = epochs if epochs is not None else 75
-                                cnn_batchsize = batch_size
-                                train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
-                                            "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}_initw{}.h5".format(
-                                                variable, hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),dense_layers,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter,weight),
-                                            epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
-                                            progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
-    
-        ### CNN pre-trained training
-        elif cnn_pre:
-            cnn_pretrained_model = cnn_pretrained(input_length=input_length, learning_rate=learning_rate, classes=classes)
-            cnn_epochs = epochs if epochs is not None else 75
-            cnn_batchsize = batch_size
-            train_model(X_profiling, Y_profiling, cnn_pretrained_model, store_directory +
-                        "{}_cnnpretrained{}_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
-                            variable, hammingweight_flag, input_length, cnn_epochs, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
-                        epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
-                        progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
-    
-        ### MLP training
-        elif mlp:
-            if multilabel:
-                mlp_best_model = mlp_weighted_bit(input_length=input_length, layer_nb=mlp_layers, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
-            else:
-                mlp_best_model = mlp_new(input_length=input_length, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
-            mlp_epochs = epochs if epochs is not None else 200
-            mlp_batchsize = batch_size
-            train_model(X_profiling, Y_profiling, mlp_best_model, store_directory +
-                        "{}_mlp{}{}{}{}_nodes{}_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}_{}.h5".format(
-                            variable, mlp_layers, '_multilabel' if multilabel else '', hammingweight_flag, hammingdistance_flag, mlp_nodes, input_length, mlp_epochs, mlp_batchsize, learning_rate, sd,
-                            training_traces, augment_method, jitter, 'defaultloss' if loss_function is None else loss_function.replace('_','')), epochs=mlp_epochs, batch_size=mlp_batchsize,
-                        validation_data=(X_attack, Y_attack), progress_bar=progress_bar, multilabel=multilabel, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
-    
-        ### LSTM training
-        elif lstm:
-            lstm_best_model = lstm_best(input_length=input_length, layer_nb=lstm_layers, learning_rate=learning_rate, classes=classes)
-            lstm_epochs = epochs if epochs is not None else 75
-            lstm_batchsize = batch_size
-            train_model(X_profiling, Y_profiling, lstm_best_model, store_directory +
-                        "{}_lstm{}{}_nodes{}_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
-                            variable, lstm_layers, hammingweight_flag, lstm_nodes, input_length, lstm_epochs, lstm_batchsize, learning_rate, sd,
-                            training_traces, augment_method, jitter), epochs=lstm_epochs, batch_size=lstm_batchsize,
-                        validation_data=(X_attack, Y_attack), progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
-    
-        ### SVM training
-        elif svm:
-            svm_best_model = svm_best(input_length=input_length, layer_nb=svm_layers, classes=classes)
-            svm_epochs = epochs if epochs is not None else 75
-            svm_batchsize = batch_size
-            train_model(X_profiling, Y_profiling, svm_best_model, store_directory +
-                        "{}_svm{}{}_nodes{}_window{}_epochs{}_batchsize{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
-                            variable, svm_layers, hammingweight_flag, svm_nodes, input_length, svm_epochs, svm_batchsize, sd,
-                            training_traces, augment_method, jitter), epochs=svm_epochs, batch_size=svm_batchsize,
-                        validation_data=(X_attack, Y_attack), progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+    if add_noise:
+        standard_deviation = 10
+        seed = 1
+        np.random.seed(seed)
+        X_profiling = X_profiling + np.round(np.random.normal(0, standard_deviation, X_profiling.shape)).astype(int)
+        X_attack = X_attack + np.round(np.random.normal(0, standard_deviation, X_attack.shape)).astype(int)
+
+    if use_ascad:
+        # Done slightly differently
+        ascad_model = cnn_ascad() if cnn else mlp_ascad()
+        train_model(X_profiling, Y_profiling, ascad_model, store_directory + '{}_{}_ASCAD.h5'.format(variable, 'cnn' if cnn else 'mlp'), epochs=75 if cnn else 200, batch_size=200 if cnn else 100, validation_data=(X_attack, Y_attack),
+        progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+
+    ### CNN training
+    elif cnn:
+        # TODO: Test New CNN!
+        # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
+        sizes = [[20,40,80,40,80],[20,40,80],[64,128,256,512,512],[256,512,512]]
+        pooling = [[0,1,2,3,4],[2,4]]
+        filters = [3,11]
+        dense_layers = [1,2,3]
+        dense_units = [1000,1500,2000,4000]            
+        for size in sizes:
+            for pool in pooling:
+                for filter_cnn in filters:
+                    for layer in dense_layers:
+                        for unit in dense_units:
+                            cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes,size=size,dense_layers= = layer,dense_units=unit,pooling = pool,filters = filter_cnn)
+                            cnn_epochs = epochs if epochs is not None else 75
+                            cnn_batchsize = batch_size
+                            train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
+                                        "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}_initw{}.h5".format(
+                                            variable, hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),dense_layers,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter,weight),
+                                        epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
+                                        progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+
+    ### CNN pre-trained training
+    elif cnn_pre:
+        cnn_pretrained_model = cnn_pretrained(input_length=input_length, learning_rate=learning_rate, classes=classes)
+        cnn_epochs = epochs if epochs is not None else 75
+        cnn_batchsize = batch_size
+        train_model(X_profiling, Y_profiling, cnn_pretrained_model, store_directory +
+                    "{}_cnnpretrained{}_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
+                        variable, hammingweight_flag, input_length, cnn_epochs, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
+                    epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
+                    progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+
+    ### MLP training
+    elif mlp:
+        if multilabel:
+            mlp_best_model = mlp_weighted_bit(input_length=input_length, layer_nb=mlp_layers, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
+        else:
+            mlp_best_model = mlp_new(input_length=input_length, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
+        mlp_epochs = epochs if epochs is not None else 200
+        mlp_batchsize = batch_size
+        train_model(X_profiling, Y_profiling, mlp_best_model, store_directory +
+                    "{}_mlp{}{}{}{}_nodes{}_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}_{}.h5".format(
+                        variable, mlp_layers, '_multilabel' if multilabel else '', hammingweight_flag, hammingdistance_flag, mlp_nodes, input_length, mlp_epochs, mlp_batchsize, learning_rate, sd,
+                        training_traces, augment_method, jitter, 'defaultloss' if loss_function is None else loss_function.replace('_','')), epochs=mlp_epochs, batch_size=mlp_batchsize,
+                    validation_data=(X_attack, Y_attack), progress_bar=progress_bar, multilabel=multilabel, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+
+    ### LSTM training
+    elif lstm:
+        lstm_best_model = lstm_best(input_length=input_length, layer_nb=lstm_layers, learning_rate=learning_rate, classes=classes)
+        lstm_epochs = epochs if epochs is not None else 75
+        lstm_batchsize = batch_size
+        train_model(X_profiling, Y_profiling, lstm_best_model, store_directory +
+                    "{}_lstm{}{}_nodes{}_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
+                        variable, lstm_layers, hammingweight_flag, lstm_nodes, input_length, lstm_epochs, lstm_batchsize, learning_rate, sd,
+                        training_traces, augment_method, jitter), epochs=lstm_epochs, batch_size=lstm_batchsize,
+                    validation_data=(X_attack, Y_attack), progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+
+    ### SVM training
+    elif svm:
+        svm_best_model = svm_best(input_length=input_length, layer_nb=svm_layers, classes=classes)
+        svm_epochs = epochs if epochs is not None else 75
+        svm_batchsize = batch_size
+        train_model(X_profiling, Y_profiling, svm_best_model, store_directory +
+                    "{}_svm{}{}_nodes{}_window{}_epochs{}_batchsize{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
+                        variable, svm_layers, hammingweight_flag, svm_nodes, input_length, svm_epochs, svm_batchsize, sd,
+                        training_traces, augment_method, jitter), epochs=svm_epochs, batch_size=svm_batchsize,
+                    validation_data=(X_attack, Y_attack), progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
 
 
 
