@@ -254,8 +254,11 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
     
     # Convolution blocks
     
-    for i in size:   
-        model.add(Conv1D(i, filters, padding='same', name='block{}_conv'.format(size.index(i)+1)))
+    for i in size:  
+        if size.index(i) == 0:
+            model.add(Conv1D(i, filters, padding='same', name='block{}_conv'.format(size.index(i)+1),input_shape=input_shape))
+        else:
+            model.add(Conv1D(i, filters, padding='same', name='block{}_conv'.format(size.index(i)+1)))
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
         model.add(BatchNormalization(name='block{}_batchnorm'.format(size.index(i)+1)))
         model.add(tf.keras.layers.Activation('relu'))
