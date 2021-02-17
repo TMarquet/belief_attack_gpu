@@ -255,12 +255,12 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
     # Convolution blocks
     
     for i in size:   
-        model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i)))
+        model.add(Conv1D(i, filters, padding='same', name='block{}_conv'.format(size.index(i)+1)))
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block{}_batchnorm'.format(i)))
+        model.add(BatchNormalization(name='block{}_batchnorm'.format(size.index(i)+1)))
         model.add(tf.keras.layers.Activation('relu'))
         if size.index(i) in pooling:
-            model.add(AveragePooling1D(2, strides=2, name='block{}_pool'))
+            model.add(AveragePooling1D(2, strides=2, name='block{}_pool'.format(size.index(i)+1)))
     
 
     model.add(Flatten(name='flatten'))
