@@ -263,7 +263,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
     # Convolution blocks
     # Block 1
-    model.add(Conv1D(8, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
+    model.add(Conv1D(16, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
@@ -318,7 +318,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
-    optimizer = RMSprop(lr=learning_rate)
+    optimizer = Adagrad(lr=learning_rate)
     model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
