@@ -28,6 +28,7 @@ from tensorflow.keras.models import load_model
 from utility import *
 
 tf.random.set_seed(7)
+np.random.seed(7)
 
 
 ###########################################################################
@@ -246,79 +247,36 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
     # return parallel_model
 
 ### CNN Best model
-def cnn_best(input_length=2000, learning_rate=0.00001, classes=256, dense_units=2048,weight_method = 'glorotu'):
-    weight_init_method = None
-    if not weight_method == 'glorotu':
-        if weight_method == 'lecunn':
-            weight_init_method = tf.keras.initializers.lecun_normal()
-        elif weight_method == 'lecunu': 
-            weight_init_method = tf.keras.initializers.lecun_uniform()
-        elif weight_method == 'heu':
-            weight_init_method = tf.keras.initializers.he_uniform()
-        else:
-            weight_init_method = tf.keras.initializers.he_normal()
+def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256, dense_units=2048,pooling = [0,1,2,3,4],dense_layers = 2,size = [64,128,256,512,512]):
     # From VGG16 design
     input_shape = (input_length, 1)
-    model = tf.keras.Sequential(name='cnn_small')
+    model = tf.keras.Sequential(name='cnn')
     
     # Convolution blocks
-    # Block 1
-    model.add(Conv1D(16, 3, padding='same', name='block1_conv1',input_shape = input_shape,kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block1_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-  
     
-    # Block 2
+    for i in size:   
+        model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i)))
+        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+        model.add(BatchNormalization(name='block{}_batchnorm'.format(i)))
+        model.add(tf.keras.layers.Activation('relu'))
+        if size.index(i) in pooling:
+            model.add(AveragePooling1D(2, strides=2, name='block{}_pool'))
+    
 
-    model.add(Conv1D(16, 3, padding='same', name='block2_conv1',kernel_initializer = weight_init_method))    
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block2_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-  
-    
-    # Block 3
-    model.add(Conv1D(64, 3, padding='same', name='block3_conv1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block3_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block3_pool'))
-    
-    # Block 4
-    model.add(Conv1D(64, 3, padding='same', name='block4_conv1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block4_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-   
-    
-    # Block 5
-    model.add(Conv1D(128, 3, padding='same', name='block5_conv1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block5_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(AveragePooling1D(2, strides=2, name='block5_pool')) 
-    
     model.add(Flatten(name='flatten'))
         
     # Two Dense layers
-    model.add(Dropout(0.5))
-    model.add(Dense(dense_units, name='fc1',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block6_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
-    model.add(Dropout(0.5))
     
     
-    model.add(Dense(dense_units, name='fc2',kernel_initializer = weight_init_method))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block7_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))       
+    for i in range(0,dense_layers):
+        model.add(Dense(dense_units, name='fc{}'.format(i)))
+        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
+        model.add(BatchNormalization(name='block_dense{}_batchnorm'.format(i)))
+        model.add(tf.keras.layers.Activation('relu'))
 
-
-    
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
-    optimizer = Adagrad(lr=learning_rate)
+    optimizer = RMSprop(lr=learning_rate)
     model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
@@ -424,16 +382,13 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
 # def train_svm()
 
 
-def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack, mlp=True, cnn=True, cnn_pre=False, lstm=True, svm=False, add_noise=False, input_length=700, normalise_traces=True, epochs=None, training_traces=50000, mlp_layers=6, lstm_layers=1, batch_size=200, sd=100, augment_method=0, jitter=None, progress_bar=1, mlp_nodes=200, lstm_nodes=64, learning_rate=0.00001, multilabel=False, hammingweight=False,weight_init = None, loss_function=None, hamming_distance_encoding=False, scratch_storage=False, use_ascad=False):
+def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack, mlp=True, cnn=True, cnn_pre=False, lstm=True, svm=False, add_noise=False, input_length=700, normalise_traces=True, epochs=None, training_traces=50000, mlp_layers=6, lstm_layers=1, batch_size=200, sd=100, augment_method=0, jitter=None, progress_bar=1, mlp_nodes=200, lstm_nodes=64, learning_rate=0.00001, multilabel=False, hammingweight=False, loss_function=None, hamming_distance_encoding=False, scratch_storage=False, use_ascad=False):
 
     store_directory = NEURAL_MODEL_FOLDER if scratch_storage else MODEL_FOLDER
 
     classes = 9 if hammingweight else 256
     hammingweight_flag = '_hw' if hammingweight else ''
     hammingdistance_flag = '_hamdistencode' if hamming_distance_encoding else ''
-    if not weight_init:
-        weight_init = ['glorotu']
-    for weight in weight_init:
         if add_noise:
             standard_deviation = 10
             seed = 1
@@ -451,14 +406,24 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         elif cnn:
             # TODO: Test New CNN!
             # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
-            cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes,weight_method = weight)
-            cnn_epochs = epochs if epochs is not None else 75
-            cnn_batchsize = batch_size
-            train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
-                        "{}_cnn{}{}_model1_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}_initw{}.h5".format(
-                            variable, hammingweight_flag, hammingdistance_flag, input_length, cnn_epochs, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter,weight),
-                        epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
-                        progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+            sizes = [[20,40,80,40,80],[20,40,80],[64,128,256,512,512],[256,512,512]]
+            pooling = [[0,1,2,3,4],[2,4]]
+            filters = [3,11]
+            dense_layers = [1,2,3]
+            dense_units = [1000,1500,2000,4000]            
+            for size in sizes:
+                for pool in pooling:
+                    for filter_cnn in filters:
+                        for layer in dense_layers:
+                            for unit in dense_units:
+                                cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes,size=size,dense_layers= = layer,dense_units=unit,pooling = pool,filters = filter_cnn)
+                                cnn_epochs = epochs if epochs is not None else 75
+                                cnn_batchsize = batch_size
+                                train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
+                                            "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}_initw{}.h5".format(
+                                                variable, hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),dense_layers,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter,weight),
+                                            epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
+                                            progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
     
         ### CNN pre-trained training
         elif cnn_pre:
@@ -769,7 +734,7 @@ if __name__ == "__main__":
 
         train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
             training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
-            learning_rate=LEARNING_RATE,weight_init=weight_method_test, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
+            learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
 
     # for var, length in variable_dict.iteritems():
     #     for i in range(length):
