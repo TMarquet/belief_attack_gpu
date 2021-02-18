@@ -413,7 +413,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         sizes = [[256,512,512]]
         pooling = [[2,4]]
         filters = [3]
-        dense_layers = [3]
+        dense_layers = [2]
         dense_units = [4000]            
         for size in sizes:
             for pool in pooling:
