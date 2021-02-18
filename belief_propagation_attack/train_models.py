@@ -270,12 +270,13 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
         
     # Two Dense layers
     
-    
+    model.add(Dropout(0.5))
     for i in range(0,dense_layers):
         model.add(Dense(dense_units, name='fc{}'.format(i)))
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
         model.add(BatchNormalization(name='block_dense{}_batchnorm'.format(i)))
         model.add(tf.keras.layers.Activation('relu'))
+        model.add(Dropout(0.5))
 
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
@@ -410,10 +411,10 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         # TODO: Test New CNN!
         # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
         sizes = [[20,40,80,40,80],[20,40,80],[64,128,256,512,512],[256,512,512]]
-        pooling = [[0,1,2,3,4],[2,4]]
-        filters = [3,11]
+        pooling = [[2,4]]
+        filters = [3]
         dense_layers = [1,2,3]
-        dense_units = [1000,1500,2000,4000]            
+        dense_units = [4000]            
         for size in sizes:
             for pool in pooling:
                 for filter_cnn in filters:
@@ -425,7 +426,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
                             cnn_batchsize = batch_size
                             train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
                                         "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
-                                            variable, hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),dense_layers,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
+                                            variable, hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),layer,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
                                         epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
                                         progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
 
