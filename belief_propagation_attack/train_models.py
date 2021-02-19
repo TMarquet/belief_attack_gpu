@@ -341,8 +341,8 @@ def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, bat
     check_file_exists(os.path.dirname(save_file_name))
     # Save model every epoch
     save_model = ModelCheckpoint(filepath = save_file_name,
-                                monitor='val_loss',
-                            mode='min',
+                                monitor='val_accuracy',
+                            mode='max',
                             save_best_only=True)
     # tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
     callbacks=[save_model, TrainValTensorBoard(write_graph=True)]
