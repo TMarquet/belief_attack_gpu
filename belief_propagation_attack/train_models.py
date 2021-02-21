@@ -274,13 +274,13 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
         
     # Two Dense layers
     
-    
+    model.add(Dropout(0.5))
     for i in range(0,dense_layers):
         model.add(Dense(dense_units, name='fc{}'.format(i)))
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
         model.add(BatchNormalization(name='block_dense{}_batchnorm'.format(i)))
         model.add(tf.keras.layers.Activation('relu'))
-        
+        model.add(Dropout(0.5))
 
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
@@ -615,7 +615,7 @@ if __name__ == "__main__":
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list = ['cm001']
+        variable_list = ['xt001','h001','p032']
         # for i in range(12,17) :
         #     if i < 10 :
         #         variable_list.append('mc00'+str(i))
