@@ -168,7 +168,7 @@ class RealTraceHandler:
                 # Use neural network to predict value
                     try:
                         neural_network = self.neural_network_dict[var_notrace]
-                        out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
+                        
                     except KeyError:
                         # Add to dict!
                         if not self.no_print:
