@@ -373,7 +373,7 @@ def run_belief_propagation_attack(margdist=None):
                     total_failures += 1
                     failure_array[rep].append(trace)
 
-                if not ONLY_END and PRINT_EVERY_TRACE and not NO_PRINT and (method == "IND" or method == "SEQ"):
+                if not ONLY_END and PRINT_EVERY_TRACE and NO_PRINT and (method == "IND" or method == "SEQ"):
                     print print_fill_2, "Current Computed Key Ranks (Repeat {}, after Trace {})".format(rep,
                                                                                                         trace), print_fill_2
                     print_new_line()
