@@ -256,11 +256,11 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
     
     for i in range(len(size)):  
         if i == 0:
-            model.add(Conv1D(size[i], 11, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))
+            model.add(Conv1D(size[i], 3, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))
             model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
             model.add(BatchNormalization())            
         else:
-            model.add(Conv1D(size[i], 11, padding='same', name='block{}_conv'.format(i+1)))
+            model.add(Conv1D(size[i], 3, padding='same', name='block{}_conv'.format(i+1)))
             model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
             model.add(BatchNormalization())            
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
@@ -415,7 +415,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
     elif cnn:
         # TODO: Test New CNN!
         # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
-        sizes = [[20,40,80]]
+        sizes = [[20,20,20]]
         pooling = [[2]]
         filters = [3]
         dense_layers = [3]
