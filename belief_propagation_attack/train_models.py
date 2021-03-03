@@ -416,7 +416,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         # TODO: Test New CNN!
         # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
         sizes = [[64,128,256,512,512]]
-        pooling = [[1,2,3,4,5]]
+        pooling = [[0,1,2,3,4]]
         filters = [11]
         dense_layers = [2]
         dense_units = [4000]            
