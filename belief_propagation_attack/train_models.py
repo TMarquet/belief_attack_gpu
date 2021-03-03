@@ -267,7 +267,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
         model.add(BatchNormalization())
         model.add(tf.keras.layers.Activation('relu'))
         if i in pooling:
-            model.add(AveragePooling1D(2, strides=2, name='block{}_pool'.format(i+1)))
+            model.add(AveragePooling1D(4, strides=2, name='block{}_pool'.format(i+1)))
     
 
     model.add(Flatten(name='flatten'))
@@ -416,7 +416,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         # TODO: Test New CNN!
         # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
         sizes = [[32,64,128]]
-        pooling = [[4]]
+        pooling = [[2]]
         filters = [3]
         dense_layers = [3]
         dense_units = [4000]            
