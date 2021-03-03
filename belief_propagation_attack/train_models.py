@@ -256,11 +256,11 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
     
     for i in range(len(size)):  
         if i == 0:
-            model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))
+            model.add(Conv1D(size[i], 3, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))
             model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
             model.add(BatchNormalization())            
         else:
-            model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1)))
+            model.add(Conv1D(size[i], 1, padding='same', name='block{}_conv'.format(i+1)))
             model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
             model.add(BatchNormalization())            
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
@@ -616,7 +616,7 @@ if __name__ == "__main__":
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list = ['p016']
+        variable_list = ['k001']
         # for i in range(12,17) :
         #     if i < 10 :
         #         variable_list.append('mc00'+str(i))
