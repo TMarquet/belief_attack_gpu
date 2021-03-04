@@ -256,31 +256,31 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
     
     for i in range(len(size)):  
         if i == 0:
-            model.add(Conv1D(size[i], 3, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))
+            model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))
             model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
             model.add(BatchNormalization())            
         else:
-            model.add(Conv1D(size[i], 3, padding='same', name='block{}_conv'.format(i+1)))
+            model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1)))
             model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
             model.add(BatchNormalization())            
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
         model.add(BatchNormalization())
         model.add(tf.keras.layers.Activation('relu'))
         if i in pooling:
-            model.add(AveragePooling1D(4, strides=2, name='block{}_pool'.format(i+1)))
+            model.add(AveragePooling1D(2, strides=2, name='block{}_pool'.format(i+1)))
     
 
     model.add(Flatten(name='flatten'))
         
     # Two Dense layers
     
-    #model.add(Dropout(0.5))
+    model.add(Dropout(0.5))
     for i in range(0,dense_layers):
         model.add(Dense(dense_units, name='fc{}'.format(i)))
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
         model.add(BatchNormalization(name='block_dense{}_batchnorm'.format(i)))
         model.add(tf.keras.layers.Activation('relu'))
-        #model.add(Dropout(0.5))
+        model.add(Dropout(0.5))
 
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
@@ -415,10 +415,10 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
     elif cnn:
         # TODO: Test New CNN!
         # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
-        sizes = [[64,128,256,512,512]]
-        pooling = [[0,1,2,3,4]]
-        filters = [11]
-        dense_layers = [2]
+        sizes = [[20,40,80]]
+        pooling = [[2]]
+        filters = [3]
+        dense_layers = [1]
         dense_units = [4000]            
         for size in sizes:
             for pool in pooling:
@@ -616,7 +616,7 @@ if __name__ == "__main__":
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list = ['k001']
+        variable_list = ['p016']
         # for i in range(12,17) :
         #     if i < 10 :
         #         variable_list.append('mc00'+str(i))
