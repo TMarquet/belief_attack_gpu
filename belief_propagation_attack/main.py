@@ -166,7 +166,7 @@ def run_belief_propagation_attack(margdist=None):
         traces_to_use = TRACES
         if method == "SEQ" or method == "IND":
             traces_to_use = 1
-        
+        print('SNR : ',SNR_exp)
         my_graph = fG.FactorGraphAES(no_print=NO_PRINT, traces=traces_to_use, removed_nodes=REMOVED_NODES, left_out_nodes=LEFT_OUT_NODES,
                                      key_scheduling=INCLUDE_KEY_SCHEDULING, furious=not USE_ARM_AES,
                                      rounds_of_aes=ROUNDS_OF_AES,
@@ -1099,7 +1099,7 @@ if __name__ == "__main__":
     if REAL_TRACES:
         if not NO_PRINT:
             print "|| Real Traces modelled around snr = 2**-7 - setting SNR_exp to -7"
-        SNR_exp = -7
+        SNR_exp = -5
 
     # Handle ELMO Default
     if not HW_POWER_MODEL and not ELMO_POWER_MODEL:
