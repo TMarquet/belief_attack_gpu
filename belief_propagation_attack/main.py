@@ -1099,7 +1099,7 @@ if __name__ == "__main__":
     if REAL_TRACES:
         if not NO_PRINT:
             print "|| Real Traces modelled around snr = 2**-7 - setting SNR_exp to -7"
-        SNR_exp = -7
+        SNR_exp = -5
 
     # Handle ELMO Default
     if not HW_POWER_MODEL and not ELMO_POWER_MODEL:
