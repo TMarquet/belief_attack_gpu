@@ -274,13 +274,13 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
         
     # Two Dense layers
     
-    model.add(Dropout(0.5))
+ 
     for i in range(0,dense_layers):
         model.add(Dense(dense_units, name='fc{}'.format(i)))
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
         model.add(BatchNormalization(name='block_dense{}_batchnorm'.format(i)))
         model.add(tf.keras.layers.Activation('relu'))
-        model.add(Dropout(0.5))
+  
 
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
@@ -611,12 +611,12 @@ if __name__ == "__main__":
 
 
     if TEST_VARIABLES:
-        variable_list = ['cm005','cm006','cm007','cm008']
+        variable_list = ['s001','s002','s003','s004','s005','s006','s007','s008','s009','s010','s011','s012','s013','s014','s015','s016']
     if ALL_VARS:
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list = ['t032']
+        variable_list = ['s001','s002','s003','s004','s005','s006','s007','s008','s009','s010','s011','s012','s013','s014','s015','s016']
         # for i in range(12,17) :
         #     if i < 10 :
         #         variable_list.append('mc00'+str(i))
@@ -630,6 +630,10 @@ if __name__ == "__main__":
 
     weight_method_test = ['lecunn','lecunu','heu','hen']
     weight_method_test = None
+    X = np.array([])
+    X_l =  np.array([])
+    V = np.array([])
+    V_l =  np.array([])
     for variable in variable_list:
 
         print "$$$ Training Neural Networks $$$\nVariable {}, Hamming Weight {} Hamming Distance Encoding {}, MLP {} ({} layers, {} nodes per layer), CNN {} (Pretrained {}), LSTM {} ({} layers, {} nodes per layer), Input Length {}, Learning Rate {}, Noise {}, Jitter {}, Normalising {}\n{} Epochs, Batch Size {}, Training Traces {}, Validation Traces {}, ASCAD {}".format(
@@ -640,8 +644,18 @@ if __name__ == "__main__":
         if not USE_DATA_ASCAD:
             (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
                                                                           input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
-                                                                       hammingweight=HAMMINGWEIGHT,
-                                                                      load_metadata=LOAD_METADATA)
+                                                                       hammingweight=HAMMINGWEIGHT,load_metadata=LOAD_METADATA)
+            
+            if X.shape[0] = 0:
+                X = X_profiling
+                X_l = Y_profiling
+                V = X_attack
+                V_l = Y_attack
+            else:
+                X = np.append(X,X_profiling)  
+                X_l = np.append(X_l,Y_profiling)   
+                V = np.append(V,X_attack)   
+                V_l = np.append(X,Y_attack)                                                           
         else:
             
             ASCAD_data_folder = "/root/Projets/ASCAD/ATMEGA_AES_v1/ATM_AES_v1_variable_key/ASCAD_data/ASCAD_databases/"
@@ -741,10 +755,13 @@ if __name__ == "__main__":
             INPUT_LENGTH = X_profiling.shape[1]
         
 
-
-        train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
-            training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
-            learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
+    print X.shape
+    print X_l.shape
+    print V.shape
+    print V_l.shape
+    train_variable_model(variable, X, X_l, V, V_l, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
+        training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
+        learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
 
     # for var, length in variable_dict.iteritems():
     #     for i in range(length):
