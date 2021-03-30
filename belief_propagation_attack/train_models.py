@@ -646,7 +646,7 @@ if __name__ == "__main__":
                                                                           input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
                                                                        hammingweight=HAMMINGWEIGHT,load_metadata=LOAD_METADATA)
             
-            if X.shape[0] = 0:
+            if X.shape[0] == 0:
                 X = X_profiling
                 X_l = Y_profiling
                 V = X_attack
