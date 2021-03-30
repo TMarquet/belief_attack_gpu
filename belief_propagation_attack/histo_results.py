@@ -11,8 +11,8 @@ from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 
 
-var_to_plot = ['s','k','t','p']
-all_v = ['s','k','t','h','p','cm','mc','xt','p2']
+var_to_plot = ['p']
+all_v = ['s','k','t','h','p','cm','mc','xt']
 #var_to_plot = all_v
 
 def dist(x1,x2):
@@ -45,9 +45,8 @@ def evaluate_consitency(l):
 s_median_rank = [47,26,58,75,42,78,86,88,41,66,73,67,39,78,104,93,52,25,51,76,45,80,77,84,39,70,74,68,40,81,100,96]
 k_median_rank = [120,106,114,100,118,102,127,110,125,63,127,104,80,57,100,69,73,72,88,80,83,85,81,87,86,83,82,83,85,84,87,95]
 p_median_rank = [122,66,127,121,124,65,125,118,121,62,121,113,107,60,111,68,80,124,71,84,82,84,80,119,83,82,78,122,94,92,81,120]
-p_2_round_rank = []
 t_median_rank = [68,77,77,76,68,68,67,68,62,65,66,65,64,63,65,61,69,69,104,122,120,116,120,120,118,113,119,119,118,109,114,113]
-h_median_rank = []
+h_median_rank = [88,109,97]
 xt_median_rank = []
 xk_median_rank = []
 cm_median_rank = []
@@ -70,7 +69,6 @@ median_rank['xt'] = xt_median_rank
 s_median_proba = [0.60,1.03,0.50,0.49,0.70,0.48,0.43,0.41,0.74,0.54,0.52,0.52,0.80,0.40,0.29,0.41,0.56,1.07,0.61,0.50,0.67,0.47,0.48,0.46,0.77,0.53,0.51,0.50,0.77,0.38,0.38,0.39]
 k_median_proba = [0.39,0.40,0.34,0.40,0.38,0.43,0.35,0.40,0.36,0.73,0.34,0.40,0.34,0.77,0.41,0.45,0.43,0.52,0.41,0.46,0.46,0.43,0.44,0.39,0.43,0.42,0.43,0.42,0.43,0.31,0.42,0.38]
 p_median_proba = [0.39,0.70,0.39,0.39,0.39,0.70,0.39,0.39,0.39,0.73,0.39,0.39,0.40,0.74,0.40,0.51,0.45,0.02,0.51,0.46,0.44,0.36,0.45,0.12,0.42,0.34,0.46,0.09,0.34,0.31,0.45,0.2]
-p_2_round_proba = []
 t_median_proba = [0.52,0.48,0.48,0.48,0.52,0.51,0.52,0.51,0.55,0.53,0.54,0.54,0.55,0.70,0.55,0.57,0.50,0.48,0.41,0.35,0.37,0.02,0.02,0.007,0.009,0.02,0.03,0.03,0.006,0.16,0.15,0.11]
 
 h_median_proba = []
@@ -94,19 +92,8 @@ median_proba['sk'] = sk_median_proba
 median_proba['xk'] = xk_median_proba
 median_proba['xt'] = xt_median_proba
 
-added = False
-if 'p2' in var_to_plot :
-    
-    if 'p' in var_to_plot :
-        
-        median_rank["p"] +=  p_2_round_rank
-        median_proba['p'] += p_2_round_proba
-    else :
-        median_rank["p"] =  p_2_round_rank
-        median_proba['p'] = p_2_round_proba
-        var_to_plot.append('p')
-        added = True       
-    var_to_plot.remove('p2')
+
+
 
 
 
@@ -249,8 +236,7 @@ if len(var_to_plot) > 1 :
         labels = []
         start = 0
         n = len(median_rank[var_to_plot[plot]])
-        if added :
-            start = 16
+
 
 
         for i in range(0,n):
@@ -294,8 +280,7 @@ else :
     labels = []
     start = 0
     n = len(median_rank[var_to_plot[plot]])
-    if added :
-        start = 16
+
     for i in range(0,n):
         labels.append(var_to_plot[plot] + str(start+i+1))   
     x = np.arange(n)  # the label locations

@@ -19,7 +19,7 @@ import matplotlib.transforms as transforms
 
 
 var_to_plot = ['s','k','t','p']
-all_v = ['s','k','t','h','p','cm','mc','xt','p2']
+all_v = ['s','k','t','h','p','cm','mc','xt']
 #var_to_plot = all_v
 
 def dist(x1,x2):
