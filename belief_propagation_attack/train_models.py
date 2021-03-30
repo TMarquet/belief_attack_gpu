@@ -616,7 +616,7 @@ if __name__ == "__main__":
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list = ['s001','s002','s003','s004','s005','s006','s007','s008','s009','s010','s011','s012','s013','s014','s015','s016']
+        variable_list = ['s001','s002']
         # for i in range(12,17) :
         #     if i < 10 :
         #         variable_list.append('mc00'+str(i))
@@ -652,10 +652,10 @@ if __name__ == "__main__":
                 V = X_attack
                 V_l = Y_attack
             else:
-                X = np.append(X,X_profiling)  
-                X_l = np.append(X_l,Y_profiling)   
-                V = np.append(V,X_attack)   
-                V_l = np.append(X,Y_attack)                                                           
+                X = np.append(X,X_profiling,axis = 0)  
+                X_l = np.append(X_l,Y_profiling,axis = 0)   
+                V = np.append(V,X_attack,axis = 0)   
+                V_l = np.append(V_l,Y_attack,axis = 0)                                                           
         else:
             
             ASCAD_data_folder = "/root/Projets/ASCAD/ATMEGA_AES_v1/ATM_AES_v1_variable_key/ASCAD_data/ASCAD_databases/"
