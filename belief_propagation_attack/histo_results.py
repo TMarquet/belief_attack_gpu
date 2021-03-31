@@ -49,7 +49,7 @@ t_median_rank = [68,77,77,76,68,68,67,68,62,65,66,65,64,63,65,61,69,69,104,122,1
 h_median_rank = [88,109,97,87,106,94,103,110,104,85,117,63]
 xt_median_rank = []
 xk_median_rank = []
-cm_median_rank = [107,124,112,106]
+cm_median_rank = [107,124,112,106,105,115,105]
 mc_median_rank = []
 sk_median_rank = []
 
@@ -74,7 +74,7 @@ t_median_proba = [0.52,0.48,0.48,0.48,0.52,0.51,0.52,0.51,0.55,0.53,0.54,0.54,0.
 h_median_proba = [0.19,0.38,0.23,0.19,0.39,0.24,0.12,0.38,0.17,0.28,0.37,0.51]
 xt_median_proba = []
 xk_median_proba = []
-cm_median_proba = [0.4,0.39,0.4,0.4]
+cm_median_proba = [0.4,0.39,0.4,0.4,0.4,0.39,0.40]
 mc_median_proba = []
 sk_median_proba = []
 
