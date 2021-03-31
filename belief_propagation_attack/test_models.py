@@ -280,7 +280,7 @@ class TestModels:
         # return f_ranks
 
     # Check a saved model against one of the bpann databases Attack traces
-    def check_model(self, model_file, num_traces=10000, template_attack=False, random_key=False, save=True,ASCAD = False,save_proba = False):
+    def check_model(self, model_file, num_traces=10000, template_attack=False, random_key=False, save=True,ASCAD = False,save_proba = False,variable=None):
         # try:
         if not save_proba:
             rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba)
@@ -458,8 +458,10 @@ if __name__ == "__main__":
                 if string_starts_with(m, 'all'):
                     print 'Testing : ', m 
                     
+                    model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var)
+                else:
                     model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
-        
+                   
 
 # # No argument: check all the trained models
 # if (len(sys.argv) == 1) or (len(sys.argv) == 2):
