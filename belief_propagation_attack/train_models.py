@@ -611,7 +611,7 @@ if __name__ == "__main__":
 
 
     if TEST_VARIABLES:
-        variable_list = ['cm001','cm002','cm003','cm004','cm005','cm006','cm007','cm008','cm009','cm010','cm011','cm012','cm013','cm014','cm015','cm016']
+        variable_list = ['h001','h002','h003','h004','h005','h006','h007','h008','h009','h010','h011','h012','h013','h014','h015','h016']
     if ALL_VARS:
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
