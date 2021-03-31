@@ -439,7 +439,7 @@ if __name__ == "__main__":
     #     data.append(in_file)
     # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
-    variables_to_test = ['k031','k027']
+    variables_to_test = ['s001','s002','s003','s004','s005','s006','s007','s008','s009','s010','s011','s012','s013','s014','s015','s016']
     if TEST_ALL:
         # Clear statistics
         if SAVE:
@@ -455,8 +455,9 @@ if __name__ == "__main__":
         
         for var in variables_to_test :
             for (m) in sorted(listdir(MODEL_FOLDER)):
-                if string_starts_with(m, var):
+                if string_starts_with(m, 'all'):
                     print 'Testing : ', m 
+                    
                     model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
         
 
