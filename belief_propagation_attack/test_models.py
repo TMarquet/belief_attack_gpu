@@ -285,7 +285,7 @@ class TestModels:
         if not save_proba:
             rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba)
         else:
-            rank_list, prob_list, predicted_values,output_list = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba)
+            rank_list, prob_list, predicted_values,output_list = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba,variable = variable)
             print 'Saving probabilities for : ' + var
             model_name = model_file.replace(MODEL_FOLDER, '')
             variable = model_name.split('_')[0] 
