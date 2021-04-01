@@ -455,13 +455,14 @@ if __name__ == "__main__":
     else:
         # Check specific model
         # TODO
-        
+        model = None
         for var in variables_to_test :
             for (m) in sorted(listdir(MODEL_FOLDER)):
                 if string_starts_with(m, 'all_t'):
                     print 'Testing : ', m 
                     print(var)
-                    model = load_sca_model(MODEL_FOLDER + m)
+                    if model is None:
+                        model = load_sca_model(MODEL_FOLDER + m)
                     model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
                 else:
                     if string_starts_with(m, var):
