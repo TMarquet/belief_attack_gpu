@@ -301,7 +301,7 @@ class RealTraceHandler:
         # Return Rank List
         return rank_list
 
-    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False ,save_proba = False,variable=None):
+    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False ,save_proba = False,variable=None,model = None):
         # Get variable of model
         if ASCAD:
             model_name = model_file.replace(MODEL_FOLDER+'adagrad/', '')            
@@ -326,7 +326,8 @@ class RealTraceHandler:
 
             if not self.no_print:
                 print "Loading model..."
-            model = load_sca_model(model_file)
+            if model is None:
+                model = load_sca_model(model_file)
             if not self.no_print:
                 print "...loaded successfully!"
 
