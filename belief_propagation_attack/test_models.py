@@ -455,7 +455,7 @@ if __name__ == "__main__":
         
         for var in variables_to_test :
             for (m) in sorted(listdir(MODEL_FOLDER)):
-                if string_starts_with(m, 'all_h'):
+                if string_starts_with(m, 'all_t'):
                     print 'Testing : ', m 
                     print(var)
                     
