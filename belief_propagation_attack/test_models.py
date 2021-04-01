@@ -442,7 +442,7 @@ if __name__ == "__main__":
     #     data.append(in_file)
     # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
-    variables_to_test = ['t001','t002','t003','t004','t005','t006','t007','t008','t009','t010','t011','t012','t013','t014','t015','t016']
+    variables_to_test = ['t002','t003','t004','t005','t006','t007','t008','t009','t010','t011','t012','t013','t014','t015','t016']
     if TEST_ALL:
         # Clear statistics
         if SAVE:
@@ -464,9 +464,9 @@ if __name__ == "__main__":
                     if model is None:
                         model = load_sca_model(MODEL_FOLDER + m)
                     model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
-                else:
-                    if string_starts_with(m, var):
-                        model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
+                # else:
+                #     if string_starts_with(m, var):
+                #         model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
                    
 
 # # No argument: check all the trained models
