@@ -288,7 +288,7 @@ class TestModels:
             rank_list, prob_list, predicted_values,output_list = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba,variable = variable,model = model)
             print 'Saving probabilities for : ' + var
             model_name = model_file.replace(MODEL_FOLDER, '')
-            variable = model_name.split('_')[0] 
+            variable = model_name.split('_')[0] if variable is None else variable
             var_name, var_number, _ = split_variable_name(variable)
             if not var_name in listdir(OUTPUT_FOLDER):
                 os.mkdir(OUTPUT_FOLDER + var_name + '/')
@@ -442,7 +442,7 @@ if __name__ == "__main__":
     #     data.append(in_file)
     # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
-    variables_to_test = ['t002','t003','t004','t005','t006','t007','t008','t009','t010','t011','t012','t013','t014','t015','t016']
+    variables_to_test = ['t001','t002','t003','t004','t005','t006','t007','t008','t009','t010','t011','t012','t013','t014','t015','t016']
     if TEST_ALL:
         # Clear statistics
         if SAVE:
