@@ -611,12 +611,12 @@ if __name__ == "__main__":
 
 
     if TEST_VARIABLES:
-        variable_list = ['t001','t002','t003','t004','t005','t006','t007','t008','t009','t010','t011','t012','t0013','t014','t015','t016']
+        variable_list = ['k001','k002','k003','k004','k005','k006','k007','k008','k009','k010','k011','k012','k013','k014','k015','k016']
     if ALL_VARS:
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list =['t001','t002','t003','t004','t005','t006','t007','t008','t009','t010','t011','t012','t0013','t014','t015','t016']
+        variable_list = ['k001','k002','k003','k004','k005','k006','k007','k008','k009','k010','k011','k012','k013','k014','k015','k016']
         # for i in range(12,17) :
         #     if i < 10 :
         #         variable_list.append('mc00'+str(i))
