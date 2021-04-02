@@ -458,7 +458,7 @@ if __name__ == "__main__":
         model = None
         for var in variables_to_test :
             for (m) in sorted(listdir(MODEL_FOLDER)):
-                if string_starts_with(m, 'all_t'):
+                if string_starts_with(m, 'all_k'):
                     print 'Testing : ', m 
                     print(var)
                     if model is None:
