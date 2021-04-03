@@ -431,7 +431,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
                             cnn_batchsize = batch_size
                             train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
                                         "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
-                                            'all_h', hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),layer,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
+                                            'all_xt', hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),layer,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
                                         epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
                                         progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
 
@@ -616,7 +616,7 @@ if __name__ == "__main__":
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list =['h001','h002','h003','h004','h005','h006','h007','h008','h009','h010','h011','h012','h013','h014','h015','h016']
+        variable_list =['xt001','xt002','xt003','xt004','xt005','xt006','xt007','xt008','xt009','xt010','xt011','xt012','xt013','xt014','xt015','xt016']
         # for i in range(12,17) :
         #     if i < 10 :
         #         variable_list.append('mc00'+str(i))
