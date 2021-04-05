@@ -443,7 +443,7 @@ if __name__ == "__main__":
     # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
     variables_to_test =[]
-    for i in range(32):
+    for i in range(1,33):
         variables_to_test.append('k0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     print(variables_to_test)
     if TEST_ALL:
