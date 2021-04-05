@@ -442,7 +442,10 @@ if __name__ == "__main__":
     #     data.append(in_file)
     # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
-    variables_to_test =['k017','k025']
+    variables_to_test =[]
+    for i in range(32):
+        variables_to_test.append('k0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+    print(variables_to_test)
     if TEST_ALL:
         # Clear statistics
         if SAVE:
@@ -459,13 +462,25 @@ if __name__ == "__main__":
         for var in variables_to_test :
             for (m) in sorted(listdir(MODEL_FOLDER)):
                 var_name, var_number, _ = split_variable_name(var)
-                if string_starts_with(m, 'all_{}'.format(var_name)):
-                    print 'Testing : ', m 
-                    print(var)
-                    if model is None:
-                        model = load_sca_model(MODEL_FOLDER + m)
-                    model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
-                # else:
+                if int(var_number) <= 16:
+                    
+                    if string_starts_with(m, 'all_{}'.format(var_name)):
+                        print 'Testing : ', m 
+                        print(var)
+                        if model is None:
+                            model = load_sca_model(MODEL_FOLDER + m)
+                        model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
+                        if int(var_number) == 16:
+                            model = None
+                else: 
+                    if string_starts_with(m, 'all_{}_2'.format(var_name)):
+                        print 'Testing : ', m 
+                        print(var)
+                        if model is None:
+                            model = load_sca_model(MODEL_FOLDER + m)
+                        model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
+               
+                    # else:
                 #     if string_starts_with(m, var):
                 #         model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
                    
