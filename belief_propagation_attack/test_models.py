@@ -476,10 +476,9 @@ if __name__ == "__main__":
                         r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
                         median_rank_out.append(r)
                         median_proba_out.append(m)
-                        if int(var_number) == 16:
-                            model = None
+
                 else: 
-                    if string_starts_with(m, 'all_{}_2'.format(var_name)):
+                    if string_starts_with(m, 'all_{}'.format(var_name)):
                         print 'Testing : ', m 
                         print(var)
                         if model is None:
