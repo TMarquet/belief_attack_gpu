@@ -94,7 +94,58 @@ median_proba['xt'] = xt_median_proba
 
 
 
+############### CNN Combined Values ####################
 
+k_COMBINE_median_rank = [117,99,98,98,109,75,111,90,102,51,110,91,93,45,89,67,94,86,91,114,90,92,87,79,78,74,74,74,80,78,90,102]
+s_COMBINE_median_rank = []
+p_COMBINE_median_rank = [112,63,122,110,110,58,115,108,109,57,106,105,112,72,112,97,77,69,75,84,78,75,83,83,76,75,85,87,80,80,84,83]
+t_COMBINE_median_rank =[]
+h_COMBINE_median_rank = []
+xt_COMBINE_median_rank = []
+xk_COMBINE_median_rank = []
+cm_COMBINE_median_rank = []
+mc_COMBINE_median_rank = []
+sk_COMBINE_median_rank = []
+
+COMBINE_median_rank = {}
+
+COMBINE_median_rank['s'] = s_COMBINE_median_rank
+COMBINE_median_rank['k'] = k_COMBINE_median_rank
+COMBINE_median_rank['p'] = p_COMBINE_median_rank
+COMBINE_median_rank['t'] = t_COMBINE_median_rank
+COMBINE_median_rank['h'] = h_COMBINE_median_rank
+COMBINE_median_rank['cm'] = cm_COMBINE_median_rank
+COMBINE_median_rank['mc'] = mc_COMBINE_median_rank
+COMBINE_median_rank['sk'] = sk_COMBINE_median_rank
+COMBINE_median_rank['xk'] = xk_COMBINE_median_rank
+COMBINE_median_rank['xt'] = xt_COMBINE_median_rank
+
+k_COMBINE_median_proba = [0.39,0.42,0.43,0.42,0.4,0.6,0.4,0.44,0.41,0.79,0.4,0,44,0.29,0.85,0.44,0.52,0.36,0.36,0.45,0.34,0.40,0.31,0.41,0.47,0.47,0.50,0.5,0.5,0.46,0.38,0.37,0.17]
+s_COMBINE_median_proba = []
+p_COMBINE_median_proba = [0.4,0.69,0.39,0.39,0.4,0.69,0.39,0.39,0.4,0.74,0.4,0.41,0.4,0.47,0.43,0.42,0.54,0.56,0.55,0.51,0.53,0.54,0.49,0.49,0.53,0.52,0.47,0.47,0.5,0.48,0.48,0.49]
+t_COMBINE_median_proba = []
+h_COMBINE_median_proba = []
+xt_COMBINE_median_proba = []
+xk_COMBINE_median_proba =[]
+cm_COMBINE_median_proba = []
+mc_COMBINE_median_proba = []
+sk_COMBINE_median_proba = []
+
+COMBINE_median_proba = {}
+
+COMBINE_median_proba['s'] = s_COMBINE_median_proba
+COMBINE_median_proba['k'] = k_COMBINE_median_proba
+COMBINE_median_proba['p'] = p_COMBINE_median_proba
+COMBINE_median_proba['t'] = t_COMBINE_median_proba
+COMBINE_median_proba['h'] = h_COMBINE_median_proba
+COMBINE_median_proba['cm'] = cm_COMBINE_median_proba
+COMBINE_median_proba['mc'] = mc_COMBINE_median_proba
+COMBINE_median_proba['sk'] = sk_COMBINE_median_proba
+COMBINE_median_proba['xk'] = xk_COMBINE_median_proba
+COMBINE_median_proba['xt'] = xt_COMBINE_median_proba
+
+
+###############################################
 
 
 
