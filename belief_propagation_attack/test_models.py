@@ -318,7 +318,8 @@ class TestModels:
                 plt.hist(prob_list, bins='auto')
                 plt.title(model_file)
                 plt.savefig('output/probabilityhistogram_{}.svg'.format(model_file.replace('models/', '').replace('.h5', '')), format='svg', dpi=1200)
-
+        
+        return np.median(rank_list),np.median(prob_list)
         # except Exception as e:
         #     print "! Uh oh, couldn't check the model! Need to resubmit (in test_models)" #PASSING OVER..."
         #     print e
@@ -443,6 +444,8 @@ if __name__ == "__main__":
     # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
     variables_to_test =[]
+    median_rank_out = []
+    median_proba_out = []
     for i in range(1,33):
         variables_to_test.append('p0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     print(variables_to_test)
@@ -470,7 +473,9 @@ if __name__ == "__main__":
                         print(var)
                         if model is None:
                             model = load_sca_model(MODEL_FOLDER + m)
-                        model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
+                        r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
+                        median_rank_out.append(r)
+                        median_proba_out.append(m)
                         if int(var_number) == 16:
                             model = None
                 else: 
@@ -479,12 +484,14 @@ if __name__ == "__main__":
                         print(var)
                         if model is None:
                             model = load_sca_model(MODEL_FOLDER + m)
-                        model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
-               
+                        r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
+                        median_rank_out.append(r)
+                        median_proba_out.append(m)               
                     # else:
                 #     if string_starts_with(m, var):
                 #         model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
-                   
+        print('All median ranks : ',median_rank_out)
+        print('All median proba : ',median_proba_out)           
 
 # # No argument: check all the trained models
 # if (len(sys.argv) == 1) or (len(sys.argv) == 2):
