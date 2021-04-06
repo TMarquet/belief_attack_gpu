@@ -479,7 +479,7 @@ if __name__ == "__main__":
                         if int(var_number) == 16:
                             model = None
                 else: 
-                    if string_starts_with(m, 'all_{}_2'.format(var_name)):
+                    if string_starts_with(m, 'all_{}_2_cnn_model1_window2000_size0_pooling0_densel3_denseu4000_filter3_batchsize100_lr1e-05_sd100_traces200000_'.format(var_name)):
                         print 'Testing : ', m 
                         print(var)
                         if model is None:
