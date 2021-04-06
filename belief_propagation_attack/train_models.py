@@ -754,7 +754,7 @@ if __name__ == "__main__":
             print "|| Changing Input Length from {} to {} (max samples)".format(INPUT_LENGTH, X_profiling.shape[1])
             INPUT_LENGTH = X_profiling.shape[1]
 
-    if not DATA_ASCAD:
+    if not USE_DATA_ASCAD:
         print X.shape
         print X_l.shape
         print V.shape
