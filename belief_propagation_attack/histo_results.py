@@ -49,7 +49,7 @@ t_median_rank = [68,77,77,76,68,68,67,68,62,65,66,65,64,63,65,61,69,69,104,122,1
 h_median_rank = [88,109,97,87,106,94,103,110,104,85,117,63]
 xt_median_rank = []
 xk_median_rank = []
-cm_median_rank = [107,124,112,106,107,124,112,106]
+cm_median_rank = [107,124,112,106,107,124,112,106,106.0, 116.0, 103.0, 112.0]
 mc_median_rank = []
 sk_median_rank = []
 
@@ -62,8 +62,6 @@ median_rank['t'] = t_median_rank
 median_rank['h'] = h_median_rank
 median_rank['cm'] = cm_median_rank
 median_rank['mc'] = mc_median_rank
-median_rank['sk'] = sk_median_rank
-median_rank['xk'] = xk_median_rank
 median_rank['xt'] = xt_median_rank
 
 s_median_proba = [0.60,1.03,0.50,0.49,0.70,0.48,0.43,0.41,0.74,0.54,0.52,0.52,0.80,0.40,0.29,0.41,0.56,1.07,0.61,0.50,0.67,0.47,0.48,0.46,0.77,0.53,0.51,0.50,0.77,0.38,0.38,0.39]
@@ -73,10 +71,10 @@ t_median_proba = [0.52,0.48,0.48,0.48,0.52,0.51,0.52,0.51,0.55,0.53,0.54,0.54,0.
 
 h_median_proba = [0.19,0.38,0.23,0.19,0.39,0.24,0.12,0.38,0.17,0.28,0.37,0.51]
 xt_median_proba = []
-xk_median_proba = []
-cm_median_proba = [0.4,0.39,0.4,0.4,0.40,0.39,0.4,0.4]
+
+cm_median_proba = [0.4,0.39,0.4,0.4,0.40,0.39,0.4,0.4,0.40094256, 0.38626224, 0.40714145, 0.38982127]
 mc_median_proba = []
-sk_median_proba = []
+
 
 median_proba = {}
 
@@ -88,8 +86,6 @@ median_proba['t'] = t_median_proba
 median_proba['h'] = h_median_proba
 median_proba['cm'] = cm_median_proba
 median_proba['mc'] = mc_median_proba
-median_proba['sk'] = sk_median_proba
-median_proba['xk'] = xk_median_proba
 median_proba['xt'] = xt_median_proba
 
 

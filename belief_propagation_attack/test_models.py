@@ -366,6 +366,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Trains Neural Network Models')
     parser.add_argument('--ALL', '--ALL_VARS', '--TEST_ALL', action="store_true", dest="TEST_ALL", help='Tests all available models (default True)', default=False)
+    parser.add_argument('--COMBINE', action="store_true", dest="COMBINE", help='Use models trained using the combination of all date from a single intermediate', default=False)
     parser.add_argument('--MLP', action="store_true", dest="USE_MLP", help='Tests Multi Layer Perceptron',
                         default=False)
     parser.add_argument('--CNN', action="store_true", dest="USE_CNN",
@@ -411,6 +412,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     USE_MLP = args.USE_MLP
     USE_CNN = args.USE_CNN
+    COMBINE = args.COMBINE
     VARIABLE = args.VARIABLE
     ADD_NOISE = args.ADD_NOISE
     INPUT_LENGTH = args.INPUT_LENGTH
@@ -461,40 +463,54 @@ if __name__ == "__main__":
     else:
         # Check specific model
         # TODO
-        model = None
+        if USE_MLP:
+  
+    
+            for var in variables_to_test :
+                for (m) in sorted(listdir(NEURAL_MODEL_FOLDER)):
+                    var_name, var_number, _ = split_variable_name(var)
 
-        for var in variables_to_test :
-            for (m) in sorted(listdir(MODEL_FOLDER)):
-                var_name, var_number, _ = split_variable_name(var)
-                if False:
-                    
-                    if int(var_number) <= 16:
-                        
-                        if string_starts_with(m, 'all_{}_cnn'.format(var_name)):
-                            print 'Testing : ', m 
-                            print(var)
-                            if model is None:
-                                model = load_sca_model(MODEL_FOLDER + m)
-                            r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
-                            median_rank_out.append(r)
-                            median_proba_out.append(m)
-                            if int(var_number) == 16:
-                                model = None
-                    else: 
-                        if string_starts_with(m, 'all_{}_2'.format(var_name)):
-                            print 'Testing : ', m 
-                            print(var)
-                            if model is None:
-                                model = load_sca_model(MODEL_FOLDER + m)
-                            r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
-                            median_rank_out.append(r)
-                            median_proba_out.append(m)               
-                else:
                     if string_starts_with(m, var):
                         print 'Testing : ', m 
                         r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
                         median_rank_out.append(r)
-                        median_proba_out.append(m)
+                        median_proba_out.append(m)        
+        else:
+            if COMBINE:
+                model = None
+        
+                for var in variables_to_test :
+                    for (m) in sorted(listdir(MODEL_FOLDER)):
+                        var_name, var_number, _ = split_variable_name(var)
+                        if int(var_number) <= 16:
+                            
+                            if string_starts_with(m, 'all_{}_cnn'.format(var_name)):
+                                print 'Testing : ', m 
+                                print(var)
+                                if model is None:
+                                    model = load_sca_model(MODEL_FOLDER + m)
+                                r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
+                                median_rank_out.append(r)
+                                median_proba_out.append(m)
+                                if int(var_number) == 16:
+                                    model = None
+                        else: 
+                            if string_starts_with(m, 'all_{}_2'.format(var_name)):
+                                print 'Testing : ', m 
+                                print(var)
+                                if model is None:
+                                    model = load_sca_model(MODEL_FOLDER + m)
+                                r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
+                                median_rank_out.append(r)
+                                median_proba_out.append(m)               
+            else:
+                for var in variables_to_test :
+                    for (m) in sorted(listdir(MODEL_FOLDER)):
+                        if string_starts_with(m, var):
+                            print 'Testing : ', m 
+                            r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
+                            median_rank_out.append(r)
+                            median_proba_out.append(m)
         print('All median ranks : ',median_rank_out)
         print('All median proba : ',median_proba_out)           
 
