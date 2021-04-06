@@ -97,15 +97,14 @@ median_proba['xt'] = xt_median_proba
 ############### CNN Combined Values ####################
 
 k_COMBINE_median_rank = [117,99,98,98,109,75,111,90,102,51,110,91,93,45,89,67,94,86,91,114,90,92,87,79,78,74,74,74,80,78,90,102]
-s_COMBINE_median_rank = []
+s_COMBINE_median_rank = [35.0, 24.0, 48.0, 72.0, 33.0, 82.0, 71.0, 79.0, 31.0, 68.0, 70.0, 64.0, 27.0, 46.0, 74.0, 68.0, 38.0, 30.0, 59.0, 73.0, 38.0, 83.0, 70.0, 87.0, 32.0, 68.0, 70.0, 60.0, 30.0, 46.0, 75.0, 71.0]
 p_COMBINE_median_rank = [112,63,122,110,110,58,115,108,109,57,106,105,112,72,112,97,77,69,75,84,78,75,83,83,76,75,85,87,80,80,84,83]
-t_COMBINE_median_rank =[]
-h_COMBINE_median_rank = []
-xt_COMBINE_median_rank = []
-xk_COMBINE_median_rank = []
-cm_COMBINE_median_rank = []
-mc_COMBINE_median_rank = []
-sk_COMBINE_median_rank = []
+t_COMBINE_median_rank =[66.0, 67.0, 63.0, 64.0, 56.0, 41.0, 56.0, 57.0, 53.0, 36.0, 55.0, 54.0, 52.0, 33.0, 56.0, 54.0, 66.0, 59.0, 75.0, 89.0, 94.0, 80.0, 93.0, 97.0, 92.0, 81.0, 94.0, 92.0, 90.0, 80.0, 98.0, 102.0]
+h_COMBINE_median_rank = [62.0, 103.0, 67.0, 63.0, 102.0, 53.0, 66.0, 98.0, 54.0, 60.0, 98.0, 56.0]
+xt_COMBINE_median_rank = [47.0, 52.0, 54.0, 51.0, 47.0, 55.0, 54.0, 47.0, 48.0, 55.0, 60.0, 45.0, 42.0, 50.0, 54.0, 42.0]
+cm_COMBINE_median_rank = [102.0, 105.0, 100.0, 99.0, 100.0, 104.0, 99.0, 97.0, 101.0, 103.5, 100.0, 98.0, 99.0, 105.0, 101.0, 102.0]
+mc_COMBINE_median_rank = [48.0, 50.0, 52.0, 54.0, 47.0, 49.0, 48.0, 45.0, 50.0, 48.0, 54.0, 44.0, 38.0, 47.0, 48.0, 42.0]
+
 
 COMBINE_median_rank = {}
 
@@ -116,20 +115,18 @@ COMBINE_median_rank['t'] = t_COMBINE_median_rank
 COMBINE_median_rank['h'] = h_COMBINE_median_rank
 COMBINE_median_rank['cm'] = cm_COMBINE_median_rank
 COMBINE_median_rank['mc'] = mc_COMBINE_median_rank
-COMBINE_median_rank['sk'] = sk_COMBINE_median_rank
-COMBINE_median_rank['xk'] = xk_COMBINE_median_rank
 COMBINE_median_rank['xt'] = xt_COMBINE_median_rank
 
 k_COMBINE_median_proba = [0.39,0.42,0.43,0.42,0.4,0.6,0.4,0.44,0.41,0.79,0.4,0,44,0.29,0.85,0.44,0.52,0.36,0.36,0.45,0.34,0.40,0.31,0.41,0.47,0.47,0.50,0.5,0.5,0.46,0.38,0.37,0.17]
-s_COMBINE_median_proba = []
+s_COMBINE_median_proba = [0.8340867, 1.1183634, 0.63963234, 0.5429022, 0.9156659, 0.4736061, 0.53365063, 0.49785916, 0.974964, 0.56085754, 0.55108014, 0.55968026, 1.11081101, 0.8231517, 0.51061213, 0.54890085, 0.804439, 0.8571037, 0.47703553, 0.5346647, 0.7860447, 0.47590486, 0.53243125, 0.4599289, 0.9605047, 0.56279995, 0.55249818, 0.5920737, 1.10010583, 0.8151276, 0.5154483, 0.5308167]
 p_COMBINE_median_proba = [0.4,0.69,0.39,0.39,0.4,0.69,0.39,0.39,0.4,0.74,0.4,0.41,0.4,0.47,0.43,0.42,0.54,0.56,0.55,0.51,0.53,0.54,0.49,0.49,0.53,0.52,0.47,0.47,0.5,0.48,0.48,0.49]
-t_COMBINE_median_proba = []
-h_COMBINE_median_proba = []
-xt_COMBINE_median_proba = []
-xk_COMBINE_median_proba =[]
-cm_COMBINE_median_proba = []
-mc_COMBINE_median_proba = []
-sk_COMBINE_median_proba = []
+t_COMBINE_median_proba = [0.5656828, 0.52959407, 0.5870697, 0.5679627, 0.6370576, 0.77518173, 0.60626706, 0.5856785, 0.6413826, 0.9007152, 0.64338623, 0.63190004, 0.67791357, 0.9935992, 0.6231174, 0.64545227, 0.56521106, 0.5812561, 0.5081865, 0.4313398, 0.34368709, 0.4297847, 0.3903978, 0.37568312, 0.3694328, 0.4311991, 0.3923239, 0.4004292, 0.41643158, 0.4066931, 0.2941942, 0.30279672]
+h_COMBINE_median_proba = [0.4312863, 0.42057354, 0.5448893, 0.40214127, 0.4252485, 0.6699076, 0.36673294, 0.42175697, 0.661393, 0.3692991, 0.43237065, 0.61375718]
+xt_COMBINE_median_proba = [0.63759703, 0.5977407, 0.59641385, 0.62374026, 0.64231576, 0.5838135, 0.58769872, 0.67730267, 0.61742757, 0.58565764, 0.54819565, 0.69354605, 0.70821126, 0.6400232, 0.583536, 0.72584325]
+
+cm_COMBINE_median_proba = [0.4094048, 0.40615248, 0.41644475, 0.42815506, 0.4131622, 0.40594996, 0.4193576, 0.4313625, 0.4098963, 0.40927245, 0.41867783, 0.4261486, 0.41436898, 0.40508397, 0.41574463, 0.4202812]
+mc_COMBINE_median_proba = [0.63508507, 0.6393516, 0.6178619, 0.5893003, 0.6543935, 0.63260067, 0.6569666, 0.69809835, 0.5959644, 0.6508962, 0.6090382, 0.695979, 0.7723243, 0.6767044, 0.6562135, 0.7310425]
+
 
 COMBINE_median_proba = {}
 
@@ -140,8 +137,6 @@ COMBINE_median_proba['t'] = t_COMBINE_median_proba
 COMBINE_median_proba['h'] = h_COMBINE_median_proba
 COMBINE_median_proba['cm'] = cm_COMBINE_median_proba
 COMBINE_median_proba['mc'] = mc_COMBINE_median_proba
-COMBINE_median_proba['sk'] = sk_COMBINE_median_proba
-COMBINE_median_proba['xk'] = xk_COMBINE_median_proba
 COMBINE_median_proba['xt'] = xt_COMBINE_median_proba
 
 
@@ -207,7 +202,8 @@ dict_val_rank = {}
 dict_MLP_val_rank = {}
 dict_val_proba = {}
 dict_MLP_val_proba = {}
-
+dict_combine_val_rank = {}
+dict_combine_val_proba = {}
 print('Studied variable :',var_to_plot)
 
 for elem in var_to_plot :
@@ -215,19 +211,23 @@ for elem in var_to_plot :
     for e in median_proba[elem] :
         dict_val_proba[elem+str(i)] = e *pow(10,-2)
         dict_MLP_val_proba[elem+str(i)] = MLP_median_proba[elem][i-1] *pow(10,-2)
+        dict_combine_val_proba[elem+str(i)] = COMBINE_median_proba[elem][i-1] *pow(10,-2)
         i+=1
     i = 1 
     for e in median_rank[elem] :
         dict_val_rank[elem+str(i)] = e
         dict_MLP_val_rank[elem+str(i)] = MLP_median_rank[elem][i-1] 
+        dict_combine_val_rank[elem+str(i)] = COMBINE_median_rank[elem][i-1] 
         i+=1
 
 
 labels = dict_val_proba.keys()
 CNN_proba = dict_val_proba.values()
 MLP_proba = dict_MLP_val_proba.values()
+CNN_Combine_proba = dict_combine_val_proba.values()
 CNN_rank = dict_val_rank.values()
 MLP_rank = dict_MLP_val_rank.values()
+CNN_combine_rank = dict_combine_val_rank.values()
 X_CNN =[]
 X_MLP = []
 
