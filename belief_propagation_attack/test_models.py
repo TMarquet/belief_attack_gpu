@@ -492,7 +492,9 @@ if __name__ == "__main__":
                 else:
                     if string_starts_with(m, var):
                         print 'Testing : ', m 
-                        model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
+                        r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
+                        median_rank_out.append(r)
+                        median_proba_out.append(m)
         print('All median ranks : ',median_rank_out)
         print('All median proba : ',median_proba_out)           
 
