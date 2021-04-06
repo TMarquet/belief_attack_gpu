@@ -447,7 +447,7 @@ if __name__ == "__main__":
     median_rank_out = []
     median_proba_out = []
     for i in range(1,33):
-        variables_to_test.append('t0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+        variables_to_test.append('cm0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     print(variables_to_test)
     if TEST_ALL:
         # Clear statistics
@@ -466,30 +466,32 @@ if __name__ == "__main__":
         for var in variables_to_test :
             for (m) in sorted(listdir(MODEL_FOLDER)):
                 var_name, var_number, _ = split_variable_name(var)
-                if int(var_number) <= 16:
+                if False:
                     
-                    if string_starts_with(m, 'all_{}_cnn'.format(var_name)):
-                        print 'Testing : ', m 
-                        print(var)
-                        if model is None:
-                            model = load_sca_model(MODEL_FOLDER + m)
-                        r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
-                        median_rank_out.append(r)
-                        median_proba_out.append(m)
-                        if int(var_number) == 16:
-                            model = None
-                else: 
-                    if string_starts_with(m, 'all_{}_2'.format(var_name)):
-                        print 'Testing : ', m 
-                        print(var)
-                        if model is None:
-                            model = load_sca_model(MODEL_FOLDER + m)
-                        r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
-                        median_rank_out.append(r)
-                        median_proba_out.append(m)               
-                    # else:
-                #     if string_starts_with(m, var):
-                #         model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
+                    if int(var_number) <= 16:
+                        
+                        if string_starts_with(m, 'all_{}_cnn'.format(var_name)):
+                            print 'Testing : ', m 
+                            print(var)
+                            if model is None:
+                                model = load_sca_model(MODEL_FOLDER + m)
+                            r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
+                            median_rank_out.append(r)
+                            median_proba_out.append(m)
+                            if int(var_number) == 16:
+                                model = None
+                    else: 
+                        if string_starts_with(m, 'all_{}_2'.format(var_name)):
+                            print 'Testing : ', m 
+                            print(var)
+                            if model is None:
+                                model = load_sca_model(MODEL_FOLDER + m)
+                            r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
+                            median_rank_out.append(r)
+                            median_proba_out.append(m)               
+                else:
+                    if string_starts_with(m, var):
+                        model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
         print('All median ranks : ',median_rank_out)
         print('All median proba : ',median_proba_out)           
 
