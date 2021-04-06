@@ -256,13 +256,9 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
     
     for i in range(len(size)):  
         if i == 0:
-            model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))
-            model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-            model.add(BatchNormalization())            
+            model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))           
         else:
-            model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1)))
-            model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-            model.add(BatchNormalization())            
+            model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1)))          
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
         model.add(BatchNormalization())
         model.add(tf.keras.layers.Activation('relu'))
@@ -274,18 +270,18 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
         
     # Two Dense layers
     
-   
+ 
     for i in range(0,dense_layers):
         model.add(Dense(dense_units, name='fc{}'.format(i)))
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
         model.add(BatchNormalization(name='block_dense{}_batchnorm'.format(i)))
         model.add(tf.keras.layers.Activation('relu'))
-      
+       
 
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
     optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+    model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
@@ -417,9 +413,9 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
         sizes = [[20,40,80]]
         pooling = [[2]]
-        filters = [11]
-        dense_layers = [1]
-        dense_units = [100]            
+        filters = [3]
+        dense_layers = [3]
+        dense_units = [4000]            
         for size in sizes:
             for pool in pooling:
                 for filter_cnn in filters:
@@ -431,7 +427,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
                             cnn_batchsize = batch_size
                             train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
                                         "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
-                                            variable, hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),layer,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
+                                            'all_s', hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),layer,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
                                         epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
                                         progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
 
@@ -616,7 +612,7 @@ if __name__ == "__main__":
         variable_list = get_variable_list()
     elif ALL_VARIABLE is None:
 
-        variable_list =['s003']
+        variable_list =['s001','s002','s003','s004','s005','s006','s007','s008','s009','s010','s011','s012','s013','s014','s015','s016']
         # for i in range(12,17) :
         #     if i < 10 :
         #         variable_list.append('mc00'+str(i))
