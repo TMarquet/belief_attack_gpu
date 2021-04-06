@@ -11,32 +11,9 @@ from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 import smallest_circle as sc
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
-var_to_plot = ['s','k','t','h','p','cm','mc','xt']
+var_to_plot = ['s']
 all_v = ['s','k','t','h','p','cm','mc','xt']
 #var_to_plot = all_v
-
-def dist(x1,x2):
-    return np.sqrt(pow(x1[0]-x2[0],2)+pow(x1[1]-x2[1],2))/256
-
-def average_nn(l):
-    sum_nn = 0
-    for elem1 in l:
-        min_v = 9999999999
-        for elem2 in l:
-            d = 9999999999
-            if elem1 != elem2 :
-                d = dist(elem1,elem2)
-            if min_v > d :
-                min_v = d
-        sum_nn += min_v
-    return sum_nn/len(l)
-
-def evaluate_consitency(l):
-    max_l = max(l)
-    min_l = min(l)
-    mean_l = np.mean(l)
-    median_l = np.median(l)
-    return np.sqrt(pow(mean_l-max_l,2)+pow(mean_l-min_l,2))/256
 
 
 ########### MY VALUES ####################
@@ -264,17 +241,17 @@ print('MLP median rank max : ',np.max(c))
 print('MLP median proba max : ',np.max(d))
 
 fig,ax =  plt.subplots()
-ax.scatter(CNN_rank, CNN_proba,c='blue', s=10)
+ax.scatter(CNN_rank, CNN_proba,c='blue', s=10,label = 'CNN')
 points_cnn = np.array(list(zip(CNN_rank,CNN_proba)))
 hull_cnn = ConvexHull(points_cnn)
 for simplex in hull_cnn.simplices:
     ax.plot(points_cnn[simplex, 0], points_cnn[simplex, 1], 'b-')
-ax.scatter(CNN_combine_rank, CNN_Combine_proba,c='green', s=10)
+ax.scatter(CNN_combine_rank, CNN_Combine_proba,c='green', s=10,label = 'CNN Combined')
 points_cnn_combine = np.array(list(zip(CNN_combine_rank,CNN_Combine_proba)))
 hull_cnn_combine = ConvexHull(points_cnn_combine)
 for simplex in hull_cnn_combine.simplices:
     ax.plot(points_cnn_combine[simplex, 0], points_cnn_combine[simplex, 1], 'g-')
-ax.scatter(MLP_rank, MLP_proba,c='red', s=10)
+ax.scatter(MLP_rank, MLP_proba,c='red', s=10,label = 'MLP')
 
 points_mlp = np.array(list(zip(MLP_rank,MLP_proba)))
 hull_mlp = ConvexHull(points_mlp)
@@ -283,7 +260,10 @@ for simplex in hull_mlp.simplices:
 print('CNN consistency : ',hull_cnn.area)
 print('Combined CNN consistency : ',hull_cnn_combine.area)
 print('MLP consistency : ',hull_mlp.area)
-
+ax.set_ylabel('Scores divided by random guess')
+ax.set_xlabel('Ranks divided by random guess')
+ax.legend()
+ax.set_title('Consistency evaluation over the subbytes output')
 ax_sca = plt.gca()
 ax_sca.set_xlim(0,1)
 ax_sca.set_ylim(0,max([np.max(points_cnn),np.max(points_cnn_combine),np.max(points_mlp)])*1.1)
