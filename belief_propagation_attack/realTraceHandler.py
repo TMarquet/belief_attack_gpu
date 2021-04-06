@@ -316,7 +316,7 @@ class RealTraceHandler:
         if not check_file_exists(model_file):            
             if not self.no_print:
                 print "!!! Doesn't exist!"
-            return (None, None)
+            return (None, None,None)
         else:
 
             multilabel = True if string_contains(model_file, '_multilabel_') else False
