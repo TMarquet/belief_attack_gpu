@@ -301,10 +301,12 @@ class RealTraceHandler:
         # Return Rank List
         return rank_list
 
-    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False ,save_proba = False,variable=None,model = None):
+    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False ,save_proba = False,variable=None,model = None,mlp = False):
         # Get variable of model
         if ASCAD:
             model_name = model_file.replace(MODEL_FOLDER+'adagrad/', '')            
+        elif mlp:
+            model_name = model_file.replace(NEURAL_MODEL_FOLDER, '')
         else:
             model_name = model_file.replace(MODEL_FOLDER, '')
         variable = model_name.split('_')[0] if variable == None else variable

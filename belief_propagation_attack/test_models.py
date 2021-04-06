@@ -280,12 +280,12 @@ class TestModels:
         # return f_ranks
 
     # Check a saved model against one of the bpann databases Attack traces
-    def check_model(self, model_file, num_traces=10000, template_attack=False, random_key=False, save=True,ASCAD = False,save_proba = False,variable=None,model = None):
+    def check_model(self, model_file, num_traces=10000, template_attack=False, random_key=False, save=True,ASCAD = False,save_proba = False,variable=None,model = None,mlp = False):
         # try:
         if not save_proba:
-            rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba,variable = variable,model=model)
+            rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba,variable = variable,model=model,mlp=mlp)
         else:
-            rank_list, prob_list, predicted_values,output_list = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba,variable = variable,model = model)
+            rank_list, prob_list, predicted_values,output_list = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba,variable = variable,model = model,mlp=mlp)
             print 'Saving probabilities for : ' + var
             model_name = model_file.replace(MODEL_FOLDER, '')
             variable = model_name.split('_')[0] if variable is None else variable
