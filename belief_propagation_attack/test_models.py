@@ -446,7 +446,7 @@ if __name__ == "__main__":
     variables_to_test =[]
     median_rank_out = []
     median_proba_out = []
-    for i in range(1,33):
+    for i in range(1,5):
         variables_to_test.append('cm0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     print(variables_to_test)
     if TEST_ALL:
@@ -491,6 +491,7 @@ if __name__ == "__main__":
                             median_proba_out.append(m)               
                 else:
                     if string_starts_with(m, var):
+                        print 'Testing : ', m 
                         model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
         print('All median ranks : ',median_rank_out)
         print('All median proba : ',median_proba_out)           
