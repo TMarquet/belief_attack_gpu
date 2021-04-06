@@ -48,10 +48,9 @@ p_median_rank = [122,66,127,121,124,65,125,118,121,62,121,113,107,60,111,68,80,1
 t_median_rank = [68,77,77,76,68,68,67,68,62,65,66,65,64,63,65,61,69,69,104,122,120,116,120,120,118,113,119,119,118,109,114,113]
 h_median_rank = [88,109,97,87,106,94,103,110,104,85,117,63]
 xt_median_rank = []
-xk_median_rank = []
 cm_median_rank = [107,124,112,106,107,124,112,106,106.0, 116.0, 103.0, 112.0,107.0, 118.0, 104.0, 112.0,109.0, 119.0, 104.0, 117.0]
-mc_median_rank = [88.0, 73.0, 66.0, 73.0,]
-sk_median_rank = [0.19157205, 0.389596, 0.45824605, 0.4274725]
+mc_median_rank = [88.0, 73.0, 66.0, 73.0,91.0, 73.0, 78.0, 68.0]
+
 
 median_rank = {}
 
@@ -68,12 +67,10 @@ s_median_proba = [0.60,1.03,0.50,0.49,0.70,0.48,0.43,0.41,0.74,0.54,0.52,0.52,0.
 k_median_proba = [0.39,0.40,0.34,0.40,0.38,0.43,0.35,0.40,0.36,0.73,0.34,0.40,0.34,0.77,0.41,0.45,0.43,0.52,0.41,0.46,0.46,0.43,0.44,0.39,0.43,0.42,0.43,0.42,0.43,0.31,0.42,0.38]
 p_median_proba = [0.39,0.70,0.39,0.39,0.39,0.70,0.39,0.39,0.39,0.73,0.39,0.39,0.40,0.74,0.40,0.51,0.45,0.02,0.51,0.46,0.44,0.36,0.45,0.12,0.42,0.34,0.46,0.09,0.34,0.31,0.45,0.2]
 t_median_proba = [0.52,0.48,0.48,0.48,0.52,0.51,0.52,0.51,0.55,0.53,0.54,0.54,0.55,0.70,0.55,0.57,0.50,0.48,0.41,0.35,0.37,0.02,0.02,0.007,0.009,0.02,0.03,0.03,0.006,0.16,0.15,0.11]
-
 h_median_proba = [0.19,0.38,0.23,0.19,0.39,0.24,0.12,0.38,0.17,0.28,0.37,0.51]
 xt_median_proba = []
-
 cm_median_proba = [0.4,0.39,0.4,0.4,0.40,0.39,0.4,0.4,0.40094256, 0.38626224, 0.40714145, 0.38982127,0.4011262, 0.39268914, 0.40722257, 0.3957341,0.401037, 0.37970073, 0.40965155, 0.3940438]
-mc_median_proba = []
+mc_median_proba = [0.19157205, 0.389596, 0.45824605, 0.4274725,0.15769254, 0.41880417, 0.2618316, 0.4692219]
 
 
 median_proba = {}
@@ -148,10 +145,8 @@ p_MLP_median_rank = [119,70,122,119,114,66,120,114,115,63,113,111,115,65,104,80,
 t_MLP_median_rank = [70,78,84,77,79,88,69,71,62,63,67,65,63,65,67,58]
 h_MLP_median_rank = [81,107,113,72,94,94,77,99,79,72,118,74,95,97,102,83]
 xt_MLP_median_rank = [87,75,71,76,102,91,62,101,91,70,88,87,99,73,74,88]
-xk_MLP_median_rank = [56]
 cm_MLP_median_rank = [108,118,114,102,106,123,105,107,106,111,104,101,114,113,111,120]
 mc_MLP_median_rank = [80,97,76,74,77,77,63,74,97,70,72,93,73,83,70,79]
-sk_MLP_median_rank = [65]
 
 MLP_median_rank = {}
 
@@ -162,8 +157,6 @@ MLP_median_rank['t'] = t_MLP_median_rank
 MLP_median_rank['h'] = h_MLP_median_rank
 MLP_median_rank['cm'] = cm_MLP_median_rank
 MLP_median_rank['mc'] = mc_MLP_median_rank
-MLP_median_rank['sk'] = sk_MLP_median_rank
-MLP_median_rank['xk'] = xk_MLP_median_rank
 MLP_median_rank['xt'] = xt_MLP_median_rank
 
 s_MLP_median_proba = [0.61,0.79,0.37,0.58,0.70,0.50,0.52,0.46,0.72,0.58,0.53,0.57,0.71,0.77,0.56,0.53]
@@ -172,10 +165,8 @@ p_MLP_median_proba = [0.39,0.68,0.38,0.38,0.40,0.70,0.40,0.40,0.40,0.71,0.39,0.4
 t_MLP_median_proba = [0.53,0.52,0.49,0.52,0.52,0.49,0.54,0.53,0.57,0.55,0.54,0.53,0.54,0.53,0.52,0.56]
 h_MLP_median_proba = [0.53,0.43,0.31,0.57,0.45,0.50,0.53,0.44,0.59,0.54,0.41,0.62,0.45,0.45,0.43,0.53]
 xt_MLP_median_proba = [0.50,0.52,0.55,0.51,0.44,0.48,0.61,0.44,0.47,0.55,0.40,0.51,0.43,0.53,0.55,0.50]
-xk_MLP_median_proba = [0.38]
 cm_MLP_median_proba = [0.42,0.4,0.4,0.43,0.36,0.42,0.42,0.42,0.41,0.42,0.43,0.41,0.4,0.41,0.4,0.41,0.4]
 mc_MLP_median_proba = [0.52,0.45,0.52,0.51,0.54,0.52,0.61,0.53,0.45,0.55,0.54,0.47,0.55,0.50,0.56,0.52]
-sk_MLP_median_proba = [0.28]
 
 MLP_median_proba = {}
 
@@ -186,8 +177,6 @@ MLP_median_proba['t'] = t_MLP_median_proba
 MLP_median_proba['h'] = h_MLP_median_proba
 MLP_median_proba['cm'] = cm_MLP_median_proba
 MLP_median_proba['mc'] = mc_MLP_median_proba
-MLP_median_proba['sk'] = sk_MLP_median_proba
-MLP_median_proba['xk'] = xk_MLP_median_proba
 MLP_median_proba['xt'] = xt_MLP_median_proba
 
 
@@ -232,16 +221,15 @@ a = np.array(list(CNN_rank))
 b = np.array(list(CNN_proba))
 c = np.array(list(MLP_rank))
 d = np.array(list(MLP_proba))
+e = np.array(list(CNN_combine_rank))
+f = np.array(list(CNN_Combine_proba))
 
-
-for x , y in zip(CNN_proba,CNN_rank) :
-    X_CNN.append([x,y])
-    
-for x , y in zip(MLP_proba,MLP_rank) :
-    X_MLP.append([x,y])
 
 print('CNN median rank mean : ',np.mean(a))
 print('CNN median proba mean : ',np.mean(b))
+print('\n')
+print('CNN combine median rank mean : ',np.mean(e))
+print('CNN combine  median proba mean : ',np.mean(f))
 print('\n')
 print('MLP median rank mean : ',np.mean(c))
 print('MLP median proba mean : ',np.mean(d))
@@ -249,11 +237,17 @@ print('\n')
 print('CNN median rank median : ',np.median(a))
 print('CNN median proba median : ',np.median(b))
 print('\n')
+print('CNN combine median rank median : ',np.median(e))
+print('CNN combine median proba median : ',np.median(f))
+print('\n')
 print('MLP median rank median : ',np.median(c))
 print('MLP median proba median : ',np.median(d))
 print('\n')
 print('CNN median rank min: ',np.min(a))
 print('CNN median proba min : ',np.min(b))
+print('\n')
+print('CNN combine median rank min: ',np.min(e))
+print('CNN median proba min : ',np.min(f))
 print('\n')
 print('MLP median rank min : ',np.min(c))
 print('MLP median proba min : ',np.min(d))
@@ -261,11 +255,15 @@ print('\n')
 print('CNN median rank max : ',np.max(a))
 print('CNN median proba max : ',np.max(b))
 print('\n')
+print('CNN combine median rank max : ',np.max(e))
+print('CNN combine median proba max : ',np.max(f))
+print('\n')
 print('MLP median rank max : ',np.max(c))
 print('MLP median proba max : ',np.max(d))
 
 plt.figure(1)
 plt.scatter(CNN_rank, CNN_proba,c='blue', s=0.5)
+plt.scatter(CNN_combine_rank, CNN_Combine_proba,c='green', s=0.5)
 plt.scatter(MLP_rank, MLP_proba,c='red', s=0.5)
 ax_sca = plt.gca()
 ax_sca.set_xlim(0,150)
@@ -290,19 +288,24 @@ if len(var_to_plot) > 1 :
             labels.append(var_to_plot[plot] + str(start + i+1))    
         x = np.arange(n)  # the label locations
         width = 0.35  # the width of the bars
-        rects1 = ax[plot][0].bar(x - width/2, median_rank[var_to_plot[plot]], width, label='CNN')
-        rects2 = ax[plot][0].bar(x + width/2, MLP_median_rank[var_to_plot[plot]][:n], width, label='MLP')
-        rects1 = ax[plot][1].bar(x - width/2, median_proba[var_to_plot[plot]], width, label='CNN')
-        rects2 = ax[plot][1].bar(x + width/2, MLP_median_proba[var_to_plot[plot]][:n], width, label='MLP')
+        rects1 = ax[plot][0].bar(x - width/3, median_rank[var_to_plot[plot]], width, label='CNN')
+        rects2 = ax[plot][0].bar(x + width/3, MLP_median_rank[var_to_plot[plot]][:n], width, label='MLP')
+        rects3 = ax[plot][0].bar(x + width/3, COMBINE_median_rank[var_to_plot[plot]][:n], width, label='CNN combined')
+        rects1 = ax[plot][1].bar(x - width/3, median_proba[var_to_plot[plot]], width, label='CNN')
+        rects2 = ax[plot][1].bar(x + width/3, MLP_median_proba[var_to_plot[plot]][:n], width, label='MLP')
+        rects3 = ax[plot][1].bar(x + width/3, COMBINE_median_proba[var_to_plot[plot]][:n], width, label='CNN combined')
         CNN_rank_mean = np.mean(median_rank[var_to_plot[plot]])
         MLP_rank_mean = np.mean(MLP_median_rank[var_to_plot[plot]])
+        CNN_combine_rank_mean = np.mean(COMBINE_median_rank[var_to_plot[plot]])
         line_CNN = ax[plot][0].plot([-width,n-1+width],[CNN_rank_mean,CNN_rank_mean],'r--',label='CNN mean')
         line_MLP = ax[plot][0].plot([-width,n-1+width],[MLP_rank_mean,MLP_rank_mean],'r:',label='MLP mean')
-        
+        line_COMBINE = ax[plot][0].plot([-width,n-1+width],[CNN_combine_rank_mean,CNN_combine_rank_mean],'rx',label='CNN combine mean')
         CNN_proba_mean = np.mean(median_proba[var_to_plot[plot]])
         MLP_proba_mean = np.mean(MLP_median_proba[var_to_plot[plot]])
+        COMBINE_proba_mean = np.mean(COMBINE_median_proba[var_to_plot[plot]])
         line_CNN = ax[plot][1].plot([-width,n-1+width],[CNN_proba_mean,CNN_proba_mean],'r--',label='CNN mean')
         line_MLP = ax[plot][1].plot([-width,n-1+width],[MLP_proba_mean,MLP_proba_mean],'r:',label='MLP mean')    
+        line_COMBINE = ax[plot][1].plot([-width,n-1+width],[COMBINE_proba_mean,COMBINE_proba_mean],'rx',label='CNN combine mean') 
     # Add some text for labels, title and custom x-axis tick labels, etc.
         ax[plot][0].set_ylabel('Rank')
         ax[plot][0].set_ylim(0,150)
@@ -332,19 +335,24 @@ else :
         labels.append(var_to_plot[plot] + str(start+i+1))   
     x = np.arange(n)  # the label locations
     width = 0.35  # the width of the bars
-    rects1 = ax[0].bar(x - width/2, median_rank[var_to_plot[plot]], width, label='CNN')
-    rects2 = ax[0].bar(x + width/2, MLP_median_rank[var_to_plot[plot]][:n], width, label='MLP')
-    rects1 = ax[1].bar(x - width/2, median_proba[var_to_plot[plot]], width, label='CNN')
-    rects2 = ax[1].bar(x + width/2, MLP_median_proba[var_to_plot[plot]][:n], width, label='MLP')
+    rects1 = ax[0].bar(x - width/3, median_rank[var_to_plot[plot]], width, label='CNN')
+    rects2 = ax[0].bar(x + width/3, MLP_median_rank[var_to_plot[plot]][:n], width, label='MLP')
+    rects3 = ax[0].bar(x + width/3, COMBINE_median_rank[var_to_plot[plot]][:n], width, label='CNN combined')
+    rects1 = ax[1].bar(x - width/3, median_proba[var_to_plot[plot]], width, label='CNN')
+    rects2 = ax[1].bar(x + width/3, MLP_median_proba[var_to_plot[plot]][:n], width, label='MLP')
+    rects3 = ax[1].bar(x + width/3, COMBINE_median_proba[var_to_plot[plot]][:n], width, label='CNN combined')
     CNN_rank_mean = np.mean(median_rank[var_to_plot[plot]])
     MLP_rank_mean = np.mean(MLP_median_rank[var_to_plot[plot]])
+    CNN_combine_rank_mean = np.mean(COMBINE_median_rank[var_to_plot[plot]])
     line_CNN = ax[0].plot([-width,n-1+width],[CNN_rank_mean,CNN_rank_mean],'r--',label='CNN mean')
     line_MLP = ax[0].plot([-width,n-1+width],[MLP_rank_mean,MLP_rank_mean],'r:',label='MLP mean')
-    
+    line_COMBINE = ax[0].plot([-width,n-1+width],[CNN_combine_rank_mean,CNN_combine_rank_mean],'rx',label='CNN combine mean')
     CNN_proba_mean = np.mean(median_proba[var_to_plot[plot]])
     MLP_proba_mean = np.mean(MLP_median_proba[var_to_plot[plot]])
+    COMBINE_proba_mean = np.mean(COMBINE_median_proba[var_to_plot[plot]])
     line_CNN = ax[1].plot([-width,n-1+width],[CNN_proba_mean,CNN_proba_mean],'r--',label='CNN mean')
     line_MLP = ax[1].plot([-width,n-1+width],[MLP_proba_mean,MLP_proba_mean],'r:',label='MLP mean')    
+    line_COMBINE = ax[1].plot([-width,n-1+width],[COMBINE_proba_mean,COMBINE_proba_mean],'rx',label='CNN combine mean') 
 # Add some text for labels, title and custom x-axis tick labels, etc.
     ax[0].set_ylabel('Rank')
     ax[0].set_ylim(0,150)
