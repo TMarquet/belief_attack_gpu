@@ -102,7 +102,7 @@ def mlp_new(input_shape=(16,256), learning_rate=0.00001, classes=256, loss_funct
     if loss_function is None:
         loss_function='rank_loss'
     model = tf.keras.Sequential()
-    model.add(Dense(256, input_dim=input_shape, activation='relu'))
+    model.add(Dense(256, input_shape=input_shape, activation='relu'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
