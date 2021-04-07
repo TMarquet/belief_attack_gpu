@@ -202,7 +202,7 @@ def train_variable_model():
     for file in os.listdir(folder):
         if '_rand' in file:
             num = int(file.split('_')[0].replace('s',''))
-            with open(path_trade+file,'rb') as f:
+            with open(folder+file,'rb') as f:
                 my_data = np.loadtxt(f, delimiter=';')
             s[num]= my_data
             print(s[num].shape)
