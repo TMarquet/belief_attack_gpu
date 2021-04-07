@@ -176,7 +176,7 @@ def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=2
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
     optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
+    model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
     return model
 
 
@@ -211,6 +211,7 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size 
     training_label = all_label[:8000]
     validation_data = all_data[8000:]
     validation_label = all_label[8000:]
+    print(all_label[0])
     model = None
     if mlp:
         model =  mlp_new()
