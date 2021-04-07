@@ -194,20 +194,21 @@ def train_model(X_profiling, Y_profiling):
 # def train_svm()
 
 
-def train_variable_model():
-
+def train_variable_model(variable):
+    var_name, var_number, _ = split_variable_name(variable)
 
     folder = 'output/s/'
     s = {}
+    real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name), allow_pickle=True)[var_number-1,:]
+    all_data = []
+    all_label = real_values[-10000:]
+    print(all_label.shape)    
     for file in os.listdir(folder):
         if '_rand' in file:
             num = int(file.split('_')[0].replace('s',''))
             s[num] = genfromtxt(folder + file, delimiter=',')
     
-    real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name), allow_pickle=True)[var_number-1,:]
-    all_data = []
-    all_label = real_values[-10000:]
-    print(all_label.shape)
+
             
 
 
@@ -276,7 +277,7 @@ if __name__ == "__main__":
     V = np.array([])
     V_l =  np.array([])
 
-    train_variable_model()         
+    train_variable_model('s001')         
 
 
 
