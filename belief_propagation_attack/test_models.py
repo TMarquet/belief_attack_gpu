@@ -292,10 +292,14 @@ class TestModels:
             var_name, var_number, _ = split_variable_name(variable)
             if not var_name in listdir(OUTPUT_FOLDER):
                 os.mkdir(OUTPUT_FOLDER + var_name + '/')
-            if model is None:
-                np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'.csv', output_list, delimiter=',') 
+            if not random_key:
+                
+                if model is None:
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'.csv', output_list, delimiter=',') 
+                else:
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_all.csv', output_list, delimiter=',')
             else:
-                np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_all.csv', output_list, delimiter=',') 
+                np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand.csv', output_list, delimiter=',')
         if rank_list is not None:
 
             print "\n\nModel: {}".format(model_file)
@@ -448,7 +452,7 @@ if __name__ == "__main__":
     variables_to_test =[]
     median_rank_out = []
     median_proba_out = []
-    for i in range(2,33):
+    for i in range(1,33):
         variables_to_test.append('s0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     print(variables_to_test)
     if TEST_ALL:
