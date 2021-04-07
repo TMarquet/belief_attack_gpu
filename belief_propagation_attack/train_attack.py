@@ -287,7 +287,7 @@ if __name__ == "__main__":
     V = np.array([])
     V_l =  np.array([])
 
-    train_variable_model('s001',mlp = True)         
+    train_variable_model('s001',mlp = USE_MLP,cnn=USE_CNN)         
 
 
 
