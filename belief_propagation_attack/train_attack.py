@@ -211,6 +211,7 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size 
     training_label = all_label[:8000]
     validation_data = all_data[8000:]
     validation_label = all_label[8000:]
+    model = None
     if mlp:
         model =  mlp_new()
     if cnn:
