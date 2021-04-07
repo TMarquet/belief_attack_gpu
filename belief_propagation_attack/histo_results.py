@@ -11,7 +11,7 @@ from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 import smallest_circle as sc
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
-var_to_plot = ['s']
+var_to_plot = ['s','k','t','h','p','cm','mc','xt']
 all_v = ['s','k','t','h','p','cm','mc','xt']
 #var_to_plot = all_v
 
@@ -247,6 +247,7 @@ hull_cnn = ConvexHull(points_cnn)
 for simplex in hull_cnn.simplices:
     ax.plot(points_cnn[simplex, 0], points_cnn[simplex, 1], 'b-')
 ax.scatter(CNN_combine_rank, CNN_Combine_proba,c='green', s=10,label = 'CNN Combined')
+ax.scatter([1],[1],c='black', s=100, label = 'Random guess')
 points_cnn_combine = np.array(list(zip(CNN_combine_rank,CNN_Combine_proba)))
 hull_cnn_combine = ConvexHull(points_cnn_combine)
 for simplex in hull_cnn_combine.simplices:
@@ -263,9 +264,9 @@ print('MLP consistency : ',hull_mlp.area)
 ax.set_ylabel('Scores divided by random guess')
 ax.set_xlabel('Ranks divided by random guess')
 ax.legend()
-ax.set_title('Consistency evaluation over the subbytes output')
+ax.set_title('General consistency evaluation')
 ax_sca = plt.gca()
-ax_sca.set_xlim(0,1)
+ax_sca.set_xlim(0,1.1)
 ax_sca.set_ylim(0,max([np.max(points_cnn),np.max(points_cnn_combine),np.max(points_mlp)])*1.1)
 
 
