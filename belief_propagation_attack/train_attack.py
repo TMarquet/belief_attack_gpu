@@ -189,7 +189,7 @@ def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=2
 # def train_svm()
 
 
-def train_variable_model(variable,mlp = False,cnn= False):
+def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size = 50):
     var_name, var_number, _ = split_variable_name(variable)
 
     folder = 'output/s/'
@@ -216,7 +216,7 @@ def train_variable_model(variable,mlp = False,cnn= False):
     if cnn:
         model = cnn_best()
     history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
-    model.save(save_file_name)
+    model.save('models/s001_test.h5')
 
             
 
