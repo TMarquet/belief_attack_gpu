@@ -194,7 +194,7 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size 
 
     folder = 'output/s/'
     s = {}
-    real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, variable))
+    real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))
     all_data = []
     all_label = []
     temp_label = real_values[-10000:]
@@ -213,7 +213,7 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size 
         data[label] = 1
         
         all_label.append(data)
-    print(all_label[:10])
+
     training_data = np.array(all_data[:8000])
     training_label =np.array( all_label[:8000])
     validation_data = np.array(all_data[8000:])
