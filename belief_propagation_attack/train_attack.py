@@ -97,7 +97,7 @@ def shuffle_data(profiling_x,label_y):
 
 
 
-def mlp_new(input_shape=(16,256), learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
+def mlp_new(input_shape=(16,256), learning_rate=0.00001, classes=256, loss_function=None):
 
     if loss_function is None:
         loss_function='rank_loss'
@@ -142,7 +142,7 @@ def mlp_new(input_shape=(16,256), learning_rate=0.00001, classes=256, loss_funct
 
 
 ### CNN Best model
-def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=256, dense_units=2048,pooling = [0,1,2],dense_layers = 2,size = [64,128,256]):
+def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=256, dense_units=2048,pooling = [2],dense_layers = 2,size = [20,40,82]):
     # From VGG16 design
 
     model = tf.keras.Sequential(name='cnn')
