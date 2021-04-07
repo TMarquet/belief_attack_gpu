@@ -201,7 +201,7 @@ def train_variable_model():
     s = {}
     for file in os.listdir(folder):
         if '_rand' in file:
-            num = file.split('_')[0].replace('s','')
+            num = int(file.split('_')[0].replace('s',''))
             print(num)
             
 
