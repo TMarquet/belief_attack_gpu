@@ -97,12 +97,12 @@ def shuffle_data(profiling_x,label_y):
 
 
 
-def mlp_new(input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
+def mlp_new(input_shape=(16,256), learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
 
     if loss_function is None:
         loss_function='rank_loss'
     model = tf.keras.Sequential()
-    model.add(Dense(256, input_dim=input_length, activation='relu'))
+    model.add(Dense(256, input_dim=input_shape, activation='relu'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
@@ -142,9 +142,9 @@ def mlp_new(input_length=700, learning_rate=0.00001, classes=256, loss_function=
 
 
 ### CNN Best model
-def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256, dense_units=2048,pooling = [0,1,2,3,4],dense_layers = 2,size = [64,128,256,512,512]):
+def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=256, dense_units=2048,pooling = [0,1,2,3,4],dense_layers = 2,size = [64,128,256,512,512]):
     # From VGG16 design
-    input_shape = (input_length, 1)
+
     model = tf.keras.Sequential(name='cnn')
     
     # Convolution blocks
@@ -184,17 +184,12 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
 
 
 #### Training high level function
-def train_model(X_profiling, Y_profiling):
 
-
-    history = model.fit(x=Reshaped_X_profiling, y=reshaped_y, batch_size=batch_size, verbose = progress_bar, epochs=epochs, callbacks=callbacks, validation_data=(Reshaped_validation_data, reshaped_val),use_multiprocessing=True)
-    model.save(save_file_name)
-    return history
 
 # def train_svm()
 
 
-def train_variable_model(variable):
+def train_variable_model(variable,mlp = False,cnn= False):
     var_name, var_number, _ = split_variable_name(variable)
 
     folder = 'output/s/'
@@ -212,12 +207,16 @@ def train_variable_model(variable):
         for num in range(1,17):
             temp.append(s[num][i])
         all_data.append(temp)
-    print(np.array(all_data).shape)
     training_data = all_data[:8000]
     training_label = all_label[:8000]
     validation_data = all_data[8000:]
     validation_label = all_label[8000:]
-        
+    if mlp:
+        model =  mlp_new()
+    if cnn:
+        model = cnn_best()
+    history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
+    model.save(save_file_name)
 
             
 
