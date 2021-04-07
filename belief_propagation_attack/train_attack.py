@@ -142,7 +142,7 @@ def mlp_new(input_shape=(16,256), learning_rate=0.00001, classes=256, loss_funct
 
 
 ### CNN Best model
-def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=256, dense_units=4000,pooling = [0,1,2],dense_layers = 3,size = [64,128,256]):
+def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=256, dense_units=100,pooling = [0,1,2],dense_layers = 3,size = [64,128,256]):
     # From VGG16 design
 
     model = tf.keras.Sequential(name='cnn')
