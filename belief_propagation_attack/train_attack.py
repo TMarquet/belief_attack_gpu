@@ -203,7 +203,7 @@ def train_variable_model():
         if '_rand' in file:
             num = int(file.split('_')[0].replace('s',''))
             with open(folder+file,'rb') as f:
-                my_data = np.loadtxt(f, delimiter=';')
+                my_data = np.loadtxt(f, delimiter=',')
             s[num]= my_data
             print(s[num].shape)
             
