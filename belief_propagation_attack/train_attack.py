@@ -203,7 +203,11 @@ def train_variable_model():
         if '_rand' in file:
             num = int(file.split('_')[0].replace('s',''))
             s[num] = genfromtxt(folder + file, delimiter=',')
-            print(s[num].shape)
+    
+    real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name), allow_pickle=True)[var_number-1,:]
+    all_data = []
+    all_label = real_values[-10000:]
+    print(all_label.shape)
             
 
 
