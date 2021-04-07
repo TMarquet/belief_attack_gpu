@@ -213,7 +213,7 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size 
         data[label] = 1
         
         all_label.append(data)
-    print(temp_label[:10])
+
     training_data = np.array(all_data[:8000])
     training_label =np.array( all_label[:8000])
     validation_data = np.array(all_data[8000:])
