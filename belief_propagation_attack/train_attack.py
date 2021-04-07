@@ -196,7 +196,7 @@ def train_model(X_profiling, Y_profiling):
 
 def train_variable_model():
 
-    store_directory = NEURAL_MODEL_FOLDER if scratch_storage else MODEL_FOLDER
+
     folder = 'output/s/'
     s = {}
     for file in os.listdir(folder):
