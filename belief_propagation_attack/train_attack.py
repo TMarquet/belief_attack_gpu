@@ -212,7 +212,11 @@ def train_variable_model(variable):
         for num in range(1,17):
             temp.append(s[num][i])
         all_data.append(temp)
-    print(all_data.shape)
+    print(np.array(all_data).shape)
+    training_data = all_data[:8000]
+    training_label = all_label[:8000]
+    validation_data = all_data[8000:]
+    validation_label = all_label[8000:]
         
 
             
