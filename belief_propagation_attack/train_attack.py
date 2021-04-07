@@ -31,7 +31,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import load_model
-
+from numpy import genfromtxt
 from utility import *
 
 tf.random.set_seed(7)
@@ -202,7 +202,8 @@ def train_variable_model():
     for file in os.listdir(folder):
         if '_rand' in file:
             num = int(file.split('_')[0].replace('s',''))
-            print(num)
+            s[num] = genfromtxt(folder + file, delimiter=';')
+            print(s[num].shape)
             
 
 
