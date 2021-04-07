@@ -392,7 +392,6 @@ class RealTraceHandler:
             prob_list = list()
             predicted_values = list()
             leakage_list = []
-            print(self.realvalues[var_name][var_number-1][-10000:][:10])
             for trace in range(traces):
                 
                 if not ASCAD:
