@@ -196,6 +196,7 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size 
     s = {}
     real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name), allow_pickle=True)[var_number-1,:]
     all_data = []
+    all_label = []
     temp_label = real_values[-10000:]
     
     for file in os.listdir(folder):
