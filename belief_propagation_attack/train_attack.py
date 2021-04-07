@@ -121,7 +121,7 @@ def mlp_new(input_shape=(16,256), learning_rate=0.00001, classes=256, loss_funct
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block{}_batchnorm'.format(str(4))))
     model.add(tf.keras.layers.Activation('relu'))    
-    model.add(Dense(classes, activation='softmax'))
+
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
     # Save image!
