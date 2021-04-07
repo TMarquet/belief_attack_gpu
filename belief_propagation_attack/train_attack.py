@@ -207,10 +207,10 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size 
         for num in range(1,17):
             temp.append(s[num][i])
         all_data.append(temp)
-    training_data = all_data[:8000]
-    training_label = all_label[:8000]
-    validation_data = all_data[8000:]
-    validation_label = all_label[8000:]
+    training_data = np.array(all_data[:8000])
+    training_label =np.array( all_label[:8000])
+    validation_data = np.array(all_data[8000:])
+    validation_label = np.array(all_label[8000:])
     print(all_label[0])
     model = None
     if mlp:
