@@ -196,7 +196,7 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size 
     s = {}
     real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name), allow_pickle=True)[var_number-1,:]
     all_data = []
-    all_label = real_values[-10000:]
+    temp_label = real_values[-10000:]
     
     for file in os.listdir(folder):
         if '_rand' in file:
@@ -207,11 +207,14 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size 
         for num in range(1,17):
             temp.append(s[num][i])
         all_data.append(temp)
+    for label in temp_label:
+        data = [0]*256
+        data[label] = 1
+        all_label.append(data)
     training_data = np.array(all_data[:8000])
     training_label =np.array( all_label[:8000])
     validation_data = np.array(all_data[8000:])
     validation_label = np.array(all_label[8000:])
-    print(all_label[0])
     model = None
     if mlp:
         model =  mlp_new()
