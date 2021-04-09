@@ -155,26 +155,20 @@ def mlp_weighted_bit(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0
 
 
 #### MLP Best model (6 layers of 200 units)
-def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
+def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='median_probability_loss'):
 
     if loss_function is None:
-        loss_function='rank_loss'
-    model = tf.keras.Sequential()
+        loss_function='median_probability_loss'
+    model = Sequential()
     model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
-    model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-    model.add(BatchNormalization(name='block1_batchnorm'))
-    model.add(tf.keras.layers.Activation('relu'))
     for i in range(layer_nb-2):
-        model.add(Dense(mlp_nodes))
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block{}_batchnorm'.format(str(i+2))))
-        model.add(tf.keras.layers.Activation('relu'))
+        model.add(Dense(mlp_nodes, activation='relu'))
     model.add(Dense(classes, activation='softmax'))
 
     # Save image!
     #plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
 
-    optimizer = tf.keras.optimizers.RMSprop(lr=learning_rate)
+    optimizer = RMSprop(lr=learning_rate)
     if loss_function=='rank_loss':
         model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
     elif loss_function=='median_probability_loss':
