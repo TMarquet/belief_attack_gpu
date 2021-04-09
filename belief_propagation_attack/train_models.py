@@ -158,7 +158,7 @@ def mlp_weighted_bit(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0
 def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
 
     if loss_function is None:
-        loss_function='median_probability_loss'
+        loss_function='rank_loss'
     model = tf.keras.Sequential()
     model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
@@ -427,7 +427,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
                             cnn_batchsize = batch_size
                             train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
                                         "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
-                                            'all_s_proba', hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),layer,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
+                                            'all_s', hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),layer,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
                                         epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
                                         progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
 
@@ -452,7 +452,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         mlp_batchsize = batch_size
         train_model(X_profiling, Y_profiling, mlp_best_model, store_directory +
                     "{}_mlp{}{}{}{}_nodes{}_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}_{}.h5".format(
-                        variable, mlp_layers, '_multilabel' if multilabel else '', hammingweight_flag, hammingdistance_flag, mlp_nodes, input_length, mlp_epochs, mlp_batchsize, learning_rate, sd,
+                        'all_s', mlp_layers, '_multilabel' if multilabel else '', hammingweight_flag, hammingdistance_flag, mlp_nodes, input_length, mlp_epochs, mlp_batchsize, learning_rate, sd,
                         training_traces, augment_method, jitter, 'defaultloss' if loss_function is None else loss_function.replace('_','')), epochs=mlp_epochs, batch_size=mlp_batchsize,
                     validation_data=(X_attack, Y_attack), progress_bar=progress_bar, multilabel=multilabel, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
 

@@ -11,7 +11,7 @@ from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 import smallest_circle as sc
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
-var_to_plot = ['mc']
+var_to_plot = ['xt']
 all_v = ['s','k','t','h','p','cm','mc','xt']
 #var_to_plot = all_v
 
