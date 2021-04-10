@@ -452,7 +452,7 @@ if __name__ == "__main__":
     variables_to_test =[]
     median_rank_out = []
     median_proba_out = []
-    for i in range(1,33):
+    for i in range(17,33):
         variables_to_test.append('s0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     print(variables_to_test)
     if TEST_ALL:
@@ -499,7 +499,7 @@ if __name__ == "__main__":
                                 if int(var_number) == 16:
                                     model = None
                         else: 
-                            if string_starts_with(m, 'all_{}_2'.format(var_name)):
+                            if string_starts_with(m, 'all_{}'.format(var_name)):
                                 print 'Testing : ', m 
                                 print(var)
                                 if model is None:
