@@ -11,7 +11,7 @@ from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 import smallest_circle as sc
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
-var_to_plot = ['xt']
+var_to_plot = ['s']
 all_v = ['s','k','t','h','p','cm','mc','xt']
 #var_to_plot = all_v
 
@@ -309,13 +309,13 @@ if len(var_to_plot) > 1 :
     # Add some text for labels, title and custom x-axis tick labels, etc.
         ax[plot][0].set_ylabel('Rank')
         ax[plot][0].set_ylim(0,150)
-        ax[plot][0].set_title('Rank comparison between CNN and MLP for var '+ var_to_plot[plot])
+        ax[plot][0].set_title('Rank comparison for var '+ var_to_plot[plot])
         ax[plot][0].set_xticks(x)
         ax[plot][0].set_xticklabels(labels)
     
         ax[plot][1].set_ylabel('Probability in % ')
     
-        ax[plot][1].set_title('Median probability comparison between CNN and MLP for var '+ var_to_plot[plot])
+        ax[plot][1].set_title('Median probability comparison and MLP for var '+ var_to_plot[plot])
         ax[plot][1].set_xticks(x)
         ax[plot][1].set_xticklabels(labels)
     
@@ -347,22 +347,24 @@ else :
     line_CNN = ax[0].plot([-width,n-1+width],[CNN_rank_mean,CNN_rank_mean],'b--',label='CNN mean')
     line_MLP = ax[0].plot([-width,n-1+width],[MLP_rank_mean,MLP_rank_mean],'r:',label='MLP mean')
     line_COMBINE = ax[0].plot([-width,n-1+width],[CNN_combine_rank_mean,CNN_combine_rank_mean],'k-.',label='CNN combine mean')
+    
     CNN_proba_mean = np.mean(median_proba[var_to_plot[plot]])
     MLP_proba_mean = np.mean(MLP_median_proba[var_to_plot[plot]])
     COMBINE_proba_mean = np.mean(COMBINE_median_proba[var_to_plot[plot]])
     line_CNN = ax[1].plot([-width,n-1+width],[CNN_proba_mean,CNN_proba_mean],'b--',label='CNN mean')
     line_MLP = ax[1].plot([-width,n-1+width],[MLP_proba_mean,MLP_proba_mean],'r:',label='MLP mean')    
     line_COMBINE = ax[1].plot([-width,n-1+width],[COMBINE_proba_mean,COMBINE_proba_mean],'k-.',label='CNN combine mean') 
+    line_random = ax[1].plot([-width,n-1+width],[[0.39],[0.39]],'r-',label='Random guess') 
 # Add some text for labels, title and custom x-axis tick labels, etc.
     ax[0].set_ylabel('Rank')
     ax[0].set_ylim(0,150)
-    ax[0].set_title('Rank comparison between CNN and MLP for var '+ var_to_plot[plot])
+    ax[0].set_title('Rank comparison between for var '+ var_to_plot[plot])
     ax[0].set_xticks(x)
     ax[0].set_xticklabels(labels)
 
     ax[1].set_ylabel('Probability in % ')
 
-    ax[1].set_title('Median probability comparison between CNN and MLP for var '+ var_to_plot[plot])
+    ax[1].set_title('Median probability comparison for var '+ var_to_plot[plot])
     ax[1].set_xticks(x)
     ax[1].set_xticklabels(labels)
     handles, labels = ax[1].get_legend_handles_labels()
