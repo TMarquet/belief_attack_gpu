@@ -11,11 +11,11 @@ from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 import smallest_circle as sc
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
-var_to_plot = ['mc']
+var_to_plot = ['k']
 all_v = ['s','k','t','h','p','cm','mc','xt']
 #var_to_plot = all_v
-
-
+only_first_round = False
+only_second_round = True 
 ########### MY VALUES ####################
 
 
@@ -160,8 +160,23 @@ MLP_median_proba['xt'] = xt_MLP_median_proba
 
 
 ###############################################
-
-
+if only_first_round:
+    for var in var_to_plot:
+        median_proba[var] = median_proba[var][:16]
+        median_rank[var] =  median_rank[var][:16]
+        COMBINE_median_rank[var] =  COMBINE_median_rank[var][:16]
+        COMBINE_median_proba[var] = COMBINE_median_proba[var][:16]
+        MLP_median_rank[var] = MLP_median_rank[var][:16]
+        MLP_median_proba[var] =MLP_median_proba[var][:16]
+elif only_second_round:
+    for var in var_to_plot:
+        median_proba[var] = median_proba[var][16:]
+        median_rank[var] =  median_rank[var][16:]
+        COMBINE_median_rank[var] =  COMBINE_median_rank[var][16:]
+        COMBINE_median_proba[var] = COMBINE_median_proba[var][16:]
+        MLP_median_rank[var] = MLP_median_rank[var][16:]
+        MLP_median_proba[var] =MLP_median_proba[var][16:]
+        
 dict_val_rank = {}
 dict_MLP_val_rank = {}
 dict_val_proba = {}
@@ -172,18 +187,30 @@ print('Studied variable :',var_to_plot)
 
 for elem in var_to_plot :
     i = 1
+    j=1
+    if only_second_round:
+        j = 17
     for e in median_proba[elem] :
-        dict_val_proba[elem+str(i)] = e *pow(10,-2) /0.0039
-        dict_MLP_val_proba[elem+str(i)] = MLP_median_proba[elem][i-1] *pow(10,-2)/0.0039
-        dict_combine_val_proba[elem+str(i)] = COMBINE_median_proba[elem][i-1] *pow(10,-2)/0.0039
+        
+        dict_val_proba[elem+str(j)] = e *pow(10,-2) /0.0039
+        dict_MLP_val_proba[elem+str(j)] = MLP_median_proba[elem][i-1] *pow(10,-2)/0.0039
+        dict_combine_val_proba[elem+str(j)] = COMBINE_median_proba[elem][i-1] *pow(10,-2)/0.0039
         i+=1
-    i = 1 
+        j+=1
+        if only_first_round and i == 17:
+            break
+    i = 1
+    j=1
+    if only_second_round:
+        j = 17
     for e in median_rank[elem] :
-        dict_val_rank[elem+str(i)] = e / 128
-        dict_MLP_val_rank[elem+str(i)] = MLP_median_rank[elem][i-1] / 128
-        dict_combine_val_rank[elem+str(i)] = COMBINE_median_rank[elem][i-1] / 128
+        dict_val_rank[elem+str(j)] = e / 128
+        dict_MLP_val_rank[elem+str(j)] = MLP_median_rank[elem][i-1] / 128
+        dict_combine_val_rank[elem+str(j)] = COMBINE_median_rank[elem][i-1] / 128
         i+=1
-
+        j+=1
+        if only_first_round and i == 17:
+            break
 
 labels = dict_val_proba.keys()
 CNN_proba = dict_val_proba.values()
@@ -268,8 +295,9 @@ ax.set_title('General consistency evaluation')
 ax_sca = plt.gca()
 ax_sca.set_xlim(0,1.1)
 ax_sca.set_ylim(0,max([np.max(points_cnn),np.max(points_cnn_combine),np.max(points_mlp)])*1.1)
-
-
+offset= 0
+if only_second_round:
+    offset = 16
 
 if len(var_to_plot) > 1 :
 
@@ -285,7 +313,7 @@ if len(var_to_plot) > 1 :
 
 
         for i in range(0,n):
-            labels.append(var_to_plot[plot] + str(start + i+1))    
+            labels.append(var_to_plot[plot] + str(start + i+1+offset))    
         x = np.arange(n)  # the label locations
         width = 0.2  # the width of the bars
         rects1 = ax[plot][0].bar(x - width/2, median_rank[var_to_plot[plot]], width, label='CNN')
@@ -332,7 +360,7 @@ else :
     n = len(median_rank[var_to_plot[plot]])
 
     for i in range(0,n):
-        labels.append(var_to_plot[plot] + str(start+i+1))   
+        labels.append(var_to_plot[plot] + str(start+i+1+offset))   
     x = np.arange(n)  # the label locations
     width = 0.2  # the width of the bars
     rects1 = ax[0].bar(x - width, median_rank[var_to_plot[plot]], width, label='CNN')
