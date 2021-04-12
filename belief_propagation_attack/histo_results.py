@@ -14,8 +14,8 @@ from scipy.spatial import ConvexHull, convex_hull_plot_2d
 var_to_plot = ['t']
 all_v = ['s','k','t','h','p','cm','mc','xt']
 #var_to_plot = all_v
-only_first_round = False
-only_second_round = True 
+only_first_round = True
+only_second_round = False 
 ########### MY VALUES ####################
 
 
