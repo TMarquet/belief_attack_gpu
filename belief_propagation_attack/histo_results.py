@@ -11,11 +11,11 @@ from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 import smallest_circle as sc
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
-var_to_plot = ['t']
+var_to_plot = ['k','t','p']
 all_v = ['s','k','t','h','p','cm','mc','xt']
 #var_to_plot = all_v
-only_first_round = True
-only_second_round = False 
+only_first_round = False
+only_second_round = True 
 ########### MY VALUES ####################
 
 
@@ -309,6 +309,7 @@ if len(var_to_plot) > 1 :
         labels = []
         start = 0
         n = len(median_rank[var_to_plot[plot]])
+        
 
 
 
@@ -316,12 +317,12 @@ if len(var_to_plot) > 1 :
             labels.append(var_to_plot[plot] + str(start + i+1+offset))    
         x = np.arange(n)  # the label locations
         width = 0.2  # the width of the bars
-        rects1 = ax[plot][0].bar(x - width/2, median_rank[var_to_plot[plot]], width, label='CNN')
+        rects1 = ax[plot][0].bar(x - width, median_rank[var_to_plot[plot]], width, label='CNN')
         rects2 = ax[plot][0].bar(x , MLP_median_rank[var_to_plot[plot]][:n], width, label='MLP')
-        rects3 = ax[plot][0].bar(x + width/2, COMBINE_median_rank[var_to_plot[plot]][:n], width, label='CNN combined')
-        rects1 = ax[plot][1].bar(x - width/2, median_proba[var_to_plot[plot]], width, label='CNN')
+        rects3 = ax[plot][0].bar(x + width, COMBINE_median_rank[var_to_plot[plot]][:n], width, label='CNN combined')
+        rects1 = ax[plot][1].bar(x - width, median_proba[var_to_plot[plot]], width, label='CNN')
         rects2 = ax[plot][1].bar(x , MLP_median_proba[var_to_plot[plot]][:n], width, label='MLP')
-        rects3 = ax[plot][1].bar(x + width/2, COMBINE_median_proba[var_to_plot[plot]][:n], width, label='CNN combined')
+        rects3 = ax[plot][1].bar(x + width, COMBINE_median_proba[var_to_plot[plot]][:n], width, label='CNN combined')
         CNN_rank_mean = np.mean(median_rank[var_to_plot[plot]])
         MLP_rank_mean = np.mean(MLP_median_rank[var_to_plot[plot]])
         CNN_combine_rank_mean = np.mean(COMBINE_median_rank[var_to_plot[plot]])
@@ -334,6 +335,7 @@ if len(var_to_plot) > 1 :
         line_CNN = ax[plot][1].plot([-width,n-1+width],[CNN_proba_mean,CNN_proba_mean],'b--',label='CNN mean')
         line_MLP = ax[plot][1].plot([-width,n-1+width],[MLP_proba_mean,MLP_proba_mean],'r:',label='MLP mean')    
         line_COMBINE = ax[plot][1].plot([-width,n-1+width],[COMBINE_proba_mean,COMBINE_proba_mean],'k-.',label='CNN combine mean') 
+        line_random = ax[plot][1].plot([-width,n-1+width],[[0.39],[0.39]],'r-',label='Random guess')
     # Add some text for labels, title and custom x-axis tick labels, etc.
         ax[plot][0].set_ylabel('Rank')
         ax[plot][0].set_ylim(0,150)
