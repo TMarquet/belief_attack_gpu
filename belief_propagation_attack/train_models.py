@@ -608,8 +608,10 @@ if __name__ == "__main__":
     elif ALL_VARIABLE is None:
 
         variable_list =[]
-        for i in range(1,33):
-            variable_list.append('xt0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+        name = ['s','t','k','p','cm','mc','xt','h']
+        for var in name:
+            for i in range(1,33):
+                variable_list.append(name+'0'+ ('0'+str(i) if i < 10 else '' + str(i)))
         print(variable_list)
 
     else:
