@@ -609,7 +609,7 @@ if __name__ == "__main__":
 
         variable_list =[]
         for i in range(1,33):
-            variable_list.append('mc0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+            variable_list.append('xt0'+ ('0'+str(i) if i < 10 else '' + str(i)))
         print(variable_list)
 
     else:
