@@ -199,33 +199,33 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 100,batch_size
     all_label = []
     temp_label = real_values[190000:]
     
-    for file in os.listdir(folder):
-        if '_rand' in file:
-            num = int(file.split('_')[0].replace('s',''))
-            s[num] = genfromtxt(folder + file, delimiter=',')
+    # for file in os.listdir(folder):
+    #     if '_rand' in file:
+    #         num = int(file.split('_')[0].replace('s',''))
+    #         s[num] = genfromtxt(folder + file, delimiter=',')
     # for i in range(0,10000):
     #     temp = []
     #     for num in range(1,17):
     #         temp.append(s[num][i])
     #     all_data.append(temp)
-    for label in reversed(temp_label):
+    for label in reversed(temp_label)[:3]:
         data = [0]*256
         data[label] = 1
         
         print(label)
         all_label.append(data)
 
-    training_data = np.array(all_data[:8000])
-    training_label =np.array( all_label[:8000])
-    validation_data = np.array(all_data[8000:])
-    validation_label = np.array(all_label[8000:])
-    model = None
-    if mlp:
-        model =  mlp_new()
-    if cnn:
-        model = cnn_best()
-    history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
-    model.save('models/s001_test.h5')
+    # training_data = np.array(all_data[:8000])
+    # training_label =np.array( all_label[:8000])
+    # validation_data = np.array(all_data[8000:])
+    # validation_label = np.array(all_label[8000:])
+    # model = None
+    # if mlp:
+    #     model =  mlp_new()
+    # if cnn:
+    #     model = cnn_best()
+    # history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
+    # model.save('models/s001_test.h5')
 
         
         
