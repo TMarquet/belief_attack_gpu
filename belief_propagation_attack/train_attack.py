@@ -208,28 +208,24 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 100,batch_size
     #     for num in range(1,17):
     #         temp.append(s[num][i])
     #     all_data.append(temp)
-    iteration = 0
+
     for label in reversed(temp_label):
         data = [0]*256
         data[label] = 1
         
-        print(label)
-        if iteration > 3:
-            break
-        iteration += 1
         all_label.append(data)
 
-    # training_data = np.array(all_data[:8000])
-    # training_label =np.array( all_label[:8000])
-    # validation_data = np.array(all_data[8000:])
-    # validation_label = np.array(all_label[8000:])
-    # model = None
-    # if mlp:
-    #     model =  mlp_new()
-    # if cnn:
-    #     model = cnn_best()
-    # history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
-    # model.save('models/s001_test.h5')
+    training_data = np.array(all_data[:8000])
+    training_label =np.array( all_label[:8000])
+    validation_data = np.array(all_data[8000:])
+    validation_label = np.array(all_label[8000:])
+    model = None
+    if mlp:
+        model =  mlp_new()
+    if cnn:
+        model = cnn_best()
+    history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
+    model.save('models/s001_test.h5')
 
         
         
