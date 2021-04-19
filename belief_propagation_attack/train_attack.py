@@ -203,29 +203,43 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 100,batch_size
         if '_rand' in file:
             num = int(file.split('_')[0].replace('s',''))
             s[num] = genfromtxt(folder + file, delimiter=',')
-    for i in range(0,10000):
-        temp = []
-        for num in range(1,17):
-            temp.append(s[num][i])
-        all_data.append(temp)
+    # for i in range(0,10000):
+    #     temp = []
+    #     for num in range(1,17):
+    #         temp.append(s[num][i])
+    #     all_data.append(temp)
     for label in temp_label:
         data = [0]*256
         data[label] = 1
         
         all_label.append(data)
 
-    training_data = np.array(all_data[:8000])
-    training_label =np.array( all_label[:8000])
-    validation_data = np.array(all_data[8000:])
-    validation_label = np.array(all_label[8000:])
-    model = None
-    if mlp:
-        model =  mlp_new()
-    if cnn:
-        model = cnn_best()
-    history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
-    model.save('models/s001_test.h5')
-
+    # training_data = np.array(all_data[:8000])
+    # training_label =np.array( all_label[:8000])
+    # validation_data = np.array(all_data[8000:])
+    # validation_label = np.array(all_label[8000:])
+    # model = None
+    # if mlp:
+    #     model =  mlp_new()
+    # if cnn:
+    #     model = cnn_best()
+    # history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
+    # model.save('models/s001_test.h5')
+    all_score = {}
+    ranks = []
+    ranks_base = []
+    for i in range(10000):
+        all_score[i] = np.zeros(256)
+        for num in range(1,17):
+            all_score[i]=  np.add(all_score[i],s[num][i])
+        all_score[i] = np.divide(all_score[i],16)
+    
+        ranks.append(get_rank_from_prob_dist(all_score[i],all_label[i]))
+        ranks_base.append(get_rank_from_prob_dist(s[num][i],all_label[i]))
+    print('Median rank of summed pred : ',np.median(ranks))
+    print('Median based : ',np.median(ranks_base))
+        
+        
             
 
 
