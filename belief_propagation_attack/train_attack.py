@@ -235,8 +235,8 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 100,batch_size
             all_score[i]=  np.add(all_score[i],s[num][i])
         all_score[i] = np.divide(all_score[i],16)
     
-        ranks.append(get_rank_from_prob_dist(all_score[i],temp_label[i]))
-        ranks_base.append(get_rank_from_prob_dist(s[var_number][i],temp_label[i]))
+        ranks.append(get_rank_from_prob_dist(all_score[i],temp_label[10000-i-1]))
+        ranks_base.append(get_rank_from_prob_dist(s[var_number][i],temp_label[10000-i-1]))
         if i < 3:
             print(temp_label[i])
     print('Median rank of summed pred : ',np.median(ranks))
