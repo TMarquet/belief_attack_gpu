@@ -199,15 +199,15 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 100,batch_size
     all_label = []
     temp_label = real_values[190000:]
     
-    # for file in os.listdir(folder):
-    #     if '_rand' in file:
-    #         num = int(file.split('_')[0].replace('s',''))
-    #         s[num] = genfromtxt(folder + file, delimiter=',')
-    # for i in range(0,10000):
-    #     temp = []
-    #     for num in range(1,17):
-    #         temp.append(s[num][i])
-    #     all_data.append(temp)
+    for file in os.listdir(folder):
+        if '_rand' in file:
+            num = int(file.split('_')[0].replace('s',''))
+            s[num] = genfromtxt(folder + file, delimiter=',')
+    for i in range(0,10000):
+        temp = []
+        for num in range(1,17):
+            temp.append(s[num][i])
+        all_data.append(temp)
 
     for label in reversed(temp_label):
         data = [0]*256
