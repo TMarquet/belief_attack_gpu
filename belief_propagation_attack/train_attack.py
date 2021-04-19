@@ -208,11 +208,15 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 100,batch_size
     #     for num in range(1,17):
     #         temp.append(s[num][i])
     #     all_data.append(temp)
-    for label in reversed(temp_label)[:3]:
+    iteration = 0
+    for label in reversed(temp_label):
         data = [0]*256
         data[label] = 1
         
         print(label)
+        if iteration > 3:
+            break
+        iteration += 1
         all_label.append(data)
 
     # training_data = np.array(all_data[:8000])
