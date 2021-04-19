@@ -228,6 +228,7 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 100,batch_size
     all_score = {}
     ranks = []
     ranks_base = []
+    print(s[num].shape)
     for i in range(10000):
         all_score[i] = np.zeros(256)
         for num in range(1,17):
