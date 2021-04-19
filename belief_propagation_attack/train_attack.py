@@ -193,32 +193,55 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 100,batch_size
     var_name, var_number, _ = split_variable_name(variable)
 
     folder = 'output/s/'
-    s = {}
+    s_val = {}
+    
+    s_train = {}
     real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1]
-    all_data = []
-    all_label = []
+    training_data = []
+    training_label = []
+    validation_data = []
+    validation_label = []
     temp_label = real_values[190000:]
+    temp_label_t = real_values[100000:190000]
     
     for file in os.listdir(folder):
-        if '_rand' in file:
+        if '_rand' in file and not '_training' in file:
             num = int(file.split('_')[0].replace('s',''))
-            s[num] = genfromtxt(folder + file, delimiter=',')
+            s_val[num] = genfromtxt(folder + file, delimiter=',')
     for i in range(0,10000):
         temp = []
         for num in range(1,17):
-            temp.append(s[num][i])
-        all_data.append(temp)
+            temp.append(s_val[num][i])
+        validation_data.append(temp)
 
     for label in reversed(temp_label):
         data = [0]*256
         data[label] = 1
         
-        all_label.append(data)
+        validation_label.append(data)
+    for file in os.listdir(folder):
+        if '_rand_training' in file:
+            num = int(file.split('_')[0].replace('s',''))
+            s_train[num] = genfromtxt(folder + file, delimiter=',')
+    for i in range(0,90000):
+        temp = []
+        for num in range(1,17):
+            temp.append(s_train[num][i])
+        training_data.append(temp)
 
-    training_data = np.array(all_data[:8000])
-    training_label =np.array( all_label[:8000])
-    validation_data = np.array(all_data[8000:])
-    validation_label = np.array(all_label[8000:])
+    for label in reversed(temp_label_t):
+        data = [0]*256
+        data[label] = 1
+        
+        training_label.append(data)
+
+
+    training_data = np.array(training_data)
+    training_label =np.array( training_label)
+    validation_data = np.array(validation_data)
+    validation_label = np.array(validation_label)
+    print(training_data.shape)
+    print(validation_data.shape)
     model = None
     if mlp:
         model =  mlp_new()
