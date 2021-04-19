@@ -142,7 +142,7 @@ def mlp_new(input_shape=(16,256), learning_rate=0.00001, classes=256, loss_funct
 
 
 ### CNN Best model
-def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=256, dense_units=10,pooling = [2],dense_layers = 3,size = [64,128,256]):
+def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=256, dense_units=4000,pooling = [2],dense_layers = 3,size = [64,128,256]):
     # From VGG16 design
 
     model = tf.keras.Sequential(name='cnn')
@@ -165,13 +165,13 @@ def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=2
         
     # Two Dense layers
     
- 
+    model.add(Dropout(0.5))
     for i in range(0,dense_layers):
         model.add(Dense(dense_units, name='fc{}'.format(i)))
         model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
         model.add(BatchNormalization(name='block_dense{}_batchnorm'.format(i)))
         model.add(tf.keras.layers.Activation('relu'))
-       
+        model.add(Dropout(0.5))
 
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
