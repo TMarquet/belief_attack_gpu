@@ -197,7 +197,7 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 100,batch_size
     real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1]
     all_data = []
     all_label = []
-    temp_label = real_values[-10000:]
+    temp_label = real_values[190000:]
     
     for file in os.listdir(folder):
         if '_rand' in file:
