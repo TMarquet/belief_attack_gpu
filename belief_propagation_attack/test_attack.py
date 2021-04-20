@@ -77,7 +77,7 @@ def test_variable_model(variable):
         rank_list.append(rank)
         rank_list_2.append(rank_2)
         prob_list.append(leakage[labels[10000 - i -1]])
-        prob_list_2.append(add_leakage[10000 - i -1])
+        prob_list_2.append(add_leakage[labels[10000 - i -1]])
         
     
     print('Median rank : ',np.median(rank_list))
