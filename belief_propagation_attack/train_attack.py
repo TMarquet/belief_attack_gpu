@@ -248,7 +248,7 @@ def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size 
     if cnn:
         model = cnn_best()
     history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
-    model.save('models/s001_test.h5')
+    model.save('models/{}_test.h5'.format(variable))
 
         
         
@@ -320,7 +320,7 @@ if __name__ == "__main__":
     V = np.array([])
     V_l =  np.array([])
 
-    train_variable_model('s001',mlp = USE_MLP,cnn=USE_CNN)         
+    train_variable_model('s004',mlp = USE_MLP,cnn=USE_CNN)         
 
 
 
