@@ -71,7 +71,7 @@ def test_variable_model(variable):
     for i in range(10000):
         
         leakage = model.predict(np.array([validation_data[i]]))[0]
-        add_leakage = np.add(leakage,s_val[1][i])
+        add_leakage = np.divide(np.add(leakage,s_val[1][i]),2)
         rank = get_rank_from_prob_dist(leakage, labels[10000 - i -1])    
         rank_2 = get_rank_from_prob_dist(add_leakage, labels[10000 - i -1])   
         rank_list.append(rank)
