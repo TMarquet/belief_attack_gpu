@@ -69,8 +69,9 @@ def test_variable_model(variable):
     for i in range(100):
         
         leakage = model.predict(np.array([validation_data[i]]))[0]
-        print(leakage.shape)
+       
         leakage = multilabel_probabilities_to_probability_distribution(leakage)
+        print(leakage.shape)
         rank = get_rank_from_prob_dist(leakage, real_values[10000 - i])      
         rank_list.append(rank)
         prob_list.append(probability)
