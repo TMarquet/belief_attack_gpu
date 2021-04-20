@@ -70,9 +70,9 @@ def test_variable_model(variable):
         
         leakage = model.predict(np.array([validation_data[i]]))[0]
 
-        rank = get_rank_from_prob_dist(leakage, real_values[10000 - i])      
+        rank = get_rank_from_prob_dist(leakage, labels[10000 - i])      
         rank_list.append(rank)
-        prob_list.append(leakage[real_values[10000 - i]])
+        prob_list.append(leakage[labels[10000 - i]])
     print('Median rank : ',np.median(rank_list))
     print('Median proba : ',np.median(prob_list))
 
