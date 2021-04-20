@@ -70,7 +70,7 @@ def test_variable_model(variable):
         
         leakage = model.predict(np.array([validation_data[i]]))[0]
         leakage = multilabel_probabilities_to_probability_distribution(leakage)
-        rank = get_rank_from_prob_dist(leakage, real_val)      
+        rank = get_rank_from_prob_dist(leakage, real_values[10000 - i])      
         rank_list.append(rank)
         prob_list.append(probability)
     print('Median rank : ',np.median(rank_list))
