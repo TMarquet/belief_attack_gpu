@@ -86,5 +86,5 @@ def test_variable_model(variable):
     print('Median proba : ',np.median(prob_list))
     print('Median rank summed : ',np.median(rank_list_2))
     print('Median proba summed: ',np.median(prob_list_2))
-test_variable_model('s004')
+test_variable_model('s001')
 
