@@ -66,15 +66,23 @@ def test_variable_model(variable):
     validation_label = np.array(validation_label)
     rank_list = []
     prob_list = []
+    rank_list_2 = []
+    prob_list_2 = []
     for i in range(10000):
         
         leakage = model.predict(np.array([validation_data[i]]))[0]
-
-        rank = get_rank_from_prob_dist(leakage, labels[10000 - i -1])      
+        add_leakage = np.add(leakage,s_val[1][i])
+        rank = get_rank_from_prob_dist(leakage, labels[10000 - i -1])    
+        rank_2 = get_rank_from_prob_dist(add_leakage, labels[10000 - i -1])   
         rank_list.append(rank)
+        rank_list_2.append(rank_2)
         prob_list.append(leakage[labels[10000 - i -1]])
+        prob_list_2.append(add_leakage[10000 - i -1])
+        
+    
     print('Median rank : ',np.median(rank_list))
     print('Median proba : ',np.median(prob_list))
-
+    print('Median rank summed : ',np.median(rank_list_2))
+    print('Median proba summed: ',np.median(prob_list_2))
 test_variable_model('s001')
 
