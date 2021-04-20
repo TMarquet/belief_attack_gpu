@@ -38,7 +38,7 @@ np.random.seed(7)
 
 def test_variable_model(variable):
     var_name, var_number, _ = split_variable_name(variable)
-    model = load_model(MODEL_FOLDER + variable  + '_test.h5')
+    model = load_model(MODEL_FOLDER + variable  + '_test.h5', custom_objects={'tf_rank_loss': tf_rank_loss})
     folder = 'output/s/'
     s_val = {}
     
