@@ -54,7 +54,7 @@ def test_variable_model(variable):
         if '_rand' in file and not '_training' in file:
             num = int(file.split('_')[0].replace('s',''))
             s_val[num] = genfromtxt(folder + file, delimiter=',')
-    for i in range(0,100):
+    for i in range(0,10000):
         temp = []
         for num in range(1,17):
             temp.append(s_val[num][i])
@@ -66,12 +66,10 @@ def test_variable_model(variable):
     validation_label = np.array(validation_label)
     rank_list = []
     prob_list = []
-    for i in range(100):
+    for i in range(10000):
         
         leakage = model.predict(np.array([validation_data[i]]))[0]
-       
-        leakage = multilabel_probabilities_to_probability_distribution(leakage)
-        print(leakage.shape)
+
         rank = get_rank_from_prob_dist(leakage, real_values[10000 - i])      
         rank_list.append(rank)
         prob_list.append(probability)
