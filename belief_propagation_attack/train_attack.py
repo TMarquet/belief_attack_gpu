@@ -189,7 +189,7 @@ def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=2
 # def train_svm()
 
 
-def train_variable_model(variable,mlp = False,cnn= False,epochs = 10,batch_size = 10):
+def train_variable_model(variable,mlp = False,cnn= False,epochs = 8,batch_size = 10):
     var_name, var_number, _ = split_variable_name(variable)
 
     folder = 'output/s/'
