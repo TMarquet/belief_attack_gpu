@@ -320,7 +320,7 @@ if __name__ == "__main__":
     V = np.array([])
     V_l =  np.array([])
 
-    train_variable_model('s007',mlp = USE_MLP,cnn=USE_CNN)         
+    train_variable_model('s015',mlp = USE_MLP,cnn=USE_CNN)         
 
 
 
