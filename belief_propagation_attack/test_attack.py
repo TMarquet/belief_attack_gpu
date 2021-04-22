@@ -58,6 +58,7 @@ def test_variable_model(variable):
         temp = s_val[1][i]
         for num in range(2,17):
             temp= np.add(temp,s_val[num][i])
+        temp = np.divide(temp,16)
         validation_data.append(temp)
 
 
