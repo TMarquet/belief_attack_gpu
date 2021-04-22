@@ -55,9 +55,9 @@ def test_variable_model(variable):
             num = int(file.split('_')[0].replace('s',''))
             s_val[num] = genfromtxt(folder + file, delimiter=',')
     for i in range(0,10000):
-        temp = []
-        for num in range(1,17):
-            temp.append(s_val[num][i])
+        temp = s_val[1][i]
+        for num in range(2,17):
+            temp= np.add(temp,s_val[num][i])
         validation_data.append(temp)
 
 
@@ -70,21 +70,21 @@ def test_variable_model(variable):
     prob_list_2 = []
     for i in range(10000):
         
-        leakage = model.predict(np.array([validation_data[i]]))[0]
-        mixed_leakage = []
+        #leakage = model.predict(np.array([validation_data[i]]))[0]
+        mixed_leakage = validation_data[i]
         for j in range(256):
             mixed_leakage.append(2*leakage[j] * s_val[var_number][i][j] /(np.mean(leakage) + np.mean(s_val[var_number][i])))
         rank = get_rank_from_prob_dist(leakage, labels[10000 - i -1])    
-        rank_2 = get_rank_from_prob_dist(np.array(mixed_leakage), labels[10000 - i -1])   
+        #rank_2 = get_rank_from_prob_dist(np.array(mixed_leakage), labels[10000 - i -1])   
         rank_list.append(rank)
-        rank_list_2.append(rank_2)
+        #rank_list_2.append(rank_2)
         prob_list.append(leakage[labels[10000 - i -1]]/np.sum(leakage) )
-        prob_list_2.append(mixed_leakage[labels[10000 - i -1]]/np.sum(mixed_leakage))
-        
+        #prob_list_2.append(mixed_leakage[labels[10000 - i -1]]/np.sum(mixed_leakage))
+
     
     print('Median rank : ',np.median(rank_list))
     print('Median proba : ',np.median(prob_list))
-    print('Median rank summed : ',np.median(rank_list_2))
-    print('Median proba summed: ',np.median(prob_list_2))
+    # print('Median rank summed : ',np.median(rank_list_2))
+    # print('Median proba summed: ',np.median(prob_list_2))
 test_variable_model('s015')
 
