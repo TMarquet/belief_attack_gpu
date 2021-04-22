@@ -78,7 +78,7 @@ def test_variable_model(variable):
         #rank_2 = get_rank_from_prob_dist(np.array(mixed_leakage), labels[10000 - i -1])   
         rank_list.append(rank)
         #rank_list_2.append(rank_2)
-        prob_list.append(leakage[labels[10000 - i -1]]/np.sum(mixed_leakage) )
+        prob_list.append(mixed_leakage[labels[10000 - i -1]]/np.sum(mixed_leakage) )
         #prob_list_2.append(mixed_leakage[labels[10000 - i -1]]/np.sum(mixed_leakage))
 
     
