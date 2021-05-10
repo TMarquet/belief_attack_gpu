@@ -299,7 +299,12 @@ class TestModels:
                 else:
                     np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_all.csv', output_list, delimiter=',')
             else:
-                np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_training.csv', output_list, delimiter=',')
+
+                if model is None:
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand.csv', output_list, delimiter=',') 
+                else:
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_all.csv', output_list, delimiter=',')
+
         if rank_list is not None:
 
             print "\n\nModel: {}".format(model_file)
