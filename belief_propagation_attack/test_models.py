@@ -458,7 +458,7 @@ if __name__ == "__main__":
     median_rank_out = []
     median_proba_out = []
     for i in range(1,17):
-        variables_to_test.append('cm0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+        variables_to_test.append('mc0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     print(variables_to_test)
     if TEST_ALL:
         # Clear statistics
@@ -513,6 +513,8 @@ if __name__ == "__main__":
                                 median_rank_out.append(r)
                                 median_proba_out.append(m)               
             else:
+                
+                
                 for var in variables_to_test :
                     for (m) in sorted(listdir(MODEL_FOLDER)):
                         if string_starts_with(m, var):
