@@ -504,7 +504,7 @@ if __name__ == "__main__":
                                 if int(var_number) == 16:
                                     model = None
                         else: 
-                            if string_starts_with(m, 'all_{}_cnn'.format(var_name) if var_name == 's' else 'all_{}_2'.format(var_name)):
+                            if string_starts_with(m, 'all_{}_cnn'.format(var_name) if var_name == 's' or var_name == 'xt' else 'all_{}_2'.format(var_name)):
                                 print 'Testing : ', m 
                                 print(var)
                                 if model is None:
