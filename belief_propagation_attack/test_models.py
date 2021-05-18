@@ -458,7 +458,7 @@ if __name__ == "__main__":
     median_rank_out = []
     median_proba_out = []
     for i in range(17,33):
-        variables_to_test.append('h0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+        variables_to_test.append('mc0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     print(variables_to_test)
     if TEST_ALL:
         # Clear statistics
