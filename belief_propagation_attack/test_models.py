@@ -458,7 +458,7 @@ if __name__ == "__main__":
     median_rank_out = []
     median_proba_out = []
     for i in range(1,33):
-        variables_to_test.append('mc0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+        variables_to_test.append('s0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     print(variables_to_test)
     if TEST_ALL:
         # Clear statistics
@@ -479,7 +479,7 @@ if __name__ == "__main__":
                 for (m) in sorted(listdir(NEURAL_MODEL_FOLDER)):
                     var_name, var_number, _ = split_variable_name(var)
 
-                    if string_starts_with(m, 't001'):
+                    if string_starts_with(m, 'all_s_mlp5_nodes100_window2000_epochs200_batchsize50_lr1e-05_sd100_traces100000_aug0_jitterNone_defaultloss.h5'):
                         print 'Testing : ', m 
                         r,m = model_tester.check_model(NEURAL_MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,mlp=True,variable=var)
                         median_rank_out.append(r)
