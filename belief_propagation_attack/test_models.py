@@ -479,7 +479,7 @@ if __name__ == "__main__":
                 for (m) in sorted(listdir(NEURAL_MODEL_FOLDER)):
                     var_name, var_number, _ = split_variable_name(var)
 
-                    if string_starts_with(m, 'all_s_mlp5_nodes100_window2000_epochs200_batchsize50_lr1e-05_sd100_traces100000_aug0_jitterNone_defaultloss.h5'):
+                    if string_starts_with(m, 't001'):
                         print 'Testing : ', m 
                         r,m = model_tester.check_model(NEURAL_MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,mlp=True,variable=var)
                         median_rank_out.append(r)
@@ -493,7 +493,7 @@ if __name__ == "__main__":
                         var_name, var_number, _ = split_variable_name(var)
                         if int(var_number) <= 16:
                             
-                            if string_starts_with(m, 'all_{}_cnn'.format(var_name)):
+                            if string_starts_with(m, 'all_{}_nodes100_window2000_epochs200'.format(var_name)):
                                 print 'Testing : ', m 
                                 print(var)
                                 if model is None:
@@ -504,7 +504,7 @@ if __name__ == "__main__":
                                 if int(var_number) == 16:
                                     model = None
                         else: 
-                            if string_starts_with(m, 'all_{}_cnn'.format(var_name) if var_name == 's' or var_name == 'xt' or var_name == 'cm' or var_name == 'mc' or var_name == 'h' else 'all_{}_both'.format(var_name)):
+                            if string_starts_with(m, 'all_{}_nodes100_window2000_epochs200'.format(var_name) if var_name == 's' or var_name == 'xt' or var_name == 'cm' or var_name == 'mc' or var_name == 'h' else 'all_{}_both'.format(var_name)):
                                 print 'Testing : ', m 
                                 print(var)
                                 if model is None:
