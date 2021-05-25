@@ -493,7 +493,7 @@ if __name__ == "__main__":
                         var_name, var_number, _ = split_variable_name(var)
                         if int(var_number) <= 16:
                             
-                            if string_starts_with(m, 'all_{}_mlp5_nodes100_window2000_epochs200'.format(var_name)):
+                            if string_starts_with(m, 'all_{}_mlp5_nodes100_window2000_epochs50'.format(var_name)):
                                 print 'Testing : ', m 
                                 print(var)
                                 if model is None:
@@ -504,7 +504,7 @@ if __name__ == "__main__":
                                 if int(var_number) == 16:
                                     model = None
                         else: 
-                            if string_starts_with(m, 'all_{}_mlp5_nodes100_window2000_epochs200'.format(var_name) if var_name == 's' or var_name == 'xt' or var_name == 'cm' or var_name == 'mc' or var_name == 'h' else 'all_{}_both'.format(var_name)):
+                            if string_starts_with(m, 'all_{}_mlp5_nodes100_window2000_epochs50'.format(var_name) if var_name == 's' or var_name == 'xt' or var_name == 'cm' or var_name == 'mc' or var_name == 'h' else 'all_{}_both'.format(var_name)):
                                 print 'Testing : ', m 
                                 print(var)
                                 if model is None:
