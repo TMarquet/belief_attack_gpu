@@ -184,7 +184,7 @@ def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, 
 def mlp_new(input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
 
     if loss_function is None:
-        loss_function='rank_loss'
+        loss_function='median_probability_loss'
     model = tf.keras.Sequential()
     model.add(Dense(256, input_dim=input_length, activation='relu'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
