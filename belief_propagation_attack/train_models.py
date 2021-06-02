@@ -158,7 +158,7 @@ def mlp_weighted_bit(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0
 def mlp_best(mlp_nodes=200,layer_nb=6, input_length=700, learning_rate=0.00001, classes=256, loss_function='median_probability_loss'):
 
    
-    loss_function='rank_loss'
+    
     model = Sequential()
     model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
     for i in range(layer_nb-2):
@@ -442,7 +442,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         if multilabel:
             mlp_best_model = mlp_weighted_bit(input_length=input_length, layer_nb=mlp_layers, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
         else:
-            mlp_best_model = mlp_new(input_length=input_length, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
+            mlp_best_model = mlp_best(input_length=input_length, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
         mlp_epochs = epochs if epochs is not None else 200
         mlp_batchsize = batch_size
         train_model(X_profiling, Y_profiling, mlp_best_model, store_directory +
