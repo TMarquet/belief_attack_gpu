@@ -290,6 +290,8 @@ class TestModels:
             model_name = model_file.replace(MODEL_FOLDER, '')
             variable = model_name.split('_')[0] if variable is None else variable
             var_name, var_number, _ = split_variable_name(variable)
+            
+            
             if not var_name in listdir(OUTPUT_FOLDER):
                 os.mkdir(OUTPUT_FOLDER + var_name + '/')
             if not random_key:
@@ -304,7 +306,21 @@ class TestModels:
                     np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand.csv', output_list, delimiter=',') 
                 else:
                     np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_all.csv', output_list, delimiter=',')
-
+            
+            
+        value = []
+        lol = lambda lst, sz: [lst[i:i+sz] for i in range(0, len(lst), sz)]
+        for test in range(1000):
+            origin = prob_list.copy()
+            np.shuffle(origin)
+            splitted = lol(origin,50)
+            medians = []
+            for elem in splitted:
+                medians.append(np.median(elem))
+            value.append(np.mean(medians))
+            
+        np.savetxt(OUTPUT_FOLDER + 'medians.csv', value, delimiter=','))
+            
         if rank_list is not None:
 
             print "\n\nModel: {}".format(model_file)
@@ -457,7 +473,7 @@ if __name__ == "__main__":
     variables_to_test =[]
     median_rank_out = []
     median_proba_out = []
-    for i in range(1,33):
+    for i in range(1,2):
         variables_to_test.append('s0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     print(variables_to_test)
     if TEST_ALL:
