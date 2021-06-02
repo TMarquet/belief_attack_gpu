@@ -312,7 +312,7 @@ class TestModels:
         lol = lambda lst, sz: [lst[i:i+sz] for i in range(0, len(lst), sz)]
         for test in range(1000):
             print('Test n : ',test)
-            origin = prob_list.copy()
+            origin = list(prob_list).copy()
             np.shuffle(origin)
             splitted = lol(origin,50)
             medians = []
