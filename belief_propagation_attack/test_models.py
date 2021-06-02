@@ -313,7 +313,7 @@ class TestModels:
         for test in range(1000):
             print('Test n : ',test)
             origin = prob_list[:]
-            np.shuffle(origin)
+            shuffle(origin)
             splitted = lol(origin,50)
             medians = []
             for elem in splitted:
