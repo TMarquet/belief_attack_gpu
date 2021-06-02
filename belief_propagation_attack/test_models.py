@@ -311,6 +311,7 @@ class TestModels:
         value = []
         lol = lambda lst, sz: [lst[i:i+sz] for i in range(0, len(lst), sz)]
         for test in range(1000):
+            print('Test n : ',test)
             origin = prob_list.copy()
             np.shuffle(origin)
             splitted = lol(origin,50)
@@ -319,7 +320,7 @@ class TestModels:
                 medians.append(np.median(elem))
             value.append(np.mean(medians))
             
-        np.savetxt(OUTPUT_FOLDER + 'medians.csv', value, delimiter=','))
+        np.savetxt(OUTPUT_FOLDER + 'medians.csv', value, delimiter=',')
             
         if rank_list is not None:
 
