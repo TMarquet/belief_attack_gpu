@@ -307,6 +307,7 @@ class RealTraceHandler:
             model_name = model_file.replace(MODEL_FOLDER+'adagrad/', '')            
         elif mlp:
             model_name = model_file.replace(MODEL_FOLDER, '')
+            print(model_name)
         else:
             model_name = model_file.replace(MODEL_FOLDER, '')
         variable = model_name.split('_')[0] if variable == None else variable
@@ -314,8 +315,8 @@ class RealTraceHandler:
         if not self.no_print:
             print "\n* Checking model {} (variable {}) {}*\n".format(model_name, variable, 'WITH VALIDATION TRACES' if from_end else '')
         if not check_file_exists(model_file):            
-            
-            print "!!! Doesn't exist!"
+            if not self.no_print:
+                print "!!! Doesn't exist!"
             return (None, None,None)
         else:
 
