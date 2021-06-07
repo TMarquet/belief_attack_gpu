@@ -306,7 +306,7 @@ class RealTraceHandler:
         if ASCAD:
             model_name = model_file.replace(MODEL_FOLDER+'adagrad/', '')            
         elif mlp:
-            model_name = model_file.replace(NEURAL_MODEL_FOLDER, '')
+            model_name = model_file.replace(MODEL_FOLDER, '')
         else:
             model_name = model_file.replace(MODEL_FOLDER, '')
         variable = model_name.split('_')[0] if variable == None else variable

@@ -308,19 +308,19 @@ class TestModels:
                     np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_all.csv', output_list, delimiter=',')
             
             
-        value = []
-        lol = lambda lst, sz: [lst[i:i+sz] for i in range(0, len(lst), sz)]
-        for test in range(1000):
-            print('Test n : ',test)
-            origin = prob_list[:]
-            shuffle(origin)
-            splitted = lol(origin,50)
-            medians = []
-            for elem in splitted:
-                medians.append(np.median(elem))
-            value.append(np.mean(medians))
+        # value = []
+        # lol = lambda lst, sz: [lst[i:i+sz] for i in range(0, len(lst), sz)]
+        # for test in range(1000):
+        #     print('Test n : ',test)
+        #     origin = prob_list[:]
+        #     shuffle(origin)
+        #     splitted = lol(origin,50)
+        #     medians = []
+        #     for elem in splitted:
+        #         medians.append(np.median(elem))
+        #     value.append(np.mean(medians))
             
-        np.savetxt(OUTPUT_FOLDER + 'medians.csv', value, delimiter=',')
+        # np.savetxt(OUTPUT_FOLDER + 'medians.csv', value, delimiter=',')
             
         if rank_list is not None:
 
@@ -493,10 +493,10 @@ if __name__ == "__main__":
   
     
             for var in variables_to_test :
-                for (m) in sorted(listdir(NEURAL_MODEL_FOLDER)):
+                for (m) in sorted(listdir(MODEL_FOLDER)):
                     var_name, var_number, _ = split_variable_name(var)
 
-                    if string_starts_with(m, 't001'):
+                    if string_starts_with(m, 'all_{}_mlp5_nodes100_window2000_epochs50'.format(var_name)):
                         print 'Testing : ', m 
                         r,m = model_tester.check_model(NEURAL_MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,mlp=True,variable=var)
                         median_rank_out.append(r)
