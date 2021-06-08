@@ -275,7 +275,7 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
     optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     model.summary()
     return model
 
@@ -610,7 +610,7 @@ if __name__ == "__main__":
         variable_list =[]
         name = ['s']
         for var in name:
-            upto = 2 if not var =='h' else 13
+            upto = 17 if not var =='h' else 13
             for i in range(1,upto):
                 
                 variable_list.append(var+'0'+ ('0'+str(i) if i < 10 else '' + str(i)))
