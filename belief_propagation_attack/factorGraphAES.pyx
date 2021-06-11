@@ -48,8 +48,8 @@ class FactorGraphAES:
 
         self.no_print = no_print
 
-        
-        removed_nodes = ['t']
+        if removed_nodes is None:
+            removed_nodes = []
         if left_out_nodes is None:
             left_out_nodes = []
 
