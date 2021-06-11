@@ -51,7 +51,7 @@ class FactorGraphAES:
         if removed_nodes is None:
             removed_nodes = []
         
-        left_out_nodes = ['k','t','p']
+        left_out_nodes = ['t','p']
 
         furious_string = ""
         round_string = str(rounds_of_aes)
