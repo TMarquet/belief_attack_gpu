@@ -608,7 +608,7 @@ if __name__ == "__main__":
     elif ALL_VARIABLE is None:
 
         variable_list =[]
-        name = ['s']
+        name = ['k']
         for var in name:
             upto = 17 if not var =='h' else 13
             for i in range(1,upto):
