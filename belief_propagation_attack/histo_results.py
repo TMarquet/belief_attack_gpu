@@ -11,7 +11,8 @@ from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
 import smallest_circle as sc
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
-var_to_plot = ['p','k']
+import pandas as pd
+var_to_plot = ['s']
 all_v = ['s','k','t','h','p','cm','mc','xt']
 #var_to_plot = all_v
 only_first_round = False
@@ -167,247 +168,267 @@ MLP_median_proba['mc'] = mc_MLP_median_proba
 MLP_median_proba['xt'] = xt_MLP_median_proba
 
 
-###############################################
-if only_first_round:
-    for var in var_to_plot:
-        median_proba[var] = median_proba[var][:16]
-        median_rank[var] =  median_rank[var][:16]
-        COMBINE_median_rank[var] =  COMBINE_median_rank[var][:16]
-        COMBINE_median_proba[var] = COMBINE_median_proba[var][:16]
-        MLP_median_rank[var] = MLP_median_rank[var][:16]
-        MLP_median_proba[var] =MLP_median_proba[var][:16]
-elif only_second_round:
-    for var in var_to_plot:
-        median_proba[var] = median_proba[var][16:]
-        median_rank[var] =  median_rank[var][16:]
-        COMBINE_median_rank[var] =  COMBINE_median_rank[var][16:]
-        COMBINE_median_proba[var] = COMBINE_median_proba[var][16:]
-        MLP_median_rank[var] = MLP_median_rank[var][16:]
-        MLP_median_proba[var] =MLP_median_proba[var][16:]
+
+for var in all_v:
+    
+    to_n = min(len(median_proba[var]),16)
+    
+    MLP_1 = [x/100 for x in MLP_median_proba[var][:to_n]]
+    CNN_1 = [x/100 for x in median_proba[var][:to_n]]
+    COMBINE_1 =  [x/100 for x in COMBINE_median_proba[var][:to_n]]
+    df = pd.DataFrame(list(zip(MLP_1,CNN_1,COMBINE_1)), index =list(range(1,len(CNN_1)+1)),columns = ['MLP','CNN','CNN combine'])
+    df.index.name = 'varnum'
+    df.to_csv('median_proba_{}_mixed.csv'.format(var))
+    if to_n < len(median_proba[var]):
+                  
+        MLP_1 = [x/100 for x in MLP_median_proba[var][to_n:]]
+        CNN_1 = [x/100 for x in median_proba[var][to_n:]]
+        COMBINE_1 =  [x/100 for x in COMBINE_median_proba[var][to_n:]]    
+        df = pd.DataFrame(list(zip(MLP_1,CNN_1,COMBINE_1)), index =list(range(1,len(CNN_1)+1)),columns = ['MLP','CNN','CNN combine'])
+        df.index.name = 'varnum'
+        df.to_csv('median_proba_{}_mixed_2round.csv'.format(var))
+
+# ###############################################
+# if only_first_round:
+#     for var in var_to_plot:
+#         median_proba[var] = median_proba[var][:16]
+#         median_rank[var] =  median_rank[var][:16]
+#         COMBINE_median_rank[var] =  COMBINE_median_rank[var][:16]
+#         COMBINE_median_proba[var] = COMBINE_median_proba[var][:16]
+#         MLP_median_rank[var] = MLP_median_rank[var][:16]
+#         MLP_median_proba[var] =MLP_median_proba[var][:16]
+# elif only_second_round:
+#     for var in var_to_plot:
+#         median_proba[var] = median_proba[var][16:]
+#         median_rank[var] =  median_rank[var][16:]
+#         COMBINE_median_rank[var] =  COMBINE_median_rank[var][16:]
+#         COMBINE_median_proba[var] = COMBINE_median_proba[var][16:]
+#         MLP_median_rank[var] = MLP_median_rank[var][16:]
+#         MLP_median_proba[var] =MLP_median_proba[var][16:]
         
-dict_val_rank = {}
-dict_MLP_val_rank = {}
-dict_val_proba = {}
-dict_MLP_val_proba = {}
-dict_combine_val_rank = {}
-dict_combine_val_proba = {}
-print('Studied variable :',var_to_plot)
+# dict_val_rank = {}
+# dict_MLP_val_rank = {}
+# dict_val_proba = {}
+# dict_MLP_val_proba = {}
+# dict_combine_val_rank = {}
+# dict_combine_val_proba = {}
+# print('Studied variable :',var_to_plot)
 
-for elem in var_to_plot :
-    i = 1
-    j=1
-    if only_second_round:
-        j = 17
-    for e in median_proba[elem] :
+# for elem in var_to_plot :
+#     i = 1
+#     j=1
+#     if only_second_round:
+#         j = 17
+#     for e in median_proba[elem] :
         
-        dict_val_proba[elem+str(j)] = e *pow(10,-2) /0.0039
-        dict_MLP_val_proba[elem+str(j)] = MLP_median_proba[elem][i-1] *pow(10,-2)/0.0039
-        dict_combine_val_proba[elem+str(j)] = COMBINE_median_proba[elem][i-1] *pow(10,-2)/0.0039
-        i+=1
-        j+=1
-        if only_first_round and i == 17:
-            break
-    i = 1
-    j=1
-    if only_second_round:
-        j = 17
-    for e in median_rank[elem] :
-        dict_val_rank[elem+str(j)] = e / 128
-        dict_MLP_val_rank[elem+str(j)] = MLP_median_rank[elem][i-1] / 128
-        dict_combine_val_rank[elem+str(j)] = COMBINE_median_rank[elem][i-1] / 128
-        i+=1
-        j+=1
-        if only_first_round and i == 17:
-            break
+#         dict_val_proba[elem+str(j)] = e *pow(10,-2) /0.0039
+#         dict_MLP_val_proba[elem+str(j)] = MLP_median_proba[elem][i-1] *pow(10,-2)/0.0039
+#         dict_combine_val_proba[elem+str(j)] = COMBINE_median_proba[elem][i-1] *pow(10,-2)/0.0039
+#         i+=1
+#         j+=1
+#         if only_first_round and i == 17:
+#             break
+#     i = 1
+#     j=1
+#     if only_second_round:
+#         j = 17
+#     for e in median_rank[elem] :
+#         dict_val_rank[elem+str(j)] = e / 128
+#         dict_MLP_val_rank[elem+str(j)] = MLP_median_rank[elem][i-1] / 128
+#         dict_combine_val_rank[elem+str(j)] = COMBINE_median_rank[elem][i-1] / 128
+#         i+=1
+#         j+=1
+#         if only_first_round and i == 17:
+#             break
 
-labels = dict_val_proba.keys()
-CNN_proba = dict_val_proba.values()
-MLP_proba = dict_MLP_val_proba.values()
-CNN_Combine_proba = dict_combine_val_proba.values()
-CNN_rank = dict_val_rank.values()
-MLP_rank = dict_MLP_val_rank.values()
-CNN_combine_rank = dict_combine_val_rank.values()
-X_CNN =[]
-X_MLP = []
-
-
-a = np.array(list(CNN_rank))
-b = np.array(list(CNN_proba))
-c = np.array(list(MLP_rank))
-d = np.array(list(MLP_proba))
-e = np.array(list(CNN_combine_rank))
-f = np.array(list(CNN_Combine_proba))
+# labels = dict_val_proba.keys()
+# CNN_proba = dict_val_proba.values()
+# MLP_proba = dict_MLP_val_proba.values()
+# CNN_Combine_proba = dict_combine_val_proba.values()
+# CNN_rank = dict_val_rank.values()
+# MLP_rank = dict_MLP_val_rank.values()
+# CNN_combine_rank = dict_combine_val_rank.values()
+# X_CNN =[]
+# X_MLP = []
 
 
-print('CNN median rank mean : ',np.mean(a))
-print('CNN median proba mean : ',np.mean(b))
-print('\n')
-print('CNN combine median rank mean : ',np.mean(e))
-print('CNN combine  median proba mean : ',np.mean(f))
-print('\n')
-print('MLP median rank mean : ',np.mean(c))
-print('MLP median proba mean : ',np.mean(d))
-print('\n')
-print('CNN median rank median : ',np.median(a))
-print('CNN median proba median : ',np.median(b))
-print('\n')
-print('CNN combine median rank median : ',np.median(e))
-print('CNN combine median proba median : ',np.median(f))
-print('\n')
-print('MLP median rank median : ',np.median(c))
-print('MLP median proba median : ',np.median(d))
-print('\n')
-print('CNN median rank min: ',np.min(a))
-print('CNN median proba min : ',np.min(b))
-print('\n')
-print('CNN combine median rank min: ',np.min(e))
-print('CNN median proba min : ',np.min(f))
-print('\n')
-print('MLP median rank min : ',np.min(c))
-print('MLP median proba min : ',np.min(d))
-print('\n')
-print('CNN median rank max : ',np.max(a))
-print('CNN median proba max : ',np.max(b))
-print('\n')
-print('CNN combine median rank max : ',np.max(e))
-print('CNN combine median proba max : ',np.max(f))
-print('\n')
-print('MLP median rank max : ',np.max(c))
-print('MLP median proba max : ',np.max(d))
+# a = np.array(list(CNN_rank))
+# b = np.array(list(CNN_proba))
+# c = np.array(list(MLP_rank))
+# d = np.array(list(MLP_proba))
+# e = np.array(list(CNN_combine_rank))
+# f = np.array(list(CNN_Combine_proba))
 
-fig,ax =  plt.subplots()
-ax.scatter(CNN_rank, CNN_proba,c='blue', s=10,label = 'CNN')
-points_cnn = np.array(list(zip(CNN_rank,CNN_proba)))
-hull_cnn = ConvexHull(points_cnn)
-for simplex in hull_cnn.simplices:
-    ax.plot(points_cnn[simplex, 0], points_cnn[simplex, 1], 'b-')
-ax.scatter(CNN_combine_rank, CNN_Combine_proba,c='green', s=10,label = 'CNN Combined')
-ax.scatter([1],[1],c='black', s=100, label = 'Random guess')
-points_cnn_combine = np.array(list(zip(CNN_combine_rank,CNN_Combine_proba)))
-hull_cnn_combine = ConvexHull(points_cnn_combine)
-for simplex in hull_cnn_combine.simplices:
-    ax.plot(points_cnn_combine[simplex, 0], points_cnn_combine[simplex, 1], 'g-')
-ax.scatter(MLP_rank, MLP_proba,c='red', s=10,label = 'MLP')
 
-points_mlp = np.array(list(zip(MLP_rank,MLP_proba)))
-hull_mlp = ConvexHull(points_mlp)
-for simplex in hull_mlp.simplices:
-    ax.plot(points_mlp[simplex, 0], points_mlp[simplex, 1], 'r-')
-print('CNN consistency : ',hull_cnn.area)
-print('Combined CNN consistency : ',hull_cnn_combine.area)
-print('MLP consistency : ',hull_mlp.area)
-ax.set_ylabel('Scores divided by random guess')
-ax.set_xlabel('Ranks divided by random guess')
-ax.legend()
-ax.set_title('General consistency evaluation')
-ax_sca = plt.gca()
-ax_sca.set_xlim(0,1.1)
-ax_sca.set_ylim(0,max([np.max(points_cnn),np.max(points_cnn_combine),np.max(points_mlp)])*1.1)
-offset= 0
-if only_second_round:
-    offset = 16
+# print('CNN median rank mean : ',np.mean(a))
+# print('CNN median proba mean : ',np.mean(b))
+# print('\n')
+# print('CNN combine median rank mean : ',np.mean(e))
+# print('CNN combine  median proba mean : ',np.mean(f))
+# print('\n')
+# print('MLP median rank mean : ',np.mean(c))
+# print('MLP median proba mean : ',np.mean(d))
+# print('\n')
+# print('CNN median rank median : ',np.median(a))
+# print('CNN median proba median : ',np.median(b))
+# print('\n')
+# print('CNN combine median rank median : ',np.median(e))
+# print('CNN combine median proba median : ',np.median(f))
+# print('\n')
+# print('MLP median rank median : ',np.median(c))
+# print('MLP median proba median : ',np.median(d))
+# print('\n')
+# print('CNN median rank min: ',np.min(a))
+# print('CNN median proba min : ',np.min(b))
+# print('\n')
+# print('CNN combine median rank min: ',np.min(e))
+# print('CNN median proba min : ',np.min(f))
+# print('\n')
+# print('MLP median rank min : ',np.min(c))
+# print('MLP median proba min : ',np.min(d))
+# print('\n')
+# print('CNN median rank max : ',np.max(a))
+# print('CNN median proba max : ',np.max(b))
+# print('\n')
+# print('CNN combine median rank max : ',np.max(e))
+# print('CNN combine median proba max : ',np.max(f))
+# print('\n')
+# print('MLP median rank max : ',np.max(c))
+# print('MLP median proba max : ',np.max(d))
 
-if len(var_to_plot) > 1 :
+# fig,ax =  plt.subplots()
+# ax.scatter(CNN_rank, CNN_proba,c='blue', s=10,label = 'CNN')
+# points_cnn = np.array(list(zip(CNN_rank,CNN_proba)))
+# hull_cnn = ConvexHull(points_cnn)
+# for simplex in hull_cnn.simplices:
+#     ax.plot(points_cnn[simplex, 0], points_cnn[simplex, 1], 'b-')
+# ax.scatter(CNN_combine_rank, CNN_Combine_proba,c='green', s=10,label = 'CNN Combined')
+# ax.scatter([1],[1],c='black', s=100, label = 'Random guess')
+# points_cnn_combine = np.array(list(zip(CNN_combine_rank,CNN_Combine_proba)))
+# hull_cnn_combine = ConvexHull(points_cnn_combine)
+# for simplex in hull_cnn_combine.simplices:
+#     ax.plot(points_cnn_combine[simplex, 0], points_cnn_combine[simplex, 1], 'g-')
+# ax.scatter(MLP_rank, MLP_proba,c='red', s=10,label = 'MLP')
 
-    fig, ax = plt.subplots(len(var_to_plot),2)
-    plt.subplots_adjust(hspace=0.5)
-    #fig, ax = plt.subplots(3,1)
+# points_mlp = np.array(list(zip(MLP_rank,MLP_proba)))
+# hull_mlp = ConvexHull(points_mlp)
+# for simplex in hull_mlp.simplices:
+#     ax.plot(points_mlp[simplex, 0], points_mlp[simplex, 1], 'r-')
+# print('CNN consistency : ',hull_cnn.area)
+# print('Combined CNN consistency : ',hull_cnn_combine.area)
+# print('MLP consistency : ',hull_mlp.area)
+# ax.set_ylabel('Scores divided by random guess')
+# ax.set_xlabel('Ranks divided by random guess')
+# ax.legend()
+# ax.set_title('General consistency evaluation')
+# ax_sca = plt.gca()
+# ax_sca.set_xlim(0,1.1)
+# ax_sca.set_ylim(0,max([np.max(points_cnn),np.max(points_cnn_combine),np.max(points_mlp)])*1.1)
+# offset= 0
+# if only_second_round:
+#     offset = 16
+
+# if len(var_to_plot) > 1 :
+
+#     fig, ax = plt.subplots(len(var_to_plot),2)
+#     plt.subplots_adjust(hspace=0.5)
+#     #fig, ax = plt.subplots(3,1)
     
-    for plot in range(0,len(var_to_plot)):
-        labels = []
-        start = 0
-        n = len(median_rank[var_to_plot[plot]])
+#     for plot in range(0,len(var_to_plot)):
+#         labels = []
+#         start = 0
+#         n = len(median_rank[var_to_plot[plot]])
         
 
 
 
-        for i in range(0,n):
-            labels.append(var_to_plot[plot] + str(start + i+1+offset))    
-        x = np.arange(n)  # the label locations
-        width = 0.2  # the width of the bars
-        rects1 = ax[plot][0].bar(x - width, median_rank[var_to_plot[plot]], width, label='CNN')
-        rects2 = ax[plot][0].bar(x , MLP_median_rank[var_to_plot[plot]][:n], width, label='MLP')
-        rects3 = ax[plot][0].bar(x + width, COMBINE_median_rank[var_to_plot[plot]][:n], width, label='CNN combined')
-        rects1 = ax[plot][1].bar(x - width, median_proba[var_to_plot[plot]], width, label='CNN')
-        rects2 = ax[plot][1].bar(x , MLP_median_proba[var_to_plot[plot]][:n], width, label='MLP')
-        rects3 = ax[plot][1].bar(x + width, COMBINE_median_proba[var_to_plot[plot]][:n], width, label='CNN combined')
-        CNN_rank_mean = np.mean(median_rank[var_to_plot[plot]])
-        MLP_rank_mean = np.mean(MLP_median_rank[var_to_plot[plot]])
-        CNN_combine_rank_mean = np.mean(COMBINE_median_rank[var_to_plot[plot]])
-        line_CNN = ax[plot][0].plot([-width,n-1+width],[CNN_rank_mean,CNN_rank_mean],'b--',label='CNN mean')
-        line_MLP = ax[plot][0].plot([-width,n-1+width],[MLP_rank_mean,MLP_rank_mean],'r:',label='MLP mean')
-        line_COMBINE = ax[plot][0].plot([-width,n-1+width],[CNN_combine_rank_mean,CNN_combine_rank_mean],'k-.',label='CNN combine mean')
-        CNN_proba_mean = np.mean(median_proba[var_to_plot[plot]])
-        MLP_proba_mean = np.mean(MLP_median_proba[var_to_plot[plot]])
-        COMBINE_proba_mean = np.mean(COMBINE_median_proba[var_to_plot[plot]])
-        line_CNN = ax[plot][1].plot([-width,n-1+width],[CNN_proba_mean,CNN_proba_mean],'b--',label='CNN mean')
-        line_MLP = ax[plot][1].plot([-width,n-1+width],[MLP_proba_mean,MLP_proba_mean],'r:',label='MLP mean')    
-        line_COMBINE = ax[plot][1].plot([-width,n-1+width],[COMBINE_proba_mean,COMBINE_proba_mean],'k-.',label='CNN combine mean') 
-        line_random = ax[plot][1].plot([-width,n-1+width],[[0.39],[0.39]],'r-',label='Random guess')
-    # Add some text for labels, title and custom x-axis tick labels, etc.
-        ax[plot][0].set_ylabel('Rank')
-        ax[plot][0].set_ylim(0,128)
-        ax[plot][0].set_title('Rank comparison for var '+ var_to_plot[plot])
-        ax[plot][0].set_xticks(x)
-        ax[plot][0].set_xticklabels(labels)
+#         for i in range(0,n):
+#             labels.append(var_to_plot[plot] + str(start + i+1+offset))    
+#         x = np.arange(n)  # the label locations
+#         width = 0.2  # the width of the bars
+#         rects1 = ax[plot][0].bar(x - width, median_rank[var_to_plot[plot]], width, label='CNN')
+#         rects2 = ax[plot][0].bar(x , MLP_median_rank[var_to_plot[plot]][:n], width, label='MLP')
+#         rects3 = ax[plot][0].bar(x + width, COMBINE_median_rank[var_to_plot[plot]][:n], width, label='CNN combined')
+#         rects1 = ax[plot][1].bar(x - width, median_proba[var_to_plot[plot]], width, label='CNN')
+#         rects2 = ax[plot][1].bar(x , MLP_median_proba[var_to_plot[plot]][:n], width, label='MLP')
+#         rects3 = ax[plot][1].bar(x + width, COMBINE_median_proba[var_to_plot[plot]][:n], width, label='CNN combined')
+#         CNN_rank_mean = np.mean(median_rank[var_to_plot[plot]])
+#         MLP_rank_mean = np.mean(MLP_median_rank[var_to_plot[plot]])
+#         CNN_combine_rank_mean = np.mean(COMBINE_median_rank[var_to_plot[plot]])
+#         line_CNN = ax[plot][0].plot([-width,n-1+width],[CNN_rank_mean,CNN_rank_mean],'b--',label='CNN mean')
+#         line_MLP = ax[plot][0].plot([-width,n-1+width],[MLP_rank_mean,MLP_rank_mean],'r:',label='MLP mean')
+#         line_COMBINE = ax[plot][0].plot([-width,n-1+width],[CNN_combine_rank_mean,CNN_combine_rank_mean],'k-.',label='CNN combine mean')
+#         CNN_proba_mean = np.mean(median_proba[var_to_plot[plot]])
+#         MLP_proba_mean = np.mean(MLP_median_proba[var_to_plot[plot]])
+#         COMBINE_proba_mean = np.mean(COMBINE_median_proba[var_to_plot[plot]])
+#         line_CNN = ax[plot][1].plot([-width,n-1+width],[CNN_proba_mean,CNN_proba_mean],'b--',label='CNN mean')
+#         line_MLP = ax[plot][1].plot([-width,n-1+width],[MLP_proba_mean,MLP_proba_mean],'r:',label='MLP mean')    
+#         line_COMBINE = ax[plot][1].plot([-width,n-1+width],[COMBINE_proba_mean,COMBINE_proba_mean],'k-.',label='CNN combine mean') 
+#         line_random = ax[plot][1].plot([-width,n-1+width],[[0.39],[0.39]],'r-',label='Random guess')
+#     # Add some text for labels, title and custom x-axis tick labels, etc.
+#         ax[plot][0].set_ylabel('Rank')
+#         ax[plot][0].set_ylim(0,128)
+#         ax[plot][0].set_title('Rank comparison for var '+ var_to_plot[plot])
+#         ax[plot][0].set_xticks(x)
+#         ax[plot][0].set_xticklabels(labels)
     
-        ax[plot][1].set_ylabel('Probability in % ')
-        ax[plot][1].set_ylim(0,1.2)
-        ax[plot][1].set_title('Median probability comparison for var '+ var_to_plot[plot])
-        ax[plot][1].set_xticks(x)
-        ax[plot][1].set_xticklabels(labels)
+#         ax[plot][1].set_ylabel('Probability in % ')
+#         ax[plot][1].set_ylim(0,1.2)
+#         ax[plot][1].set_title('Median probability comparison for var '+ var_to_plot[plot])
+#         ax[plot][1].set_xticks(x)
+#         ax[plot][1].set_xticklabels(labels)
     
 
-    handles, labels = ax[0][0].get_legend_handles_labels()
+#     handles, labels = ax[0][0].get_legend_handles_labels()
     
-    fig.legend(handles, labels, loc='upper left',fancybox=True, framealpha=1)
-else :
+#     fig.legend(handles, labels, loc='upper left',fancybox=True, framealpha=1)
+# else :
     
-    fig, ax = plt.subplots(2,1)
-    plot = 0
-    labels = []
-    start = 0
-    n = len(median_rank[var_to_plot[plot]])
+#     fig, ax = plt.subplots(2,1)
+#     plot = 0
+#     labels = []
+#     start = 0
+#     n = len(median_rank[var_to_plot[plot]])
 
-    for i in range(0,n):
-        labels.append(var_to_plot[plot] + str(start+i+1+offset))   
-    x = np.arange(n)  # the label locations
-    width = 0.2  # the width of the bars
-    rects1 = ax[0].bar(x - width, median_rank[var_to_plot[plot]], width, label='CNN')
-    rects2 = ax[0].bar(x , MLP_median_rank[var_to_plot[plot]][:n], width, label='MLP')
-    rects3 = ax[0].bar(x + width, COMBINE_median_rank[var_to_plot[plot]][:n], width, label='CNN combined')
-    rects1 = ax[1].bar(x - width, median_proba[var_to_plot[plot]], width, label='CNN')
-    rects2 = ax[1].bar(x , MLP_median_proba[var_to_plot[plot]][:n], width, label='MLP')
-    rects3 = ax[1].bar(x + width, COMBINE_median_proba[var_to_plot[plot]][:n], width, label='CNN combined')
-    CNN_rank_mean = np.mean(median_rank[var_to_plot[plot]])
-    MLP_rank_mean = np.mean(MLP_median_rank[var_to_plot[plot]])
-    CNN_combine_rank_mean = np.mean(COMBINE_median_rank[var_to_plot[plot]])
-    line_CNN = ax[0].plot([-width,n-1+width],[CNN_rank_mean,CNN_rank_mean],'b--',label='CNN mean')
-    line_MLP = ax[0].plot([-width,n-1+width],[MLP_rank_mean,MLP_rank_mean],'r:',label='MLP mean')
-    line_COMBINE = ax[0].plot([-width,n-1+width],[CNN_combine_rank_mean,CNN_combine_rank_mean],'k-.',label='CNN combine mean')
+#     for i in range(0,n):
+#         labels.append(var_to_plot[plot] + str(start+i+1+offset))   
+#     x = np.arange(n)  # the label locations
+#     width = 0.2  # the width of the bars
+#     rects1 = ax[0].bar(x - width, median_rank[var_to_plot[plot]], width, label='CNN')
+#     rects2 = ax[0].bar(x , MLP_median_rank[var_to_plot[plot]][:n], width, label='MLP')
+#     rects3 = ax[0].bar(x + width, COMBINE_median_rank[var_to_plot[plot]][:n], width, label='CNN combined')
+#     rects1 = ax[1].bar(x - width, median_proba[var_to_plot[plot]], width, label='CNN')
+#     rects2 = ax[1].bar(x , MLP_median_proba[var_to_plot[plot]][:n], width, label='MLP')
+#     rects3 = ax[1].bar(x + width, COMBINE_median_proba[var_to_plot[plot]][:n], width, label='CNN combined')
+#     CNN_rank_mean = np.mean(median_rank[var_to_plot[plot]])
+#     MLP_rank_mean = np.mean(MLP_median_rank[var_to_plot[plot]])
+#     CNN_combine_rank_mean = np.mean(COMBINE_median_rank[var_to_plot[plot]])
+#     line_CNN = ax[0].plot([-width,n-1+width],[CNN_rank_mean,CNN_rank_mean],'b--',label='CNN mean')
+#     line_MLP = ax[0].plot([-width,n-1+width],[MLP_rank_mean,MLP_rank_mean],'r:',label='MLP mean')
+#     line_COMBINE = ax[0].plot([-width,n-1+width],[CNN_combine_rank_mean,CNN_combine_rank_mean],'k-.',label='CNN combine mean')
     
-    CNN_proba_mean = np.mean(median_proba[var_to_plot[plot]])
-    MLP_proba_mean = np.mean(MLP_median_proba[var_to_plot[plot]])
-    COMBINE_proba_mean = np.mean(COMBINE_median_proba[var_to_plot[plot]])
-    line_CNN = ax[1].plot([-width,n-1+width],[CNN_proba_mean,CNN_proba_mean],'b--',label='CNN mean')
-    line_MLP = ax[1].plot([-width,n-1+width],[MLP_proba_mean,MLP_proba_mean],'r:',label='MLP mean')    
-    line_COMBINE = ax[1].plot([-width,n-1+width],[COMBINE_proba_mean,COMBINE_proba_mean],'k-.',label='CNN combine mean') 
-    line_random = ax[1].plot([-width,n-1+width],[[0.39],[0.39]],'r-',label='Random guess') 
-# Add some text for labels, title and custom x-axis tick labels, etc.
-    ax[0].set_ylabel('Rank')
-    ax[0].set_ylim(0,128)
-    ax[0].set_title('Rank comparison between for var '+ var_to_plot[plot])
-    ax[0].set_xticks(x)
-    ax[0].set_xticklabels(labels)
+#     CNN_proba_mean = np.mean(median_proba[var_to_plot[plot]])
+#     MLP_proba_mean = np.mean(MLP_median_proba[var_to_plot[plot]])
+#     COMBINE_proba_mean = np.mean(COMBINE_median_proba[var_to_plot[plot]])
+#     line_CNN = ax[1].plot([-width,n-1+width],[CNN_proba_mean,CNN_proba_mean],'b--',label='CNN mean')
+#     line_MLP = ax[1].plot([-width,n-1+width],[MLP_proba_mean,MLP_proba_mean],'r:',label='MLP mean')    
+#     line_COMBINE = ax[1].plot([-width,n-1+width],[COMBINE_proba_mean,COMBINE_proba_mean],'k-.',label='CNN combine mean') 
+#     line_random = ax[1].plot([-width,n-1+width],[[0.39],[0.39]],'r-',label='Random guess') 
+# # Add some text for labels, title and custom x-axis tick labels, etc.
+#     ax[0].set_ylabel('Rank')
+#     ax[0].set_ylim(0,128)
+#     ax[0].set_title('Rank comparison between for var '+ var_to_plot[plot])
+#     ax[0].set_xticks(x)
+#     ax[0].set_xticklabels(labels)
 
-    ax[1].set_ylabel('Probability in % ')
-    ax[1].set_ylim(0,1.2)
-    ax[1].set_title('Median probability comparison for var '+ var_to_plot[plot])
-    ax[1].set_xticks(x)
-    ax[1].set_xticklabels(labels)
-    handles, labels = ax[1].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper left',fancybox=True, framealpha=1)
-    plt.tight_layout()
+#     ax[1].set_ylabel('Probability in % ')
+#     ax[1].set_ylim(0,1.2)
+#     ax[1].set_title('Median probability comparison for var '+ var_to_plot[plot])
+#     ax[1].set_xticks(x)
+#     ax[1].set_xticklabels(labels)
+#     handles, labels = ax[1].get_legend_handles_labels()
+#     fig.legend(handles, labels, loc='upper left',fancybox=True, framealpha=1)
+#     plt.tight_layout()
     
     
-plt.show()
+# plt.show()
