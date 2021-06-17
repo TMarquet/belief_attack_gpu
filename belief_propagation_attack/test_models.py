@@ -496,7 +496,7 @@ if __name__ == "__main__":
                 for (m) in sorted(listdir(MODEL_FOLDER)):
                     var_name, var_number, _ = split_variable_name(var)
 
-                    if string_starts_with(m, 'all_{}_nobn_mlp5_nodes100_window2000_epochs100'.format(var_name)):
+                    if string_starts_with(m, 'all_{}_mlp5_nodes100_window2000_epochs100'.format(var_name)):
                         print 'Testing : ', m 
                         r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,mlp=True,variable=var)
                         median_rank_out.append(r)
@@ -510,7 +510,7 @@ if __name__ == "__main__":
                         var_name, var_number, _ = split_variable_name(var)
                         if int(var_number) <= 16:
                             
-                            if string_starts_with(m, 'all_{}_cnn'.format(var_name)):
+                            if string_starts_with(m, 'all_{}_nobn_cnn'.format(var_name)):
                                 print 'Testing : ', m 
                                 print(var)
                                 if model is None:
