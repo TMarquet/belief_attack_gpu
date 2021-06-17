@@ -253,8 +253,8 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
             model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))           
         else:
             model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1)))          
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1),name = 'L2_regularisation_{}'.format(i+1)))
-        model.add(BatchNormalization(name = 'Batch_normalisation_{}'.format(i+1)))
+        # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1),name = 'L2_regularisation_{}'.format(i+1)))
+        # model.add(BatchNormalization(name = 'Batch_normalisation_{}'.format(i+1)))
         model.add(tf.keras.layers.Activation('relu'))
         if i in pooling:
             model.add(AveragePooling1D(2, strides=2, name='block{}_pool'.format(i+1)))
@@ -267,8 +267,8 @@ def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256,
     #model.add(Dropout(0.5))
     for i in range(0,dense_layers):
         model.add(Dense(dense_units, name='Dense_{}'.format(i+1)))
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1),name = 'L2_regularisation_dense_{}'.format(i+1)))
-        model.add(BatchNormalization(name='block_dense_{}_batchnorm'.format(i+1)))
+        # model.add(Lambda(lambda x: K.l2_normalize(x,axis=1),name = 'L2_regularisation_dense_{}'.format(i+1)))
+        # model.add(BatchNormalization(name='block_dense_{}_batchnorm'.format(i+1)))
         model.add(tf.keras.layers.Activation('relu'))
         #model.add(Dropout(0.5))
 
