@@ -610,7 +610,7 @@ if __name__ == "__main__":
         variable_list =[]
         name = ['s']
         for var in name:
-            upto = 17 if not var =='h' else 13
+            upto = 2 if not var =='h' else 13
             for i in range(1,upto):
                 
                 variable_list.append(var+'0'+ ('0'+str(i) if i < 10 else '' + str(i)))
