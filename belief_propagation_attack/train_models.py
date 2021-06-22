@@ -513,8 +513,14 @@ if __name__ == "__main__":
                         type=int, default=64)
     parser.add_argument('-b', '-batch', '-batch_size', action="store", dest="BATCH_SIZE", help='Size of Training Batch (default: 200)',
                         type=int, default=50)
-    parser.add_argument('-allvar', '-av', action="store", dest="ALL_VARIABLE",
-                        help='Train all Variables that match (default: None)', default=None)
+    parser.add_argument('--COMBINE', '--CB', action="store", dest="COMBINE",
+                        help='Train with all bytes of an intermediate (default: False)', default=False)
+    parser.add_argument('--R1', action="store_true", dest="FIRST_ROUND",
+                        help='Use data from the first round (default: False)', default=False)
+    parser.add_argument('--R2', action="store_true", dest="SECOND_ROUND",
+                        help='Use data from the second round (default: False)', default=False)
+
+
     parser.add_argument('-sd', action="store", dest="STANDARD_DEVIATION",
                         help='Standard Deviation for Data Augmentation (default: 100)',
                         type=int, default=100)
@@ -567,7 +573,9 @@ if __name__ == "__main__":
     BATCH_SIZE      = args.BATCH_SIZE
     NORMALISE       = args.NORMALISE
     STANDARD_DEVIATION = args.STANDARD_DEVIATION
-    ALL_VARIABLE    = args.ALL_VARIABLE
+    COMBINE    = args.COMBINE
+    FIRST_ROUND = args.FIRST_ROUND
+    SECOND_ROUND = args.SECOND_ROUND
     AUGMENT_METHOD  = args.AUGMENT_METHOD
     ALL_VARS        = args.ALL_VARS
     JITTER          = args.JITTER
@@ -605,19 +613,21 @@ if __name__ == "__main__":
         variable_list = ['s001','k001','t001','K004']
     if ALL_VARS:
         variable_list = get_variable_list()
-    elif ALL_VARIABLE is None:
+    elif COMBINE:
 
         variable_list =[]
-        name = ['s']
-        for var in name:
-            upto = 17 if not var =='h' else 13
-            for i in range(1,upto):
-                
-                variable_list.append(var+'0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+        var_name  = get_variable_name(VARIABLE)
+        start = 1 if not SECOND_ROUND else 17
+        end = 17 if not SECOND_ROUND else 33
+
+        end -= 0 if not var =='h' else 4
+        for i in range(start,end):
+            
+            variable_list.append(var+'0'+ ('0'+str(i) if i < 10 else '' + str(i)))
         print(variable_list)
 
     else:
-        variable_list = ['{}{}'.format(ALL_VARIABLE, pad_string_zeros(i+1)) for i in range(variable_dict[ALL_VARIABLE])]
+        variable_list = [VARIABLE]
 
 
     weight_method_test = ['lecunn','lecunu','heu','hen']
