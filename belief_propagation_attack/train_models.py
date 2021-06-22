@@ -406,25 +406,29 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
     elif cnn:
         # TODO: Test New CNN!
         # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
-        sizes = [[64,128,256,512,512]]
-        pooling = [[0,1,2,3,4]]
-        filters = [11]
-        dense_layers = [2]
-        dense_units = [4096]            
-        for size in sizes:
-            for pool in pooling:
-                for filter_cnn in filters:
-                    for layer in dense_layers:
-                        for unit in dense_units:
-                            print('Training for {} size, {} pool, {} filter, {} layers, {} units'.format(size,pool,filter_cnn,layer,unit))
-                            cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes,size=size,dense_layers=layer,dense_units=unit,pooling = pool,filters = filter_cnn)
-                            cnn_epochs = epochs if epochs is not None else 75
-                            cnn_batchsize = batch_size
-                            train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
-                                        "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
-                                            'all_s_nobn', hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),layer,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
-                                        epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
-                                        progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+        sizes = [64,128,256,512,512]
+        pooling = [0,1,2,3,4]
+        filters = 11
+        dense_layers = 2
+        dense_units = 4096        
+
+        print('Training for {} size, {} pool, {} filter, {} layers, {} units'.format(size,pool,filter_cnn,layer,unit))
+        cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes,size=sizes,dense_layers=dense_layers,dense_units=dense_units,pooling = pooling,filters = filters)
+        cnn_epochs = epochs if epochs is not None else 75
+        cnn_batchsize = batch_size
+        
+        if len(Y_attack) > 10000:
+            train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
+                        "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
+                            'all_{}'.format(get_variable_name(variable), hammingweight_flag, hammingdistance_flag, input_length, sizes[0],len(pooling),dense_layers,dense_units,filters, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
+                        epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
+                        progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+        else:
+            train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
+                        "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
+                            variable, hammingweight_flag, hammingdistance_flag, input_length, sizes[0],len(pooling),dense_layers,dense_units,filters, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
+                        epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
+                        progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)            
 
     ### CNN pre-trained training
     elif cnn_pre:
@@ -590,7 +594,6 @@ if __name__ == "__main__":
     LOAD_METADATA = args.LOAD_METADATA
     SCRATCH_STORAGE = args.SCRATCH_STORAGE
     USE_ASCAD = args.USE_ASCAD
-    USE_DATA_ASCAD = args.USE_DATA_ASCAD
     if not USE_MLP and not USE_CNN and not USE_CNN_PRETRAINED and not USE_LSTM:
         print "|| No models set to run - setting USE_MLP to True"
         USE_MLP = True
@@ -658,97 +661,7 @@ if __name__ == "__main__":
                 X_l = np.append(X_l,Y_profiling,axis = 0)   
                 V = np.append(V,X_attack,axis = 0)   
                 V_l = np.append(V_l,Y_attack,axis = 0)                                                           
-        else:
-            
-            ASCAD_data_folder = "/root/Projets/ASCAD/ATMEGA_AES_v1/ATM_AES_v1_variable_key/ASCAD_data/ASCAD_databases/"
-            
-            # Choose the name of the model
-
-            if INPUT_LENGTH > 1400:
-            
-            # Load the profiling traces
-                (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD_big.h5", load_metadata=True)
-            
-            else:
-            
-                (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
-            
-            # Shuffle data
-            (X_profiling_temp, Y_profiling_temp) = shuffle_data(X_profiling_temp, Y_profiling_temp)
-            
-
-            
-            #Traces Scaling (between 0 and 1)
-            
-            X_profiling_temp = normalise_neural_traces(X_profiling_temp)
-            X_attack_temp = normalise_neural_traces(X_attack_temp)
-            
-            # X_attack = X_attack.reshape((X_attack.shape[0], X_attack.shape[1], 1))
-            
-            X_attack = X_attack_temp[:VALIDATION_TRACES]
-            Y_attack = Y_attack_temp[:VALIDATION_TRACES]
-            temp = []
-            middle = int(len(X_profiling_temp[0])*0.5)
-            for elem in X_profiling_temp:                               
-                temp_elem = elem[middle-int(INPUT_LENGTH*0.5):middle+ int(INPUT_LENGTH*0.5)]
-                temp.append(temp_elem)
-            X_profiling_temp = np.array(temp)
-            temp = []
-            for elem in X_attack:
-                temp_elem = elem[middle-int(INPUT_LENGTH*0.5):middle+ int(INPUT_LENGTH*0.5)]
-                temp.append(temp_elem)
-            X_attack = np.array(temp)            
-            X_profiling_before_aug = X_profiling_temp
-            Y_profiling_before_aug = Y_profiling_temp
-            traces = len(X_profiling_before_aug)
-            type = X_profiling_before_aug.dtype
-            training_traces = TRAINING_TRACES
-            if training_traces > traces:
-                print 'Augmenting {} Traces!'.format(training_traces - traces)
-        
-                # X_profiling = np.empty((training_traces, data_length), dtype=type)
-                X_profiling = np.memmap('{}tmp_{}_{}_sd{}_window{}_aug{}.mmap'.format(ASCAD_data_folder, variable, training_traces, STANDARD_DEVIATION, INPUT_LENGTH, AUGMENT_METHOD), shape=(training_traces, INPUT_LENGTH), mode='w+', dtype=type)
-                Y_profiling = np.empty(training_traces, dtype=int)
-        
-                X_profiling[:traces] = X_profiling_before_aug
-                Y_profiling[:traces] = Y_profiling_before_aug
-        
-                for train_trace in range(traces, training_traces):
-        
-                    # AUGMENT METHODS
-                    # 0 - gaussian noise
-                    # 1 - time warping
-                    # 2 - averaging traces
-        
-                    # Get Random Number
-                    random_number = np.random.randint(0, traces)
-        
-                    # Add label
-                    Y_profiling[train_trace] = Y_profiling_before_aug[random_number]
-        
-                    if AUGMENT_METHOD == 0:
-        
-                        # GAUSSIAN NOISE
-                        random_noise = np.random.normal(0, STANDARD_DEVIATION, INPUT_LENGTH).round().astype(int)
-        
-                        # Add to Profiling after applying noise
-                        X_profiling[train_trace] = (X_profiling_before_aug[random_number] + random_noise).astype(type)
-                    elif AUGMENT_METHOD == 1:
-        
-                        # TIME WARPING
-                        random_shift = 0
-                        while random_shift == 0:
-                            random_shift = np.random.randint(-MAX_SHIFT, MAX_SHIFT)
-                            
-        
-                        X_profiling[train_trace] = roll_and_pad(X_profiling_before_aug[random_number], random_shift)
-
-
-            else:
-                X_profiling = X_profiling_before_aug[:training_traces]
-                Y_profiling = Y_profiling_before_aug[:training_traces]
-            
-            
+     
         # Handle Input Length of -1
         
         if INPUT_LENGTH < 0:
@@ -756,19 +669,14 @@ if __name__ == "__main__":
             print "|| Changing Input Length from {} to {} (max samples)".format(INPUT_LENGTH, X_profiling.shape[1])
             INPUT_LENGTH = X_profiling.shape[1]
 
-    if not USE_DATA_ASCAD:
-        print X.shape
-        print X_l.shape
-        print V.shape
-        print V_l.shape
-        train_variable_model(variable, X, X_l, V, V_l, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
-            training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
-            learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
-    else:
-        train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
-            training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
-            learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)         
 
+    print X.shape
+    print X_l.shape
+    print V.shape
+    print V_l.shape
+    train_variable_model(variable, X, X_l, V, V_l, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
+        training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
+        learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
 
     # for var, length in variable_dict.iteritems():
     #     for i in range(length):
