@@ -1112,7 +1112,7 @@ def arrays_trim_mean(np.ndarray v, threshold = 0.3):
 def load_sca_model(model_file):
     check_file_exists(model_file)
     try:
-        if string_contains(model_file, 'rankloss'):
+        if string_contains(model_file, 'cnn'):
             model = load_model(model_file, custom_objects={'tf_rank_loss': tf_rank_loss})
         elif string_contains(model_file, 'median'):
             model = load_model(model_file, custom_objects={'tf_median_probability_loss': tf_median_probability_loss})
