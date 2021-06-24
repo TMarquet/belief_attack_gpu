@@ -646,21 +646,21 @@ if __name__ == "__main__":
 
         # Load the profiling traces and the attack traces
         
-        if not USE_DATA_ASCAD:
-            (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
-                                                                          input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
-                                                                       hammingweight=HAMMINGWEIGHT,load_metadata=LOAD_METADATA)
-            
-            if X.shape[0] == 0:
-                X = X_profiling
-                X_l = Y_profiling
-                V = X_attack
-                V_l = Y_attack
-            else:
-                X = np.append(X,X_profiling,axis = 0)  
-                X_l = np.append(X_l,Y_profiling,axis = 0)   
-                V = np.append(V,X_attack,axis = 0)   
-                V_l = np.append(V_l,Y_attack,axis = 0)                                                           
+        
+        (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
+                                                                      input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
+                                                                   hammingweight=HAMMINGWEIGHT,load_metadata=LOAD_METADATA)
+        
+        if X.shape[0] == 0:
+            X = X_profiling
+            X_l = Y_profiling
+            V = X_attack
+            V_l = Y_attack
+        else:
+            X = np.append(X,X_profiling,axis = 0)  
+            X_l = np.append(X_l,Y_profiling,axis = 0)   
+            V = np.append(V,X_attack,axis = 0)   
+            V_l = np.append(V_l,Y_attack,axis = 0)                                                           
      
         # Handle Input Length of -1
         
