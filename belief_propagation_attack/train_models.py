@@ -619,7 +619,7 @@ if __name__ == "__main__":
     elif COMBINE:
 
         variable_list =[]
-        var_name  = get_variable_name(VARIABLE)
+        var  = get_variable_name(VARIABLE)
         start = 1 if not SECOND_ROUND else 17
         end = 17 if not SECOND_ROUND else 33
 
