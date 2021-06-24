@@ -517,7 +517,7 @@ if __name__ == "__main__":
                         type=int, default=64)
     parser.add_argument('-b', '-batch', '-batch_size', action="store", dest="BATCH_SIZE", help='Size of Training Batch (default: 200)',
                         type=int, default=50)
-    parser.add_argument('--COMBINE', '--CB', action="store", dest="COMBINE",
+    parser.add_argument('--COMBINE', '--CB', action="store_true", dest="COMBINE",
                         help='Train with all bytes of an intermediate (default: False)', default=False)
     parser.add_argument('--R1', action="store_true", dest="FIRST_ROUND",
                         help='Use data from the first round (default: False)', default=False)
