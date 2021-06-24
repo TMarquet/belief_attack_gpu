@@ -303,9 +303,9 @@ class TestModels:
             else:
 
                 if model is None:
-                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand.csv', output_list, delimiter=',') 
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_5000.csv', output_list, delimiter=',') 
                 else:
-                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_all.csv', output_list, delimiter=',')
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_all_5000.csv', output_list, delimiter=',')
             
             
         # value = []
@@ -510,7 +510,7 @@ if __name__ == "__main__":
                         var_name, var_number, _ = split_variable_name(var)
                         if int(var_number) <= 16:
                             
-                            if string_starts_with(m, 'all_{}_cnn'.format(var_name)):
+                            if string_starts_with(m, 'all_{}_cnn_model1_window5000_'.format(var_name)):
                                 print 'Testing : ', m 
                                 print(var)
                                 if model is None:

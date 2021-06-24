@@ -412,7 +412,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
         dense_layers = 2
         dense_units = 4096        
 
-        print('Training for {} size, {} pool, {} filter, {} layers, {} units'.format(size,pool,filter_cnn,layer,unit))
+        print('Training for {} size, {} pool, {} filter, {} layers, {} units'.format(sizes,pooling,filters,dense_layers,dense_units))
         cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes,size=sizes,dense_layers=dense_layers,dense_units=dense_units,pooling = pooling,filters = filters)
         cnn_epochs = epochs if epochs is not None else 75
         cnn_batchsize = batch_size
