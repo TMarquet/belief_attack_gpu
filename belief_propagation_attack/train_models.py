@@ -422,7 +422,7 @@ def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack,
                         "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
                             'all_{}'.format(get_variable_name(variable), hammingweight_flag, hammingdistance_flag, input_length, sizes[0],len(pooling),dense_layers,dense_units,filters, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
                         epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
-                        progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+                        progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding))
         else:
             train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
                         "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
