@@ -45,9 +45,6 @@ class RealTraceHandler:
         self.timepoints = dict()
         for var in variable_dict:
             self.timepoints[var] = np.load('{}{}.npy'.format(TIMEPOINTS_FOLDER, var))
-            print('========================')
-            print(var)
-            print(self.timepoints[var])
 
 
         self.use_best = use_best
