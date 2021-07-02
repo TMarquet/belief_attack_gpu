@@ -303,9 +303,9 @@ class TestModels:
             else:
 
                 if model is None:
-                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_5000.csv', output_list, delimiter=',') 
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand.csv', output_list, delimiter=',') 
                 else:
-                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_all_5000.csv', output_list, delimiter=',')
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_all.csv', output_list, delimiter=',')
             
             
         # value = []
