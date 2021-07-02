@@ -663,7 +663,7 @@ if __name__ == "__main__":
             INPUT_LENGTH = X_profiling.shape[1]
 
 
-    train_variable_model(variable, X, X_l, V, V_l, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM,,combine = COMBINE input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
+    train_variable_model(variable, X, X_l, V, V_l, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM,combine = COMBINE input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
         training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
         learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
 
