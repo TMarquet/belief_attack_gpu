@@ -510,7 +510,7 @@ if __name__ == "__main__":
                         var_name, var_number, _ = split_variable_name(var)
                         if int(var_number) <= 16:
                             
-                            if string_starts_with(m, 'all_{}_cnn_model1_window5000_size20'.format(var_name)):
+                            if string_starts_with(m, 'all_{}_cnn'.format(var_name)):
                                 print 'Testing : ', m 
                                 print(var)
                                 if model is None:
