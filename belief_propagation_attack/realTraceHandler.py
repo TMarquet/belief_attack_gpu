@@ -38,7 +38,7 @@ class RealTraceHandler:
                     self.realvalues[var] = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var))
                     
         self.real_trace_data_maxtraces, self.real_trace_data_len = self.real_trace_data.shape
-
+        print(self.real_trace_data_len)
         self.loaded_proba = {}
         if not no_print:
             print "Preloading all timepoints, may take a while..."
