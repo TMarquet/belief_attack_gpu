@@ -443,6 +443,8 @@ if __name__ == "__main__":
     COMBINE = args.COMBINE
     VARIABLE = args.VARIABLE
     ADD_NOISE = args.ADD_NOISE
+    FIRST_ROUND = args.FIRST_ROUND
+    SECOND_ROUND = args.SECOND_ROUND    
     INPUT_LENGTH = args.INPUT_LENGTH
     TEST_TRACES = args.TEST_TRACES
     SAVE = args.SAVE
