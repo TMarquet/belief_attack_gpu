@@ -280,12 +280,12 @@ class TestModels:
         # return f_ranks
 
     # Check a saved model against one of the bpann databases Attack traces
-    def check_model(self, model_file, num_traces=10000, template_attack=False, random_key=False, save=True,ASCAD = False,save_proba = False,variable=None,model = None,mlp = False):
+    def check_model(self, model_file, num_traces=10000, template_attack=False, random_key=False, save=True,save_proba = False,variable=None,model = None,mlp = False):
         # try:
         if not save_proba:
-            rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba,variable = variable,model=model,mlp=mlp)
+            rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,save_proba = save_proba,variable = variable,model=model,mlp=mlp)
         else:
-            rank_list, prob_list, predicted_values,output_list = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,ASCAD= ASCAD,save_proba = save_proba,variable = variable,model = model,mlp=mlp)
+            rank_list, prob_list, predicted_values,output_list = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,save_proba = save_proba,variable = variable,model = model,mlp=mlp)
             print 'Saving probabilities for : ' + var
             model_name = model_file.replace(MODEL_FOLDER, '')
             variable = model_name.split('_')[0] if variable is None else variable
@@ -397,6 +397,10 @@ if __name__ == "__main__":
                         default=False)
     parser.add_argument('--CNN', action="store_true", dest="USE_CNN",
                         help='Tests Convolutional Neural Network', default=False)
+    parser.add_argument('--R1', action="store_true", dest="FIRST_ROUND",
+                        help='Use data from the first round (default: False)', default=False)
+    parser.add_argument('--R2', action="store_true", dest="SECOND_ROUND",
+                        help='Use data from the second round (default: False)', default=False)
     parser.add_argument('--N', '--NOISE', action="store_true", dest="ADD_NOISE",
                         help='Adds noise to the profiling step', default=False)
     parser.add_argument('-v', '-var', '-variable', action="store", dest="VARIABLE", help='Variable to train',
@@ -431,8 +435,6 @@ if __name__ == "__main__":
     parser.add_argument('--H', '--HIST', '--HISTOGRAM', action="store_true", dest="HISTOGRAM",
                         help='Plots histogram of probabilities', default=False)
 
-    parser.add_argument('--ASCAD', action="store_true", dest="ASCAD",
-                        help='Plots histogram of probabilities', default=False)
 
     # Target node here
     args = parser.parse_args()
@@ -443,7 +445,6 @@ if __name__ == "__main__":
     ADD_NOISE = args.ADD_NOISE
     INPUT_LENGTH = args.INPUT_LENGTH
     TEST_TRACES = args.TEST_TRACES
-    TEST_ALL = args.TEST_ALL
     SAVE = args.SAVE
     SAVE_PROBA = args.SAVE_PROBA
     TEMPLATE_ATTACK = args.TEMPLATE_ATTACK
@@ -453,7 +454,6 @@ if __name__ == "__main__":
     DEBUG = args.DEBUG
     VERBOSE = args.VERBOSE
     HISTOGRAM = args.HISTOGRAM
-    ASCAD = args.ASCAD
     # var_list = list()
     # for v in variable_dict:
     #     var_list.append('{}001'.format(v))
@@ -474,73 +474,63 @@ if __name__ == "__main__":
     variables_to_test =[]
     median_rank_out = []
     median_proba_out = []
-    for i in range(1,17):
-        variables_to_test.append('s0'+ ('0'+str(i) if i < 10 else '' + str(i)))
-    print(variables_to_test)
-    if TEST_ALL:
-        # Clear statistics
-        if SAVE:
-            clear_statistics()
-        # Check all models
-        for (m) in sorted(listdir(MODEL_FOLDER)):
-            if string_ends_with(m, '.h5'):
-                model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD)
-                tf.keras.backend.clear_session()
-    else:
-        # Check specific model
-        # TODO
-        if USE_MLP:
-  
+    if COMBINE:
+        var  = get_variable_name(VARIABLE)
+        start = 1 if FIRST_ROUND else 17
+        end = 17 if not SECOND_ROUND else 33
     
-            for var in variables_to_test :
-                for (m) in sorted(listdir(MODEL_FOLDER)):
-                    var_name, var_number, _ = split_variable_name(var)
+        end -= 0 if not var =='h' else 4
+        if start - end == 0:
+            print('Error no round specified : Please indicate at least one round')
+        for i in range(start,end):
+            
+            variables_to_test.append(var+'0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+    else:
+        variables_to_test.append(VARIABLE)
 
-                    if string_starts_with(m, 'all_{}_mlp5_nodes100_window2000_epochs100'.format(var_name)):
+    print(variables_to_test)
+    # Check specific model
+    # TODO
+
+    if COMBINE:
+        model = None
+
+        for var in variables_to_test :
+            for (m) in sorted(listdir(MODEL_FOLDER)):
+                var_name, var_number, _ = split_variable_name(var)
+                if int(var_number) <= 16:
+                    
+                    if string_starts_with(m, 'all_{}_{}'.format(var_name,'cnn' if USE_CNN else 'mlp')):
                         print 'Testing : ', m 
-                        r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,mlp=True,variable=var)
+                        print(var)
+                        if model is None:
+                            model = load_sca_model(MODEL_FOLDER + m)
+                        r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,save_proba=SAVE_PROBA,variable=var,model = model)
                         median_rank_out.append(r)
-                        median_proba_out.append(m)        
-        else:
-            if COMBINE:
-                model = None
+                        median_proba_out.append(m)
+                        if int(var_number) == 16:
+                            model = None
+                else: 
+                    if string_starts_with(m, 'all_{}_{}'.format(var_name,'cnn' if USE_CNN else 'mlp') if var_name == 's' or var_name == 'xt' or var_name == 'cm' or var_name == 'mc' or var_name == 'h' else 'all_{}_both'.format(var_name)):
+                        print 'Testing : ', m 
+                        print(var)
+                        if model is None:
+                            model = load_sca_model(MODEL_FOLDER + m)
+                        r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,save_proba=SAVE_PROBA,variable=var,model = model)
+                        median_rank_out.append(r)
+                        median_proba_out.append(m)               
+    else:
         
-                for var in variables_to_test :
-                    for (m) in sorted(listdir(MODEL_FOLDER)):
-                        var_name, var_number, _ = split_variable_name(var)
-                        if int(var_number) <= 16:
-                            
-                            if string_starts_with(m, 'all_{}_cnn'.format(var_name)):
-                                print 'Testing : ', m 
-                                print(var)
-                                if model is None:
-                                    model = load_sca_model(MODEL_FOLDER + m)
-                                r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
-                                median_rank_out.append(r)
-                                median_proba_out.append(m)
-                                if int(var_number) == 16:
-                                    model = None
-                        else: 
-                            if string_starts_with(m, 'all_{}_cnn'.format(var_name) if var_name == 's' or var_name == 'xt' or var_name == 'cm' or var_name == 'mc' or var_name == 'h' else 'all_{}_both'.format(var_name)):
-                                print 'Testing : ', m 
-                                print(var)
-                                if model is None:
-                                    model = load_sca_model(MODEL_FOLDER + m)
-                                r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA,variable=var,model = model)
-                                median_rank_out.append(r)
-                                median_proba_out.append(m)               
-            else:
-                
-                
-                for var in variables_to_test :
-                    for (m) in sorted(listdir(MODEL_FOLDER)):
-                        if string_starts_with(m, var):
-                            print 'Testing : ', m 
-                            r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,ASCAD = ASCAD,save_proba=SAVE_PROBA)
-                            median_rank_out.append(r)
-                            median_proba_out.append(m)
-        print('All median ranks : ',median_rank_out)
-        print('All median proba : ',median_proba_out)           
+        
+        for var in variables_to_test :
+            for (m) in sorted(listdir(MODEL_FOLDER)):
+                if string_starts_with(m, var):
+                    print 'Testing : ', m 
+                    r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,save_proba=SAVE_PROBA)
+                    median_rank_out.append(r)
+                    median_proba_out.append(m)
+    print('All median ranks : ',median_rank_out)
+    print('All median proba : ',median_proba_out)           
 
 # # No argument: check all the trained models
 # if (len(sys.argv) == 1) or (len(sys.argv) == 2):
