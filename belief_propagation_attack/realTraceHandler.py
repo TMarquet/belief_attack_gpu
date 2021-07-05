@@ -359,14 +359,14 @@ class RealTraceHandler:
         
             for trace in range(traces):
                 
-                print((self.real_trace_data_maxtraces - trace - 1) if from_end else trace)
-                real_val = self.realvalues[var_name][var_number-1][(self.real_trace_data_maxtraces - trace - 1) if from_end else trace]
+                
+                real_val = self.realvalues[var_name][var_number-1][(self.real_trace_data_maxtraces - trace - 10001) if from_end else trace]
 
                 # if trace < 3:
                 #     print "Real Value {}: {}".format(self.real_trace_data_maxtraces - trace - 1, real_val)
 
             # leakage = self.get_leakage(variable, trace=trace)
-                power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 1) if from_end else trace, nn_normalise=True, window=window_size)
+                power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 10001) if from_end else trace, nn_normalise=True, window=window_size)
                 new_input = np.resize(power_value, (1, power_value.size))
 
                 ### IF CNN, NEED TO CHANGE INPUT SHAPE
