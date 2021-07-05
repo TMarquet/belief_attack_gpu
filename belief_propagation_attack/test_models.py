@@ -298,15 +298,15 @@ class TestModels:
             if not random_key:
                 
                 if model is None:
-                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_{}.csv'.format(num_traces), output_list, delimiter=',') 
+                    np.savetxt('data_training/' + var_name + '/' + variable +'_{}.csv'.format(num_traces), output_list, delimiter=',') 
                 else:
-                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_all_{}.csv'.format(num_traces), output_list, delimiter=',')
+                    np.savetxt('data_training/' + var_name + '/' + variable +'_all_{}.csv'.format(num_traces), output_list, delimiter=',')
             else:
 
                 if model is None:
-                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_{}.csv'.format(num_traces), output_list, delimiter=',') 
+                    np.savetxt('data_training/' + var_name + '/' + variable +'_rand_{}.csv'.format(num_traces), output_list, delimiter=',') 
                 else:
-                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_all_{}.csv'.format(num_traces), output_list, delimiter=',')
+                    np.savetxt('data_training/' + var_name + '/' + variable +'_rand_all_{}.csv'.format(num_traces), output_list, delimiter=',')
             
             
         # value = []
