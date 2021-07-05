@@ -1,4 +1,8 @@
 
+
+ASCAD_results/model_CNN_best_BN+L2+MP.PNG
+ASCAD_results/model_CNN_best_BN+L2+CCE.PNG
+belief_propagation_attack/move_files.py
 median_test.py
 belief_propagation_attack/test_loss.py
-belief_propagation_attack/move_files.py
+

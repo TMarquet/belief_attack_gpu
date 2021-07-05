@@ -8,8 +8,11 @@ import cPickle as Pickle
 from datetime import datetime
 import timing
 import matplotlib.pyplot as plt
+from numpy import savetxt
 os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 CHOSEN_KEY = [0x54, 0x68, 0x61, 0x74, 0x73, 0x20, 0x6D, 0x79, 0x20, 0x4B, 0x75, 0x6E, 0x67, 0x20, 0x46, 0x75]
+
+
 
 def run_belief_propagation_attack(margdist=None):
     global key_distributions
@@ -163,7 +166,7 @@ def run_belief_propagation_attack(margdist=None):
         traces_to_use = TRACES
         if method == "SEQ" or method == "IND":
             traces_to_use = 1
-        
+        print('SNR : ',SNR_exp)
         my_graph = fG.FactorGraphAES(no_print=NO_PRINT, traces=traces_to_use, removed_nodes=REMOVED_NODES, left_out_nodes=LEFT_OUT_NODES,
                                      key_scheduling=INCLUDE_KEY_SCHEDULING, furious=not USE_ARM_AES,
                                      rounds_of_aes=ROUNDS_OF_AES,
@@ -230,7 +233,7 @@ def run_belief_propagation_attack(margdist=None):
                 my_graph.set_all_initial_distributions( #specific_trace=specific_trace,
                                                         no_leak=NOT_LEAKING_NODES, fixed_value=fixed_node_tuple,
                                                         elmo_pow_model=ELMO_POWER_MODEL, real_traces=REAL_TRACES,
-                                                        no_noise=NO_NOISE, offset=trace+(rep*TRACES), ignore_bad=IGNORE_BAD_TEMPLATES, trace_id = specific_trace)
+                                                        no_noise=NO_NOISE, offset=trace+(rep*TRACES), ignore_bad=IGNORE_BAD_TEMPLATES, trace_id = specific_trace, load_probability = LOAD_PROBABILITY)
 
                 if PRINT_ALL_KEY_RANKS:
                     print "-~-~-~-~-~-~- Trace {} -~-~-~-~-~-~-".format(trace)
@@ -250,23 +253,18 @@ def run_belief_propagation_attack(margdist=None):
                                                           my_graph.get_all_key_initial_distributions())
                     # print key_distributions.shape, key_distributions
                     my_graph.set_key_distributions(key_distributions)
-                    print 'here1'
+
                 elif (method == "SEQ") and (trace == 0) and KEY_POWER_VALUE_AVERAGE:
                     key_distributions = my_graph.get_all_key_initial_distributions()
-                    print 'here2'
+
                 elif (method == "IND") and not KEY_POWER_VALUE_AVERAGE:
                     # Multiply incoming messages to key_distributions
                     key_distributions = array_2d_multiply(key_distributions,
                                                           my_graph.get_all_key_initial_distributions())
-                    print 'here3'
                     key_distributions_sum = array_2d_add(key_distributions_sum,
                                                          my_graph.get_all_key_initial_distributions())
                 elif (method == "IND") and KEY_POWER_VALUE_AVERAGE and (trace == 0):
-                    print 'here4'
                     key_initial_distributions = my_graph.get_all_key_initial_distributions()
-                    print len(key_initial_distributions)
-                    print len(key_initial_distributions[0])
-                    print key_initial_distributions[0][84]
 
                 # Start Timer
                 start_time = datetime.now()
@@ -352,7 +350,7 @@ def run_belief_propagation_attack(margdist=None):
                             for j_ in range(256):
                                 incoming_messages_list[i_][j_][trace] = incoming_messages[i_][j_]
                     elif method == "IND" and KEY_POWER_VALUE_AVERAGE:
-                        print 'MULTIPLY'
+                        
                         # Multiply the incoming messages
                         current_incoming_key_messages = array_2d_multiply(current_incoming_key_messages,
                                                               my_graph.get_all_key_incoming_messages())
@@ -930,7 +928,8 @@ if __name__ == "__main__":
 
     parser.add_argument('--REALIGN', '--AUTO_REALIGN', '--ALIGN', '--DTW', '--AR', action="store_true", dest="AUTO_REALIGN",
                             help='Auto Realigns Jittery Traces using FastDTW', default=False)
-
+    parser.add_argument('--LOAD_PROBA_CNN', action="store_true", dest="LOAD_PROBABILITY",
+                            help='load probabilities when all models cannot be loaded', default=False)
 
 
 
@@ -1014,6 +1013,7 @@ if __name__ == "__main__":
     JITTER = args.JITTER
     ERRONEOUS_BAD = args.ERRONEOUS_BAD
     AUTO_REALIGN = args.AUTO_REALIGN
+    LOAD_PROBABILITY = args.LOAD_PROBABILITY
 
     if MY_KEY is not None:
         CHOSEN_KEY = hex_string_to_int_array(MY_KEY)

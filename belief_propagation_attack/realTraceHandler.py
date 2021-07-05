@@ -24,6 +24,7 @@ class RealTraceHandler:
         if use_extra:
             self.real_trace_data = load_trace_data(filepath=TRACEDATA_EXTRA_FILEPATH if jitter is None else get_shifted_tracedata_filepath(extra=True, shifted=jitter), memory_mapped=memory_mapped)
             self.plaintexts = np.load(PLAINTEXT_EXTRA_FILEPATH)
+            print('Youre using the right traces ! : ', debug)
             if debug:
                 self.realvalues = dict()
                 for var in variable_dict:
@@ -35,16 +36,15 @@ class RealTraceHandler:
                 self.realvalues = dict()
                 for var in variable_dict:
                     self.realvalues[var] = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var))
-
+                    
         self.real_trace_data_maxtraces, self.real_trace_data_len = self.real_trace_data.shape
-
-
+        
+        self.loaded_proba = {}
         if not no_print:
             print "Preloading all timepoints, may take a while..."
         self.timepoints = dict()
         for var in variable_dict:
             self.timepoints[var] = np.load('{}{}.npy'.format(TIMEPOINTS_FOLDER, var))
-
 
 
         self.use_best = use_best
@@ -137,13 +137,13 @@ class RealTraceHandler:
 
         return power_value
 
-    def get_leakage_distribution(self, variable, power_value, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1):
+    def get_leakage_distribution(self, variable, power_value, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1,load_probability = False):
         # myvarlist = ["k001-K", "k001"]
         # if variable in myvarlist:
             # print "Getting Leakage for {}, trace {}".format(variable, trace)
         tprange = self.tprange
         best = None
-        print 'leakage distrib'
+
         if self.use_best:
             best = self.get_best_template(variable)
             if best == 'uni':
@@ -161,23 +161,62 @@ class RealTraceHandler:
                 if not self.no_print:
                     print "> Ignoring NN for Variable {} as below threshold".format(variable)
             else:
+                var_name, var_number, _ = split_variable_name(variable)
+                real_val = self.realvalues[var_name][var_number-1][trace]
+                if not load_probability :
                 # Use neural network to predict value
-                try:
-                    neural_network = self.neural_network_dict[var_notrace]
-                except KeyError:
-                    # Add to dict!
-                    if not self.no_print:
-                        print "> Loading NN for Variable {}...".format(var_notrace)
-                    # OLD: TODO FIX
-                    # self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes200_window{}_epochs6000_batchsize200_sd100_traces200000_aug0.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
-                    # NEW NEURAL NETWORKS 20/5/19                               p016_cnn_model1_window2000_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5
-                    # self.neural_network_dict[var_notrace] = load_sca_model('{}{}_cnn_model1_window{}_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
-                    self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes100_window{}_epochs100_batchsize50_lr1e-05_sd100_traces190000_aug0_jitterNone_defaultloss_best.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
+                    try:
+                        neural_network = self.neural_network_dict[var_notrace]
+                        
+                    except KeyError:
+                        # Add to dict!
+                        if not self.no_print:
+                            print "> Loading NN for Variable {}...".format(var_notrace)
+                        # OLD: TODO FIX
+                        # self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes200_window{}_epochs6000_batchsize200_sd100_traces200000_aug0.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
+                        # NEW NEURAL NETWORKS 20/5/19                               p016_cnn_model1_window2000_epochs6_batchsize50_lr1e-05_sd100_traces240000_aug0_jitterNone.h5
+                        #self.neural_network_dict[var_notrace] = load_sca_model('models/adagrad/{}_cnn_model1_window{}_epochs6_batchsize50_lr0.0001_sd100_traces240000_aug0_jitterNone_initwglorotu.h5'.format(var_notrace, tprange))
+
+                        self.neural_network_dict[var_notrace] = load_sca_model('{}{}_mlp5_nodes100_window{}_epochs100_batchsize50_lr1e-05_sd100_traces190000_aug0_jitterNone_defaultloss_best.h5'.format(NEURAL_MODEL_FOLDER, var_notrace, tprange))
+                        
+                        neural_network = self.neural_network_dict[var_notrace]
+                   
+                        # var_name = get_variable_name(variable)
+                        # var_number = get_variable_number(variable)                         
+                        # all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + '0'+(str(var_number) if len(str(var_number)) == 2 else '0'+str(var_number)) + '.csv', delimiter=',').astype(np.float32)
+                        # self.loaded_proba[var_name+str(var_number)] = all_distribution
+                        # print("Loaded distributions for {} ".format(var_notrace)) 
+                        
+                    new_input = np.resize(power_value, (1, power_value.size))                
+                    #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
+                    out_distribution = neural_network.predict(new_input)[0]
+
+         
+
+                
+                    #out_distribution_loaded = all_distribution[trace]   
                     
-                    neural_network = self.neural_network_dict[var_notrace]
-                new_input = np.resize(power_value, (1, power_value.size))                
-                #new_input = new_input.reshape((new_input.shape[0], new_input.shape[1], 1))
-                out_distribution = neural_network.predict(new_input)[0]
+                    #print('Value for saved proba : ',normalise_array(out_distribution_loaded)[real_val])
+
+                else:
+                    
+                    var_name = get_variable_name(variable)
+                    var_number = get_variable_number(variable) 
+
+                        
+                    if var_name+str(var_number) in self.loaded_proba:
+                        out_distribution = self.loaded_proba[var_name+str(var_number)][trace]
+                    else:
+                        
+                        all_distribution = np.genfromtxt(OUTPUT_FOLDER + var_name + '/' + var_name + '0'+(str(var_number) if len(str(var_number)) == 2 else '0'+str(var_number)) + '_all.csv', delimiter=',').astype(np.float32)
+                        self.loaded_proba[var_name+str(var_number)] = all_distribution
+                        print("Loaded distributions for {} ".format(var_notrace))
+                    
+                        out_distribution = all_distribution[trace]
+                # rank = get_rank_from_prob_dist(out_distribution, real_val)
+                # print('Rank for variable {} and trace {} : '.format(variable,trace), rank)
+                # print('Proba for variable {} and trace {} : '.format(variable,trace), out_distribution[real_val])
+
         elif best == 'lda' or (best is None and self.use_lda):
             # Load LDA file
             try:
@@ -218,9 +257,8 @@ class RealTraceHandler:
             return out_distribution
 
     # Both together
-    def get_leakage(self, variable, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1):
-        print 'leakage'
-        return self.get_leakage_distribution(variable, self.get_leakage_value(variable, trace=trace, average_power_values=average_power_values, averaged_traces=averaged_traces), trace=trace, normalise=normalise, ignore_bad=ignore_bad)
+    def get_leakage(self, variable, trace=0, normalise=True, ignore_bad=False, average_power_values=False, averaged_traces=1,load_probability = False):
+        return self.get_leakage_distribution(variable, self.get_leakage_value(variable, trace=trace, average_power_values=average_power_values, averaged_traces=averaged_traces), trace=trace, normalise=normalise, ignore_bad=ignore_bad,load_probability=load_probability)
 
     def get_plaintext_byte_distribution(self, variable, trace=0):
         # print 'For variable {}:\n{}\n\n'.format(variable, get_plaintext_array(self.plaintexts[trace][get_variable_number(variable) - 1]))
@@ -262,16 +300,23 @@ class RealTraceHandler:
         # Return Rank List
         return rank_list
 
-    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False):
+    def get_leakage_rank_list_with_specific_model(self, model_file, traces=1, from_end=False, ASCAD = False ,save_proba = False,variable=None,model = None,mlp = False):
         # Get variable of model
-        model_name = model_file.replace(MODEL_FOLDER, '')
-        variable = model_name.split('_')[0]
+        if ASCAD:
+            model_name = model_file.replace(MODEL_FOLDER+'adagrad/', '')            
+        elif mlp:
+            model_name = model_file.replace(MODEL_FOLDER, '')
+            print(model_name)
+        else:
+            model_name = model_file.replace(MODEL_FOLDER, '')
+        variable = model_name.split('_')[0] if variable == None else variable
+
         if not self.no_print:
             print "\n* Checking model {} (variable {}) {}*\n".format(model_name, variable, 'WITH VALIDATION TRACES' if from_end else '')
-        if not check_file_exists(model_file):
+        if not check_file_exists(model_file):            
             if not self.no_print:
                 print "!!! Doesn't exist!"
-            return (None, None)
+            return (None, None,None)
         else:
 
             multilabel = True if string_contains(model_file, '_multilabel_') else False
@@ -283,7 +328,8 @@ class RealTraceHandler:
 
             if not self.no_print:
                 print "Loading model..."
-            model = load_sca_model(model_file)
+            if model is None:
+                model = load_sca_model(model_file)
             if not self.no_print:
                 print "...loaded successfully!"
 
@@ -306,19 +352,61 @@ class RealTraceHandler:
             #     sys.exit(-1)
 
 
+            if ASCAD:
+                ASCAD_data_folder = "/root/Projets/ASCAD/ATMEGA_AES_v1/ATM_AES_v1_variable_key/ASCAD_data/ASCAD_databases/"
+            
+                # Choose the name of the model
+    
+                
+                if window_size > 1400:
+                    (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD_big.h5", load_metadata=True)
+                    
+                else:
+                # Load the profiling traces
+                    (X_profiling_temp, Y_profiling_temp), (X_attack_temp, Y_attack_temp), (plt_profiling, plt_attack) = load_ascad(ASCAD_data_folder + "ASCAD.h5", load_metadata=True)
+                
+                # Shuffle data
 
+                
+
+                X_attack_temp = X_attack_temp.astype('float32')
+                
+                #Traces Scaling (between 0 and 1)
+                
+
+                X_attack_temp = normalise_neural_traces(X_attack_temp)
+                
+                # X_attack = X_attack.reshape((X_attack.shape[0], X_attack.shape[1], 1))
+                
+                X_attack = X_attack_temp[10000:]
+                Y_attack = Y_attack_temp[10000:]
+                
+                middle = int(len(X_profiling_temp[0])*0.5)
+
+                temp = []
+                for elem in X_attack:
+                    temp_elem = elem[middle-int(window_size*0.5):middle+ int(window_size*0.5)]
+                    temp.append(temp_elem)
+                X_attack = np.array(temp)                     
             rank_list = list()
             prob_list = list()
             predicted_values = list()
             leakage_list = []
             for trace in range(traces):
-                real_val = self.realvalues[var_name][var_number-1][(self.real_trace_data_maxtraces - trace - 1) if from_end else trace]
+                
+                if not ASCAD:
+                    real_val = self.realvalues[var_name][var_number-1][(self.real_trace_data_maxtraces - trace - 1) if from_end else trace]
 
-                # if trace < 3:
-                #     print "Real Value {}: {}".format(trace, real_val)
+                    # if trace < 3:
+                    #     print "Real Value {}: {}".format(self.real_trace_data_maxtraces - trace - 1, real_val)
 
                 # leakage = self.get_leakage(variable, trace=trace)
-                power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 1) if from_end else trace, nn_normalise=True, window=window_size)
+                    power_value = self.return_power_window_of_variable(variable, (self.real_trace_data_maxtraces - trace - 1) if from_end else trace, nn_normalise=True, window=window_size)
+                else:
+                    middle = int(len(X_attack[trace])/2)
+                    
+                    real_val = Y_attack[trace]
+                    power_value = X_attack[trace][middle - int(window_size*0.5) : middle + int(window_size * 0.5)]
                 new_input = np.resize(power_value, (1, power_value.size))
 
                 ### IF CNN, NEED TO CHANGE INPUT SHAPE
@@ -337,6 +425,7 @@ class RealTraceHandler:
                     leakage = hw_probabilities_to_probability_distribution(leakage)
 
                 probability = leakage[real_val]
+
                 leakage_list.append(leakage)
                 rank = get_rank_from_prob_dist(leakage, real_val)
                 # print 'Real value: {}, Prob: {}, Rank: {}, Best Value: {} (prob {})'.format(real_val, leakage[real_val], rank, np.argmax(leakage), leakage[np.argmax(leakage)])
@@ -344,7 +433,10 @@ class RealTraceHandler:
                 rank_list.append(rank)
                 prob_list.append(probability)
                 predicted_values.append(np.argmax(leakage))
-            output_list = np.array(leakage_list)
-            np.savetxt('output/{}/{}_distribution.npz'.format(var_name,var_number),output_list)
-            # Return Rank List
-            return (rank_list, prob_list, predicted_values)
+            if save_proba:
+            
+                output_list = np.array(leakage_list)
+                return(rank_list, prob_list, predicted_values,output_list)
+            # Return Rank List 
+            else:
+                return (rank_list, prob_list, predicted_values)

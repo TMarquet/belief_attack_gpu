@@ -34,8 +34,8 @@ DTYPE = np.float32
 ctypedef np.float32_t DTYPE_t
 import os.path
 import platform
-
-
+import h5py
+import sys
 
 # FROM TRAIN MODELS
 import tensorflow as tf
@@ -107,6 +107,7 @@ FEATURECOLUMN_FOLDER = TENSORFLOW_FOLDER + 'featurecolumns/'
 LABEL_FOLDER        = TENSORFLOW_FOLDER + 'labels/'
 OUTPUT_FOLDER       = 'output/'
 MODEL_FOLDER        = 'models/'
+ASCAD_MODEL_FOLDER  = MODEL_FOLDER + 'ASCAD/'
 NEURAL_MODEL_FOLDER = TRACE_FOLDER + 'models/'
 
 ALL_DIRECTORIES     = [TRACE_FOLDER, TIMEPOINTS_FOLDER, # POWERVALUES_FOLDER,
@@ -258,6 +259,27 @@ def my_mult2(v1, v2, v3):
     return make_8(array_multiply(make_256(v1), make_256(v2), make_256(v3)))
 
 #################################################################
+
+def load_ascad(ascad_database_file, load_metadata=False):
+    check_file_exists(ascad_database_file)
+    # Open the ASCAD database HDF5 for reading
+    try:
+        in_file  = h5py.File(ascad_database_file, "r")
+    except:
+        print("Error: can't open HDF5 file '%s' for reading (it might be malformed) ..." % ascad_database_file)
+        sys.exit(-1)
+    # Load profiling traces
+    X_profiling = np.array(in_file['Profiling_traces/traces'], dtype=np.float64)
+    # Load profiling labels
+    Y_profiling = np.array(in_file['Profiling_traces/labels'])
+    # Load attacking traces
+    X_attack = np.array(in_file['Attack_traces/traces'], dtype=np.float64)
+    # Load attacking labels
+    Y_attack = np.array(in_file['Attack_traces/labels'])
+    if load_metadata == False:
+        return (X_profiling, Y_profiling), (X_attack, Y_attack)
+    else:
+        return (X_profiling, Y_profiling), (X_attack, Y_attack), (in_file['Profiling_traces/metadata']['plaintext'], in_file['Attack_traces/metadata']['plaintext'])
 
 def get_shifted_tracedata_filepath(extra=False,shifted=50):
     if shifted is None or shifted == 0:
@@ -1090,12 +1112,12 @@ def arrays_trim_mean(np.ndarray v, threshold = 0.3):
 def load_sca_model(model_file):
     check_file_exists(model_file)
     try:
-        if string_contains(model_file, 'rankloss'):
+        if string_contains(model_file, 'cnn'):
             model = load_model(model_file, custom_objects={'tf_rank_loss': tf_rank_loss})
         elif string_contains(model_file, 'median'):
             model = load_model(model_file, custom_objects={'tf_median_probability_loss': tf_median_probability_loss})
         else:
-            model = load_model(model_file, custom_objects={'tf_rank_loss': tf_rank_loss})
+            model = load_model(model_file)
     except:
         print("Error: can't load Keras model file '%s'" % model_file)
         raise
@@ -1717,6 +1739,7 @@ def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length
 
     trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, start_window:end_window]
     traces, data_length = trace_data.shape
+    traces -= validation_traces
     type = trace_data.dtype
     real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name), allow_pickle=True)[var_number-1,:]
 
@@ -1727,8 +1750,8 @@ def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length
         X_profiling = np.memmap('{}tmp_{}_{}_sd{}_window{}_aug{}.mmap'.format(TRACE_FOLDER, variable, training_traces, sd, input_length, augment_method), shape=(training_traces, data_length), mode='w+', dtype=type)
         Y_profiling = np.empty(training_traces, dtype=int)
 
-        X_profiling[:traces] = trace_data
-        Y_profiling[:traces] = real_values
+        X_profiling[:traces] = trace_data[:traces]
+        Y_profiling[:traces] = real_values[:traces]
 
         for train_trace in range(traces, training_traces):
 
@@ -2024,7 +2047,7 @@ def tf_rank_loss(y_true, y_pred):
 
 def tf_median_probability_loss(y_true, y_pred):
     # undo one-hot
-
+    
     argmaxed_onehot = tf.argmax(y_true, output_type=tf.int32, axis=1)
     # reshape
 

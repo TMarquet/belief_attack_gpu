@@ -7,7 +7,7 @@ import matplotlib
 
 import os
 matplotlib.use('Agg')
-os.environ["CUDA_VISIBLE_DEVICES"]="2"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 import matplotlib.pyplot as plt
 import argparse
 from utility import *
@@ -280,9 +280,48 @@ class TestModels:
         # return f_ranks
 
     # Check a saved model against one of the bpann databases Attack traces
-    def check_model(self, model_file, num_traces=10000, template_attack=False, random_key=False, save=True):
+    def check_model(self, model_file, num_traces=10000, template_attack=False, random_key=False, save=True,save_proba = False,variable=None,model = None,mlp = False):
         # try:
-        rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key)
+        if not save_proba:
+            rank_list, prob_list, predicted_values = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,save_proba = save_proba,variable = variable,model=model,mlp=mlp)
+        else:
+            rank_list, prob_list, predicted_values,output_list = self.real_trace_handler.get_leakage_rank_list_with_specific_model(model_file, traces=num_traces, from_end=random_key,save_proba = save_proba,variable = variable,model = model,mlp=mlp)
+            print 'Saving probabilities for : ' + var
+            model_name = model_file.replace(MODEL_FOLDER, '')
+            variable = model_name.split('_')[0] if variable is None else variable
+            var_name, var_number, _ = split_variable_name(variable)
+            
+            
+            if not var_name in listdir(OUTPUT_FOLDER):
+                os.mkdir(OUTPUT_FOLDER + var_name + '/')
+            if not random_key:
+                
+                if model is None:
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'.csv', output_list, delimiter=',') 
+                else:
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_all.csv', output_list, delimiter=',')
+            else:
+
+                if model is None:
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand.csv', output_list, delimiter=',') 
+                else:
+                    np.savetxt(OUTPUT_FOLDER + var_name + '/' + variable +'_rand_all.csv', output_list, delimiter=',')
+            
+            
+        # value = []
+        # lol = lambda lst, sz: [lst[i:i+sz] for i in range(0, len(lst), sz)]
+        # for test in range(1000):
+        #     print('Test n : ',test)
+        #     origin = prob_list[:]
+        #     shuffle(origin)
+        #     splitted = lol(origin,50)
+        #     medians = []
+        #     for elem in splitted:
+        #         medians.append(np.median(elem))
+        #     value.append(np.mean(medians))
+            
+        # np.savetxt(OUTPUT_FOLDER + 'medians.csv', value, delimiter=',')
+            
         if rank_list is not None:
 
             print "\n\nModel: {}".format(model_file)
@@ -305,7 +344,8 @@ class TestModels:
                 plt.hist(prob_list, bins='auto')
                 plt.title(model_file)
                 plt.savefig('output/probabilityhistogram_{}.svg'.format(model_file.replace('models/', '').replace('.h5', '')), format='svg', dpi=1200)
-
+        
+        return np.median(rank_list),np.median(prob_list)
         # except Exception as e:
         #     print "! Uh oh, couldn't check the model! Need to resubmit (in test_models)" #PASSING OVER..."
         #     print e
@@ -352,10 +392,15 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Trains Neural Network Models')
     parser.add_argument('--ALL', '--ALL_VARS', '--TEST_ALL', action="store_true", dest="TEST_ALL", help='Tests all available models (default True)', default=False)
+    parser.add_argument('--COMBINE', action="store_true", dest="COMBINE", help='Use models trained using the combination of all date from a single intermediate', default=False)
     parser.add_argument('--MLP', action="store_true", dest="USE_MLP", help='Tests Multi Layer Perceptron',
                         default=False)
     parser.add_argument('--CNN', action="store_true", dest="USE_CNN",
                         help='Tests Convolutional Neural Network', default=False)
+    parser.add_argument('--R1', action="store_true", dest="FIRST_ROUND",
+                        help='Use data from the first round (default: False)', default=False)
+    parser.add_argument('--R2', action="store_true", dest="SECOND_ROUND",
+                        help='Use data from the second round (default: False)', default=False)
     parser.add_argument('--N', '--NOISE', action="store_true", dest="ADD_NOISE",
                         help='Adds noise to the profiling step', default=False)
     parser.add_argument('-v', '-var', '-variable', action="store", dest="VARIABLE", help='Variable to train',
@@ -368,6 +413,8 @@ if __name__ == "__main__":
                         type=int, default=10000)
     parser.add_argument('--S', '--SAVE', action="store_true", dest="SAVE",
                         help='Saves Output', default=False)
+    parser.add_argument('--SAVE_PROBA', action="store_true", dest="SAVE_PROBA",
+                        help='Saves Output probability for attack', default=False)    
     parser.add_argument('--T', '--TEMPLATE', '--TEMPLATE_ATTACK', action="store_true", dest="TEMPLATE_ATTACK",
                         help='Performs Template Attack on Data', default=False)
     parser.add_argument('-j', '-jitter', action="store", dest="JITTER",
@@ -393,12 +440,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
     USE_MLP = args.USE_MLP
     USE_CNN = args.USE_CNN
+    COMBINE = args.COMBINE
     VARIABLE = args.VARIABLE
     ADD_NOISE = args.ADD_NOISE
+    FIRST_ROUND = args.FIRST_ROUND
+    SECOND_ROUND = args.SECOND_ROUND    
     INPUT_LENGTH = args.INPUT_LENGTH
     TEST_TRACES = args.TEST_TRACES
-    TEST_ALL = args.TEST_ALL
     SAVE = args.SAVE
+    SAVE_PROBA = args.SAVE_PROBA
     TEMPLATE_ATTACK = args.TEMPLATE_ATTACK
     JITTER = args.JITTER
     USE_EXTRA = args.USE_EXTRA
@@ -406,7 +456,6 @@ if __name__ == "__main__":
     DEBUG = args.DEBUG
     VERBOSE = args.VERBOSE
     HISTOGRAM = args.HISTOGRAM
-
     # var_list = list()
     # for v in variable_dict:
     #     var_list.append('{}001'.format(v))
@@ -424,26 +473,66 @@ if __name__ == "__main__":
     #     data.append(in_file)
     # data_np = np.array(data)
     model_tester = TestModels(jitter=JITTER, use_extra=(not RANDOM_KEY) and USE_EXTRA, no_print=not DEBUG, verbose=VERBOSE, histogram=HISTOGRAM)
-
-    if TEST_ALL:
-        # Clear statistics
-        if SAVE:
-            clear_statistics()
-        # Check all models
-        for (m) in sorted(listdir(MODEL_FOLDER)):
-            if string_ends_with(m, '.h5'):
-                model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE)
-                tf.keras.backend.clear_session()
+    variables_to_test =[]
+    median_rank_out = []
+    median_proba_out = []
+    if COMBINE:
+        var  = get_variable_name(VARIABLE)
+        start = 1 if FIRST_ROUND else 17
+        end = 17 if not SECOND_ROUND else 33
+    
+        end -= 0 if not var =='h' else 4
+        if start - end == 0:
+            print('Error no round specified : Please indicate at least one round')
+        for i in range(start,end):
+            
+            variables_to_test.append(var+'0'+ ('0'+str(i) if i < 10 else '' + str(i)))
     else:
-        # Check specific model
-        # TODO
+        variables_to_test.append(VARIABLE)
+
+    print(variables_to_test)
+    # Check specific model
+    # TODO
+
+    if COMBINE:
+        model = None
+
+        for var in variables_to_test :
+            for (m) in sorted(listdir(MODEL_FOLDER)):
+                var_name, var_number, _ = split_variable_name(var)
+                if int(var_number) <= 16:
+                    
+                    if string_starts_with(m, 'all_{}_{}'.format(var_name,'cnn' if USE_CNN else 'mlp')):
+                        print 'Testing : ', m 
+                        print(var)
+                        if model is None:
+                            model = load_sca_model(MODEL_FOLDER + m)
+                        r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,save_proba=SAVE_PROBA,variable=var,model = model)
+                        median_rank_out.append(r)
+                        median_proba_out.append(m)
+                        if int(var_number) == 16:
+                            model = None
+                else: 
+                    if string_starts_with(m, 'all_{}_{}'.format(var_name,'cnn' if USE_CNN else 'mlp') if var_name == 's' or var_name == 'xt' or var_name == 'cm' or var_name == 'mc' or var_name == 'h' else 'all_{}_both'.format(var_name)):
+                        print 'Testing : ', m 
+                        print(var)
+                        if model is None:
+                            model = load_sca_model(MODEL_FOLDER + m)
+                        r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,save_proba=SAVE_PROBA,variable=var,model = model)
+                        median_rank_out.append(r)
+                        median_proba_out.append(m)               
+    else:
+        
         
         for var in variables_to_test :
             for (m) in sorted(listdir(MODEL_FOLDER)):
                 if string_starts_with(m, var):
                     print 'Testing : ', m 
-                    model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE)
-        
+                    r,m = model_tester.check_model(MODEL_FOLDER + m, TEST_TRACES, template_attack=TEMPLATE_ATTACK, random_key=RANDOM_KEY, save=SAVE,save_proba=SAVE_PROBA)
+                    median_rank_out.append(r)
+                    median_proba_out.append(m)
+    print('All median ranks : ',median_rank_out)
+    print('All median proba : ',median_proba_out)           
 
 # # No argument: check all the trained models
 # if (len(sys.argv) == 1) or (len(sys.argv) == 2):

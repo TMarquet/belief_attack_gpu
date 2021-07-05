@@ -366,7 +366,7 @@ class FactorGraphAES:
 
     def set_all_initial_distributions(self, specific_trace = None, no_leak = None,
                                       fixed_value = None, elmo_pow_model = False, real_traces = False,
-                                      seed=0, no_noise=False, offset=0, ignore_bad=False, trace_id = None):
+                                      seed=0, no_noise=False, offset=0, ignore_bad=False, trace_id = None , load_probability = False):
 
         snr = 2 ** self.SNR_exp
 
@@ -483,11 +483,11 @@ class FactorGraphAES:
                         self.set_initial_distribution(var, self.handler.get_plaintext_byte_distribution(var, trace=offset+trace))
                     elif var_name == 'k' and var_number <= 16 and self.averaged_key_values is not None:
                         # print "Uh oh, here... No Leak: {}".format(no_leak)
-                        self.set_initial_distribution(var, self.handler.get_leakage_distribution(var, self.averaged_key_values[var_number-1], ignore_bad=ignore_bad))
+                        self.set_initial_distribution(var, self.handler.get_leakage_distribution(var, self.averaged_key_values[var_number-1], ignore_bad=ignore_bad, load_probability = load_probability))
                         # print "Initial Dist for var {}:\n{}\n".format(var, self.handler.get_leakage_distribution(var, self.averaged_key_values[var_number-1], ignore_bad=ignore_bad)) #debug
                     else:
                         if cheat == 0:
-                            self.set_initial_distribution(var, self.handler.get_leakage(var, trace=offset+trace, ignore_bad=ignore_bad))
+                            self.set_initial_distribution(var, self.handler.get_leakage(var, trace=offset+trace, ignore_bad=ignore_bad,load_probability = load_probability))
                             # cheat = 1
                         else:
                             pass
