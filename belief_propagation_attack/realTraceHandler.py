@@ -356,10 +356,10 @@ class RealTraceHandler:
             prob_list = list()
             predicted_values = list()
             leakage_list = []
-            print(from_end)
+        
             for trace in range(traces):
                 
-
+                print((self.real_trace_data_maxtraces - trace - 1) if from_end else trace)
                 real_val = self.realvalues[var_name][var_number-1][(self.real_trace_data_maxtraces - trace - 1) if from_end else trace]
 
                 # if trace < 3:
