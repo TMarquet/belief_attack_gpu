@@ -293,7 +293,7 @@ class TestModels:
             var_name, var_number, _ = split_variable_name(variable)
             
             
-            if not var_name in listdir(OUTPUT_FOLDER):
+            if not var_name in listdir('data_training/'):
                 os.mkdir(OUTPUT_FOLDER + var_name + '/')
             if not random_key:
                 
