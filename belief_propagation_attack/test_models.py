@@ -294,7 +294,7 @@ class TestModels:
             
             
             if not var_name in listdir('data_training/'):
-                os.mkdir(OUTPUT_FOLDER + var_name + '/')
+                os.mkdir('data_training/' + var_name + '/')
             if not random_key:
                 
                 if model is None:
