@@ -189,9 +189,14 @@ def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=2
 # def train_svm()
 
 
-def train_variable_model(variable,mlp = False,cnn= False,epochs = 8,batch_size = 10):
+def train_variable_model(mlp = False,cnn= False,epochs = 8,batch_size = 10):
     var_name, var_number, _ = split_variable_name(variable)
-
+    realvalues = dict()
+    variable_list = []
+    for i in range(1,17):
+        variable_list.append('k0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+    for var in variable_list:
+        realvalues[var] = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var))
     folder = 'output/s/'
     s_val = {}
     
@@ -312,13 +317,8 @@ if __name__ == "__main__":
 
 
 
-    variable_list =['s001','s002','s003','s004','s005','s006','s007','s008','s009','s010','s011','s012','s013','s014','s015','s016']
 
 
-    X = np.array([])
-    X_l =  np.array([])
-    V = np.array([])
-    V_l =  np.array([])
 
     train_variable_model('s015',mlp = USE_MLP,cnn=USE_CNN)         
 

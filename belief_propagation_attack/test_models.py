@@ -514,7 +514,7 @@ if __name__ == "__main__":
                         if int(var_number) == 16:
                             model = None
                 else: 
-                    if string_starts_with(m, 'all_{}_{}'.format(var_name,'cnn' if USE_CNN else 'mlp') if var_name == 's' or var_name == 'xt' or var_name == 'cm' or var_name == 'mc' or var_name == 'h' else 'all_{}_both'.format(var_name)):
+                    if string_starts_with(m, 'all_{}_{}'.format(var_name,'cnn' if USE_CNN else 'mlp') if var_name == 's' or var_name == 'xt' or var_name == 'cm' or var_name == 'mc' or var_name == 'h' else 'all_{}_both'.format(var_name) if var_name == 't' else 'all_{}_2'.format(var_name)):
                         print 'Testing : ', m 
                         print(var)
                         if model is None:
