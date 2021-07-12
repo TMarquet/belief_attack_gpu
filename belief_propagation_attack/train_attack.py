@@ -199,6 +199,8 @@ def load_data(number = ['001']):
             print(file)
             name = file.split('_')[0]
             var_name, var_number, _ = split_variable_name(name)
+            print(var_number)
+            print(type(var_number))
             if var_number in number:
                 data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
                 labels[name] = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1][100000:190000]
