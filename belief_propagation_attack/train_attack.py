@@ -209,7 +209,7 @@ def load_data(number = [1]):
                     hot_encoded[l] = 1                     
                     label.append(hot_encoded)
                 
-                labels[name] = label
+                labels[name] = np.array(label)
                 print(data[name].shape)
                 print(labels[name].shape)
     return data , labels
@@ -223,11 +223,6 @@ def train_variable_model(mlp = False,cnn= False,epochs = 8,batch_size = 10):
     data,labels = load_data()
 
 
-    folder = 'output/s/'
-    s_val = {}
-    
-    s_train = {}
-    real_values = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1]
     training_data = []
     training_label = []
     validation_data = []
