@@ -208,7 +208,7 @@ def resave(number = [1]):
                     
                     start_save = name
     
-    end_data = data[name].reshape((data[name].shape[0],data[name].shape[1],1))
+    end_data = data[start_save].reshape((data[start_save].shape[0],data[start_save].shape[1],1))
     for var , d in data.items():
         if not var == start_save:
             d.reshape((d.shape[0],d.shape[1],1))
