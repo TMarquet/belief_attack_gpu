@@ -222,7 +222,7 @@ def resave(number = [1]):
 def load_data(number = [1]):
     folder = 'data_training/'
     data = {}
-    labels = {}
+    labels = []
     for sub_folder in os.listdir(folder):
         print('Loading variables : ',sub_folder)
         
@@ -231,19 +231,29 @@ def load_data(number = [1]):
             name = file.split('_')[0]
             var_name, var_number, _ = split_variable_name(name)
             if var_number in number:
-                print(file)
+         
                 data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
-                temp_labels = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1][100000:190000]
-                label = []
-                for l in list(temp_labels):
-                    hot_encoded = [0]*256
-                    hot_encoded[l] = 1                     
-                    label.append(hot_encoded)
-                
-                labels[name] = np.array(label)
-                print(data[name].shape)
-                print(labels[name].shape)
-    return data , labels
+                if var_name == 'k':
+                    start_save = name
+                    temp_labels = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1][100000:190000]
+                    label = []
+                    for l in list(temp_labels):
+                        hot_encoded = [0]*256
+                        hot_encoded[l] = 1                     
+                        label.append(hot_encoded)
+                    
+                    labels = np.array(label)
+            
+    end_data = data[start_save].reshape((data[start_save].shape[0],data[start_save].shape[1],1))
+
+    for var , d in data.items():
+        if not var == start_save:
+            temp_d  = d.reshape((d.shape[0],d.shape[1],1))
+          
+            end_data = np.concatenate([end_data,temp_d],axis =2)
+    print(end_data.shape)
+    print(labels.shape)
+    return end_data , labels
             
 
 
@@ -254,42 +264,12 @@ def train_variable_model(mlp = False,cnn= False,epochs = 8,batch_size = 10):
     data,labels = load_data()
 
 
-    training_data = []
-    training_label = []
-    validation_data = []
-    validation_label = []
+    training_data = data[:80000]
+    training_label = labels[:80000]
+    validation_data = data[80000:]
+    validation_label = labels[80000:]
 
     
-    for file in os.listdir(folder):
-        if '_rand' in file and not '_training' in file:
-            num = int(file.split('_')[0].replace('s',''))
-            s_val[num] = genfromtxt(folder + file, delimiter=',')
-    for i in range(0,10000):
-        temp = []
-        for num in range(1,17):
-            temp.append(s_val[num][i])
-        validation_data.append(temp)
-
-    for label in reversed(temp_label):
-        data = [0]*256
-        data[label] = 1
-        
-        validation_label.append(data)
-    for file in os.listdir(folder):
-        if '_rand_training' in file:
-            num = int(file.split('_')[0].replace('s',''))
-            s_train[num] = genfromtxt(folder + file, delimiter=',')
-    for i in range(0,90000):
-        temp = []
-        for num in range(1,17):
-            temp.append(s_train[num][i])
-        training_data.append(temp)
-
-    for label in reversed(temp_label_t):
-        data = [0]*256
-        data[label] = 1
-        
-        training_label.append(data)
 
 
     training_data = np.array(training_data)
