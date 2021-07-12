@@ -188,6 +188,35 @@ def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=2
 
 # def train_svm()
 
+
+def resave(number = [1]):
+    folder = 'data_training/'
+    data = {}
+    
+    for sub_folder in os.listdir(folder):
+        print('Loading variables : ',sub_folder)
+        
+        for file in os.listdir(folder+sub_folder):
+            
+            name = file.split('_')[0]
+            var_name, var_number, _ = split_variable_name(name)
+            if var_number in number:
+                print(file)
+                data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
+                print(data[name].shape)
+                if var_name == 'k':
+                    
+                    start_save = name
+    
+    end_data = data[name].reshape((data[name].shape[0],data[name].shape[1],1))
+    for var , d in data.items():
+        if not var == start_save:
+            d.reshape((d.shape[0],d.shape[1],1))
+            end_data = np.concatenate(end_data,d,axis = 2)
+    print(end_data.shape)
+        
+    
+
 def load_data(number = [1]):
     folder = 'data_training/'
     data = {}
@@ -339,7 +368,7 @@ if __name__ == "__main__":
 
 
 
-    data = load_data()
+    resave()
     #train_variable_model('k001',mlp = USE_MLP,cnn=USE_CNN)         
 
 
