@@ -196,12 +196,21 @@ def load_data(number = [1]):
         print('Loading variables : ',sub_folder)
         
         for file in os.listdir(folder+sub_folder):
-            print(file)
+            
             name = file.split('_')[0]
             var_name, var_number, _ = split_variable_name(name)
             if var_number in number:
+                print(file)
                 data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
-                labels[name] = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1][100000:190000]
+                temp_labels = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1][100000:190000]
+                label = []
+                for l in list(temp_labels):
+                hot_encoded = [0]*256
+                hot_encoded[label] = 1
+                            
+                    label.append()
+                for label
+                labels[name] = 
                 print(data[name].shape)
                 print(labels[name].shape)
     return data , labels
@@ -209,9 +218,10 @@ def load_data(number = [1]):
 
 
 def train_variable_model(mlp = False,cnn= False,epochs = 8,batch_size = 10):
-    var_name, var_number, _ = split_variable_name(variable)
-    realvalues = dict()
-    data = load_data()
+    name = file.split('_')[0]
+    var_name, var_number, _ = split_variable_name(name)
+
+    data,labels = load_data()
 
 
     folder = 'output/s/'
@@ -223,8 +233,7 @@ def train_variable_model(mlp = False,cnn= False,epochs = 8,batch_size = 10):
     training_label = []
     validation_data = []
     validation_label = []
-    temp_label = real_values[190000:]
-    temp_label_t = real_values[100000:190000]
+
     
     for file in os.listdir(folder):
         if '_rand' in file and not '_training' in file:
