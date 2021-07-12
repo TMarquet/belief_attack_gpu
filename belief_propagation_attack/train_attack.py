@@ -221,39 +221,40 @@ def resave(number = [1]):
 
 def load_data(number = [1]):
     folder = 'data_training/'
-    data = {}
-    labels = []
+    first = True
+ 
+    label = []
     for sub_folder in os.listdir(folder):
         print('Loading variables : ',sub_folder)
-        
-        for file in os.listdir(folder+sub_folder):
-            
-            name = file.split('_')[0]
-            var_name, var_number, _ = split_variable_name(name)
-            if var_number in number:
-            
-                data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
+        if sub_folder == 's' or  sub_folder == 'k' 
+            for file in os.listdir(folder+sub_folder):
+                
+                name = file.split('_')[0]
+                var_name, var_number, _ = split_variable_name(name)
+                new_data = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
+                if first:
+                    
+                    data = new_data.reshape((new_data.shape[0],new_data.shape[1],1))
+                    first = False
+                else:
+                    data = np.concatenate([data, new_data.reshape((new_data.shape[0],new_data.shape[1],1))],axis =2)
                 if var_name == 'k':
                     start_save = name
                     temp_labels = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1][100000:190000]
-                    label = []
+                    
                     for l in reversed(list(temp_labels)):
                         hot_encoded = [0]*256
                         hot_encoded[l] = 1                     
                         label.append(hot_encoded)
                     
-                    labels = np.array(label)
+                    
                
-    end_data = data[start_save].reshape((data[start_save].shape[0],data[start_save].shape[1],1))
 
-    for var , d in data.items():
-        if not var == start_save:
-            temp_d  = d.reshape((d.shape[0],d.shape[1],1))
-          
-            end_data = np.concatenate([end_data,temp_d],axis =2)
-    print(end_data.shape)
+    labels = np.array(label)
+
+    print(data.shape)
     print(labels.shape)
-    return end_data , labels
+    return data , labels
             
 
 
