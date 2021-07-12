@@ -196,7 +196,7 @@ def load_data():
         for file in os.listdir(folder+sub_folder):
             print(file)
             name = file.split('_')[0]
-            data[name] = np.genfromtxt(folder + sub_folder + file, delimiter=',')
+            data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
             print(data[name].shape)
     return data
             
