@@ -331,8 +331,8 @@ if __name__ == "__main__":
 
 
 
-
-    train_variable_model('k001',mlp = USE_MLP,cnn=USE_CNN)         
+    data = load_data()
+    #train_variable_model('k001',mlp = USE_MLP,cnn=USE_CNN)         
 
 
 
