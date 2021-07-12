@@ -97,7 +97,7 @@ def shuffle_data(profiling_x,label_y):
 
 
 
-def mlp_new(input_shape=(16,256), learning_rate=0.00001, classes=256, loss_function=None):
+def mlp_new(input_shape=(256,6), learning_rate=0.00001, classes=256, loss_function=None):
 
     if loss_function is None:
         loss_function='rank_loss'
@@ -279,9 +279,9 @@ def train_variable_model(mlp = False,cnn= False,epochs = 8,batch_size = 10):
     print(validation_data.shape)
     model = None
     if mlp:
-        model =  mlp_new()
+        model =  mlp_new(input_shape=(training_data.shape[1],training_data.shape[2]))
     if cnn:
-        model = cnn_best()
+        model = cnn_best(input_shape=(training_data.shape[1],training_data.shape[2]))
     history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
     model.save('models/{}_test.h5'.format('attack'))
 
