@@ -205,12 +205,11 @@ def load_data(number = [1]):
                 temp_labels = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1][100000:190000]
                 label = []
                 for l in list(temp_labels):
-                hot_encoded = [0]*256
-                hot_encoded[label] = 1
-                            
-                    label.append()
-                for label
-                labels[name] = 
+                    hot_encoded = [0]*256
+                    hot_encoded[l] = 1                     
+                    label.append(hot_encoded)
+                
+                labels[name] = label
                 print(data[name].shape)
                 print(labels[name].shape)
     return data , labels
