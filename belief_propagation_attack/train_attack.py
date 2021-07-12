@@ -226,7 +226,7 @@ def load_data(number = [1]):
     label = []
     for sub_folder in os.listdir(folder):
         print('Loading variables : ',sub_folder)
-        if sub_folder == 's' or  sub_folder == 'k' 
+        if sub_folder == 's' or  sub_folder == 'k' :
             for file in os.listdir(folder+sub_folder):
                 
                 name = file.split('_')[0]
