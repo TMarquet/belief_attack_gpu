@@ -188,17 +188,23 @@ def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=2
 
 # def train_svm()
 
-def load_data():
+def load_data(number = ['001']):
     folder = 'data_training/'
     data = {}
+    labels = {}
     for sub_folder in os.listdir(folder):
         print('Loading variables : ',sub_folder)
+        
         for file in os.listdir(folder+sub_folder):
             print(file)
             name = file.split('_')[0]
-            data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
-            print(data[name].shape)
-    return data
+            var_name, var_number, _ = split_variable_name(name)
+            if var_number in number:
+                data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
+                labels[name] = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1][100000:190000]
+                print(data[name].shape)
+                print(labels[name].shape)
+    return data , labels
             
 
 
@@ -207,8 +213,7 @@ def train_variable_model(mlp = False,cnn= False,epochs = 8,batch_size = 10):
     realvalues = dict()
     data = load_data()
 
-    for var in variable_list:
-        realvalues[var] = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var))
+
     folder = 'output/s/'
     s_val = {}
     
