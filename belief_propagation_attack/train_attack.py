@@ -209,9 +209,11 @@ def resave(number = [1]):
                     start_save = name
     
     end_data = data[start_save].reshape((data[start_save].shape[0],data[start_save].shape[1],1))
+    print(end_data.shape)
     for var , d in data.items():
         if not var == start_save:
             d.reshape((d.shape[0],d.shape[1],1))
+            print(d.shape)
             end_data = np.concatenate([end_data,d],axis =2)
     print(end_data.shape)
         
