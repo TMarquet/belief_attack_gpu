@@ -193,7 +193,7 @@ def load_data():
     data = {}
     for sub_folder in os.listdir(folder):
         print('Loading variables : ',sub_folder)
-        for file in os.listdir(fodler+sub_folder):
+        for file in os.listdir(folder+sub_folder):
             print(file)
             name = file.split('_')[0]
             data[name] = np.genfromtxt(folder + sub_folder + file, delimiter=',')
