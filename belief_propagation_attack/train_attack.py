@@ -189,33 +189,33 @@ def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=2
 # def train_svm()
 
 
-def resave(number = [1]):
-    folder = 'data_training/'
-    data = {}
+# def resave(number = [1]):
+#     folder = 'data_training/'
+#     data = {}
     
-    for sub_folder in os.listdir(folder):
-        print('Loading variables : ',sub_folder)
+#     for sub_folder in os.listdir(folder):
+#         print('Loading variables : ',sub_folder)
         
-        for file in os.listdir(folder+sub_folder):
+#         for file in os.listdir(folder+sub_folder):
             
-            name = file.split('_')[0]
-            var_name, var_number, _ = split_variable_name(name)
-            if var_number in number:
-                print(file)
-                data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
-                print(data[name].shape)
-                if var_name == 'k':
+#             name = file.split('_')[0]
+#             var_name, var_number, _ = split_variable_name(name)
+#             if var_number in number:
+#                 print(file)
+#                 data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
+#                 print(data[name].shape)
+#                 if var_name == 'k':
                     
-                    start_save = name
+#                     start_save = name
     
-    end_data = data[start_save].reshape((data[start_save].shape[0],data[start_save].shape[1],1))
-    print(end_data.shape)
-    for var , d in data.items():
-        if not var == start_save:
-            temp_d  = d.reshape((d.shape[0],d.shape[1],1))
-            print(temp_d.shape)
-            end_data = np.concatenate([end_data,temp_d],axis =2)
-    print(end_data.shape)
+#     end_data = data[start_save].reshape((data[start_save].shape[0],data[start_save].shape[1],1))
+#     print(end_data.shape)
+#     for var , d in data.items():
+#         if not var == start_save:
+#             temp_d  = d.reshape((d.shape[0],d.shape[1],1))
+#             print(temp_d.shape)
+#             end_data = np.concatenate([end_data,temp_d],axis =2)
+#     print(end_data.shape)
         
     
 
@@ -284,7 +284,7 @@ def train_variable_model(mlp = False,cnn= False,epochs = 8,batch_size = 10):
     if cnn:
         model = cnn_best()
     history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
-    model.save('models/{}_test.h5'.format(variable))
+    model.save('models/{}_test.h5'.format('attack'))
 
         
         
@@ -350,7 +350,7 @@ if __name__ == "__main__":
 
 
 
-    resave()
+    train_variable_model(mlp = USE_MLP,cnn=USE_CNN)    
     #train_variable_model('k001',mlp = USE_MLP,cnn=USE_CNN)         
 
 
