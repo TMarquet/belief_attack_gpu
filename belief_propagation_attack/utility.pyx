@@ -1733,7 +1733,7 @@ def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length
     #         print "! Could not load metadata! Writing from scratch..."
 
     # Get time point for variable
-    time_point = np.load('{}{}.npy'.format(TIMEPOINTS_FOLDER, var_name), allow_pickle=True)[var_number-1]
+    time_point = np.load('{}{}.npy'.format(TIMEPOINTS_FOLDER, var_name))[var_number-1]
 
     start_window, end_window = handle_window(time_point, input_length, 0, samples - 1)
 
