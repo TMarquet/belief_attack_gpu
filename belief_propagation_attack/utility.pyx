@@ -1717,8 +1717,8 @@ def handle_window(time_point, input_length, minimum, maximum):
 def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length=700, training_traces=50000, sd = 100, augment_method=2, jitter=None, validation_traces=10000, randomkey_validation=False, hammingweight=False):
 
     # Load meta
-    profile_traces, attack_traces, samples, coding = load_meta()
-
+    #profile_traces, attack_traces, samples, coding = load_meta()
+    samples = 51250
     # print "Loading BPA NN Files for variable {}!".format(variable)
     var_name, var_number, _ = split_variable_name(variable)
 
