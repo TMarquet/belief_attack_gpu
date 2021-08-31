@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Apr  7 14:40:42 2021
-
-@author: martho
-"""
-
 import os.path
 import os
 import sys
@@ -31,7 +24,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import load_model
-from numpy import genfromtxt
+
 from utility import *
 
 tf.random.set_seed(7)
@@ -93,16 +86,39 @@ def shuffle_data(profiling_x,label_y):
 
 
 
+#### MLP Best model (6 layers of 200 units)
+def mlp_best(mlp_nodes=100,layer_nb=5, input_length=2000, learning_rate=0.00001, classes=256, loss_function='median_probability_loss'):
 
+   
+    loss_function='categorical_crossentropy'
+    model = Sequential()
+    model.add(Dense(mlp_nodes, input_dim=input_length, activation='relu'))
+    for i in range(layer_nb-2):
+        model.add(Dense(mlp_nodes, activation='relu'))
+    model.add(Dense(classes, activation='softmax'))
 
+    # Save image!
+    #plot_model(model, to_file='output/model_plot.png', show_shapes=True, show_layer_names=True)
 
+    optimizer = RMSprop(lr=learning_rate)
+    if loss_function=='rank_loss':
+        model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+    elif loss_function=='median_probability_loss':
+        model.compile(loss=tf_median_probability_loss, optimizer=optimizer, metrics=['accuracy'])
+    else:
+        try:
+            model.compile(loss=loss_function, optimizer=optimizer, metrics=['accuracy'])
+        except ValueError:
+            print "!!! Loss Function '{}' not recognised, aborting\n".format(loss_function)
+            raise
+    return model
 
-def mlp_new(input_shape=(256,6), learning_rate=0.00001, classes=256, loss_function=None):
+def mlp_new(input_length=700, learning_rate=0.00001, classes=256, loss_function='categorical_crossentropy'):
 
     if loss_function is None:
-        loss_function='rank_loss'
+        loss_function='median_probability_loss'
     model = tf.keras.Sequential()
-    model.add(Dense(256, input_shape=input_shape, activation='relu'))
+    model.add(Dense(256, input_dim=input_length, activation='relu'))
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block1_batchnorm'))
     model.add(tf.keras.layers.Activation('relu'))
@@ -121,7 +137,7 @@ def mlp_new(input_shape=(256,6), learning_rate=0.00001, classes=256, loss_functi
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block{}_batchnorm'.format(str(4))))
     model.add(tf.keras.layers.Activation('relu'))    
-
+    model.add(Dense(classes, activation='softmax'))
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
     # Save image!
@@ -142,9 +158,9 @@ def mlp_new(input_shape=(256,6), learning_rate=0.00001, classes=256, loss_functi
 
 
 ### CNN Best model
-def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=256, dense_units=1000,pooling = [2],dense_layers = 3,size = [20,40,80]):
+def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256, dense_units=2048,pooling = [0,1,2,3,4],dense_layers = 2,size = [64,128,256,512,512]):
     # From VGG16 design
-
+    input_shape = (input_length, 1)
     model = tf.keras.Sequential(name='cnn')
     
     # Convolution blocks
@@ -154,8 +170,8 @@ def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=2
             model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))           
         else:
             model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1)))          
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization())
+        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1),name = 'L2_regularisation_{}'.format(i+1)))
+        model.add(BatchNormalization(name = 'Batch_normalisation_{}'.format(i+1)))
         model.add(tf.keras.layers.Activation('relu'))
         if i in pooling:
             model.add(AveragePooling1D(2, strides=2, name='block{}_pool'.format(i+1)))
@@ -165,170 +181,97 @@ def cnn_best(input_shape=(16,256), learning_rate=0.00001, filters = 3, classes=2
         
     # Two Dense layers
     
-
+    #model.add(Dropout(0.5))
     for i in range(0,dense_layers):
-        model.add(Dense(dense_units, name='fc{}'.format(i)))
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
-        model.add(BatchNormalization(name='block_dense{}_batchnorm'.format(i)))
+        model.add(Dense(dense_units, name='Dense_{}'.format(i+1)))
+        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1),name = 'L2_regularisation_dense_{}'.format(i+1)))
+        model.add(BatchNormalization(name='block_dense_{}_batchnorm'.format(i+1)))
         model.add(tf.keras.layers.Activation('relu'))
- 
+        #model.add(Dropout(0.5))
 
     model.add(Dense(classes, activation='softmax', name='predictions'))
 
     optimizer = RMSprop(lr=learning_rate)
-    model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
+    model.summary()
     return model
 
 
 
 
+def load_sca_model(model_file):
+    check_file_exists(model_file)
+    try:
+            model = load_model(model_file)
+    except:
+        print("Error: can't load Keras model file '%s'" % model_file)
+        sys.exit(-1)
+    return model
 
 #### Training high level function
+def train_model(X_profiling, Y_profiling, model, save_file_name, epochs=150, batch_size=100, validation_data=None, progress_bar=1, hamming_distance_encoding=False, one_hot=True, multilabel=False, hammingweight=False):
 
+    check_file_exists(os.path.dirname(save_file_name))
+    # Save model every epoch
+    # save_model = ModelCheckpoint(filepath = save_file_name,
+    #                             monitor='val_accuracy',
+    #                         mode='max',
+    #                         save_best_only=True)
+    # tensorboard = TensorBoard(log_dir="logs/{}".format(time()))
+    callbacks=[TrainValTensorBoard(write_graph=True)]
+    # Get the input layer shape
+  
+    input_layer_shape = model.get_layer(index=0).input_shape
+    # Sanity check
+    if input_layer_shape[1] != len(X_profiling[0]):
+        print("Error: model input shape %d instead of %d is not expected ..." % (input_layer_shape[1], len(X_profiling[0])))
+        sys.exit(-1)
+    # Adapt the data shape according our model input
+    if len(input_layer_shape) == 2:
+        # This is a MLP
+        Reshaped_X_profiling = X_profiling
+        Reshaped_validation_data = validation_data[0]
+    elif len(input_layer_shape) == 3:
+        # This is a CNN: expand the dimensions
+        Reshaped_X_profiling = X_profiling.reshape((X_profiling.shape[0], X_profiling.shape[1], 1))
+        Reshaped_validation_data = validation_data[0].reshape((validation_data[0].shape[0], validation_data[0].shape[1], 1))
+    else:
+        print("Error: model input shape length %d is not expected ..." % len(input_layer_shape))
+        sys.exit(-1)
+
+    # Split up for debug
+
+    history = model.fit(x=Reshaped_X_profiling, y=Y_profiling, batch_size=batch_size, verbose = progress_bar, epochs=epochs, callbacks=callbacks, validation_data=(Reshaped_validation_data, validation_data[1]),use_multiprocessing=True)
+    model.save(save_file_name)
+    return history
 
 # def train_svm()
 
 
-def resave(number = [1]):
-    folder = 'data_training/'
-    data = {}
-    
-    for sub_folder in os.listdir(folder):
-        print('Loading variables : ',sub_folder)
-        
-        for file in os.listdir(folder+sub_folder):
-            
-            name = file.split('_')[0]
-            var_name, var_number, _ = split_variable_name(name)
-            if var_number in number:
-                print(file)
-                data[name] = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
-                print(data[name].shape)
-                if var_name == 'k':
-                    
-                    start_save = name
-    
-    end_data = data[start_save].reshape((data[start_save].shape[0],data[start_save].shape[1],1))
-    print(end_data.shape)
-    for var , d in data.items():
-        if not var == start_save:
-            temp_d  = d.reshape((d.shape[0],d.shape[1],1))
-            print(temp_d.shape)
-            end_data = np.concatenate([end_data,temp_d],axis =2)
-    print(end_data.shape)
-        
-    
+def train_variable_model(variable, X_profiling, Y_profiling, X_attack, Y_attack, mlp=True, cnn=True, cnn_pre=False, lstm=True, svm=False, add_noise=False,combine = False, input_length=700, normalise_traces=True, epochs=None, training_traces=50000, mlp_layers=6, lstm_layers=1,sizes = [20,40,80],pooling = [2],filters = 3,dense_layers = 3,dense_units = 1000  , batch_size=200, sd=100, augment_method=0, jitter=None, progress_bar=1, mlp_nodes=200, lstm_nodes=64, learning_rate=0.00001, multilabel=False, hammingweight=False, loss_function=None, hamming_distance_encoding=False, scratch_storage=False, use_ascad=False):
 
-def load_data(number = [1]):
-    folder = 'data_training/'
-    first = True
- 
-    label = []
-    for sub_folder in os.listdir(folder):
-        print('Loading variables : ',sub_folder)
-        if sub_folder == 's' or  sub_folder == 'k' :
-            for file in os.listdir(folder+sub_folder):
-                
-                name = file.split('_')[0]
-                var_name, var_number, _ = split_variable_name(name)
-                new_data = np.genfromtxt(folder + sub_folder + '/' + file, delimiter=',')
-                if first:
-                    
-                    data = new_data.reshape((new_data.shape[0],new_data.shape[1],1))
-                    first = False
-                else:
-                    data = np.concatenate([data, new_data.reshape((new_data.shape[0],new_data.shape[1],1))],axis =2)
-                if var_name == 'k':
-                    start_save = name
-                    temp_labels = np.load('{}{}.npy'.format(REALVALUES_FOLDER, var_name))[var_number-1][100000:190000]
-                    
-                    for l in reversed(list(temp_labels)):
-                        hot_encoded = [0]*256
-                        hot_encoded[l] = 1                     
-                        label.append(hot_encoded)
-                    
-                    
-               
+    store_directory = NEURAL_MODEL_FOLDER if scratch_storage else MODEL_FOLDER
 
-    labels = np.array(label)
-
-    print(data.shape)
-    print(labels.shape)
-    return data , labels
-            
+    classes = 2
+    hammingweight_flag = '_hw' if hammingweight else ''
+    hammingdistance_flag = '_hamdistencode' if hamming_distance_encoding else ''
 
 
-def train_variable_model(mlp = False,cnn= False,epochs = 8,batch_size = 10):
 
-
-    data,labels = load_data()
-
-
-    training_data = data[:80000]
-    training_label = labels[:80000]
-    validation_data = data[80000:]
-    validation_label = labels[80000:]
-
-    
-
-
-    training_data = np.array(training_data)
-    training_label =np.array( training_label)
-    validation_data = np.array(validation_data)
-    validation_label = np.array(validation_label)
-    print(training_data.shape)
-    print(validation_data.shape)
-    model = None
-    if mlp:
-        model =  mlp_new(input_shape=(training_data.shape[1],training_data.shape[2]))
     if cnn:
-        model = cnn_best(input_shape=(training_data.shape[1],training_data.shape[2]))
-    history = model.fit(training_data, training_label, batch_size=batch_size, epochs=epochs, validation_data=(validation_data, validation_label))
-    model.save('models/{}_test.h5'.format('attack'))
-
+        # TODO: Test New CNN!
+        # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
+        print('Training for {} size, {} pool, {} filter, {} layers, {} units'.format(sizes,pooling,filters,dense_layers,dense_units))
+        cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes,size=sizes,dense_layers=dense_layers,dense_units=dense_units,pooling = pooling,filters = filters)
+        cnn_epochs = epochs if epochs is not None else 75
+        cnn_batchsize = batch_size
         
-        
-            
 
-
-
-    # ### CNN training
-    # if cnn:
-    #     # TODO: Test New CNN!
-    #     # cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes)
-    #     sizes = [[20,40,80]]
-    #     pooling = [[2]]
-    #     filters = [3]
-    #     dense_layers = [3]
-    #     dense_units = [4000]            
-    #     for size in sizes:
-    #         for pool in pooling:
-    #             for filter_cnn in filters:
-    #                 for layer in dense_layers:
-    #                     for unit in dense_units:
-    #                         print('Training for {} size, {} pool, {} filter, {} layers, {} units'.format(size,pool,filter_cnn,layer,unit))
-    #                         cnn_best_model = cnn_best(input_length=input_length, learning_rate=learning_rate, classes=classes,size=size,dense_layers=layer,dense_units=unit,pooling = pool,filters = filter_cnn)
-    #                         cnn_epochs = epochs if epochs is not None else 75
-    #                         cnn_batchsize = batch_size
-    #                         train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
-    #                                     "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
-    #                                         'all_s_proba', hammingweight_flag, hammingdistance_flag, input_length, sizes.index(size),pooling.index(pool),layer,unit,filter_cnn, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
-    #                                     epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
-    #                                     progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
-
-    # ### MLP training
-    # elif mlp:
-    #     if multilabel:
-    #         mlp_best_model = mlp_weighted_bit(input_length=input_length, layer_nb=mlp_layers, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
-    #     else:
-    #         mlp_best_model = mlp_new(input_length=input_length, learning_rate=learning_rate, classes=classes, loss_function=loss_function)
-    #     mlp_epochs = epochs if epochs is not None else 200
-    #     mlp_batchsize = batch_size
-    #     train_model(X_profiling, Y_profiling, mlp_best_model, store_directory +
-    #                 "{}_mlp{}{}{}{}_nodes{}_window{}_epochs{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}_{}.h5".format(
-    #                     variable, mlp_layers, '_multilabel' if multilabel else '', hammingweight_flag, hammingdistance_flag, mlp_nodes, input_length, mlp_epochs, mlp_batchsize, learning_rate, sd,
-    #                     training_traces, augment_method, jitter, 'defaultloss' if loss_function is None else loss_function.replace('_','')), epochs=mlp_epochs, batch_size=mlp_batchsize,
-    #                 validation_data=(X_attack, Y_attack), progress_bar=progress_bar, multilabel=multilabel, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)
+        train_model(X_profiling, Y_profiling, cnn_best_model, store_directory +
+                    "{}_cnn{}{}_model1_window{}_size{}_pooling{}_densel{}_denseu{}_filter{}_batchsize{}_lr{}_sd{}_traces{}_aug{}_jitter{}.h5".format(
+                        variable if not combine else 'all_{}'.format(get_variable_name(variable)), hammingweight_flag, hammingdistance_flag, input_length, sizes[0],len(pooling),dense_layers,dense_units,filters, cnn_batchsize, learning_rate, sd, training_traces, augment_method, jitter),
+                    epochs=cnn_epochs, batch_size=cnn_batchsize, validation_data=(X_attack, Y_attack),
+                    progress_bar=progress_bar, hammingweight=hammingweight, hamming_distance_encoding=hamming_distance_encoding)            
 
 
 
@@ -336,23 +279,244 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Trains Neural Network Models')
     parser.add_argument('--MLP', action="store_true", dest="USE_MLP", help='Trains Multi Layer Perceptron',
                         default=False)
+    parser.add_argument('--NORM', action="store_false", dest="NORMALISE", help='Toggles Normalisation Off',
+                        default=True)
     parser.add_argument('--CNN', action="store_true", dest="USE_CNN",
                         help='Trains Convolutional Neural Network', default=False)
+    parser.add_argument('--CNNP', '--CNN_PRE', '--CNN_PRETRAINED', action="store_true", dest="USE_CNN_PRETRAINED",
+                        help='ReTrains Pretrained Convolutional Neural Network', default=False)
+    parser.add_argument('--LSTM', action="store_true", dest="USE_LSTM",
+                        help='Trains Long Short Term Memory Neural Network', default=False)
+    parser.add_argument('--N', '--NOISE', action="store_true", dest="ADD_NOISE",
+                        help='Adds noise to the profiling step', default=False)
+    parser.add_argument('-v', '-var', '-variable', action="store", dest="VARIABLE", help='Variable to train',
+                        default='s001')
+    parser.add_argument('-l', '-length', '-input', '-window', action="store", dest="INPUT_LENGTH", help='Input Length (default: 2000)',
+                        type=int, default=2000)
+    parser.add_argument('-lr', '-learn', '-learning_rate', action="store", dest="LEARNING_RATE", help='Learning Rate (default: 0.00001)',
+                        type=float, default=0.00001)
+    parser.add_argument('-e', '-epochs', action="store", dest="EPOCHS", help='Number of Epochs in Training (default: 75 CNN, 100 MLP)',
+                        type=int, default=100)
+    parser.add_argument('-t', '-traces', action="store", dest="TRAINING_TRACES", help='Number of Traces in Training (default: 200000)',
+                        type=int, default=200000)
+    parser.add_argument('-vt', '-validation_traces', action="store", dest="VALIDATION_TRACES", help='Number of Validation Traces in Testing, taken from Training Traces (default: 10000)',
+                        type=int, default=10000)
+    parser.add_argument('-mlp_layers', action="store", dest="MLP_LAYERS", help='Number of Layers in MLP (default: 5)',
+                        type=int, default=5)
+    parser.add_argument('-mlp_nodes', action="store", dest="MLP_NODES", help='Number of Nodes in MLP Layer (default: 200)',
+                        type=int, default=100)
+    parser.add_argument('-lstm_layers', action="store", dest="LSTM_LAYERS",
+                        help='Number of Layers in LSTM (default: 1)',
+                        type=int, default=1)
+    parser.add_argument('-lstm_nodes', action="store", dest="LSTM_NODES",
+                        help='Number of Nodes in LSTM Layer (default: 64)',
+                        type=int, default=64)
+    parser.add_argument('-b', '-batch', '-batch_size', action="store", dest="BATCH_SIZE", help='Size of Training Batch (default: 200)',
+                        type=int, default=50)
+    parser.add_argument('--COMBINE', '--CB', action="store_true", dest="COMBINE",
+                        help='Train with all bytes of an intermediate (default: False)', default=False)
+    parser.add_argument('--R1', action="store_true", dest="FIRST_ROUND",
+                        help='Use data from the first round (default: False)', default=False)
+    parser.add_argument('--R2', action="store_true", dest="SECOND_ROUND",
+                        help='Use data from the second round (default: False)', default=False)
 
+
+    parser.add_argument('-sd', action="store", dest="STANDARD_DEVIATION",
+                        help='Standard Deviation for Data Augmentation (default: 100)',
+                        type=int, default=100)
+    parser.add_argument('-am', '-augment', '-aug', action="store", dest="AUGMENT_METHOD",
+                        help='Method for Data Augmentation: 0 Noise, 1 Shift, 2 Average (default: 0)',
+                        type=int, default=0)
+    parser.add_argument('--PB', '--PROG', '--PROGRESS', action="store_true", dest="PROGRESS_BAR",
+                        help='Prints Progress Bar', default=False)
+    parser.add_argument('--ALLVARS', action="store_true", dest="ALL_VARS",
+                        help='Trains all Variable Nodes', default=False)
+    parser.add_argument('-j', '-jitter', action="store", dest="JITTER",
+                        help='Clock Jitter to use on real traces (default: None)',
+                        type=int, default=None)
+    parser.add_argument('--TEST', '--TEST_VARIABLES', action="store_true", dest="TEST_VARIABLES",
+                        help='Trains only specified Testing Variable Nodes', default=False)
+    parser.add_argument('--MULTILABEL', '--ML', '--M', action="store_true", dest="MULTILABEL",
+                        help='Uses multilabels in binary form', default=False)
+    parser.add_argument('--RV', '--RKV', '--RANDOMKEY_VALIDATION', action="store_false", dest="RANDOMKEY_VALIDATION",
+                        help='Takes validation traces from randomkey set (subtracting from training traces!), default True', default=True)
+    parser.add_argument('--HW', '--HAMMINGWEIGHT', '--HAMMING_WEIGHT', action="store_true", dest="HAMMINGWEIGHT",
+                        help='Trains to match Hamming Weight rather than identity', default=False)
+    parser.add_argument('--HD', '--HAMMINGDISTANCE', '--HAMMING_DISTANCE', action="store_true", dest="HAMMING_DISTANCE_ENCODING",
+                        help='Encodes to scaled Hamming Weight Distance, rather than one hot encoding', default=False)
+    parser.add_argument('--META', '--LOAD_META', '--LOAD_METADATA', action="store_false", dest="LOAD_METADATA",
+                        help='Toggles loading of metadata, default True (bad for mig!)', default=True)
+    parser.add_argument('--SCRATCH', '--SCRATCH_STORAGE', '--S', action="store_true", dest="SCRATCH_STORAGE",
+                        help='Stores neural networks on scratch storage (external hard drive)', default=False)
+    parser.add_argument('--ASCAD', '--USE_ASCAD', action="store_true", dest="USE_ASCAD",
+                        help='Uses ASCAD Default Model, CNN or MLP', default=False)
+    parser.add_argument('--DATA_ASCAD', '--USE_DATA_ASCAD', action="store_true", dest="USE_DATA_ASCAD",
+                        help='Uses data of ASCAD', default=False)
+    parser.add_argument('-loss', '-loss_function', action="store", dest="LOSS_FUNCTION", help='Loss Function (default: None (uses standard depending on model structure, usually categorical cross entropy))',
+                        default=None)
 
     # Target node here
     args            = parser.parse_args()
     USE_MLP         = args.USE_MLP
     USE_CNN         = args.USE_CNN
- 
+    USE_CNN_PRETRAINED = args.USE_CNN_PRETRAINED
+    USE_LSTM        = args.USE_LSTM
+    VARIABLE        = args.VARIABLE
+    ADD_NOISE       = args.ADD_NOISE
+    INPUT_LENGTH    = args.INPUT_LENGTH
+    EPOCHS          = args.EPOCHS
+    TRAINING_TRACES = args.TRAINING_TRACES
+    MLP_LAYERS      = args.MLP_LAYERS
+    MLP_NODES       = args.MLP_NODES
+    LSTM_LAYERS     = args.LSTM_LAYERS
+    LSTM_NODES      = args.LSTM_NODES
+    BATCH_SIZE      = args.BATCH_SIZE
+    NORMALISE       = args.NORMALISE
+    STANDARD_DEVIATION = args.STANDARD_DEVIATION
+    COMBINE    = args.COMBINE
+    FIRST_ROUND = args.FIRST_ROUND
+    SECOND_ROUND = args.SECOND_ROUND
+    AUGMENT_METHOD  = args.AUGMENT_METHOD
+    ALL_VARS        = args.ALL_VARS
+    JITTER          = args.JITTER
+    TEST_VARIABLES  = args.TEST_VARIABLES
+    LEARNING_RATE   = args.LEARNING_RATE
+    MULTILABEL      = args.MULTILABEL
+    VALIDATION_TRACES = args.VALIDATION_TRACES
+    RANDOMKEY_VALIDATION = args.RANDOMKEY_VALIDATION
+    HAMMINGWEIGHT = args.HAMMINGWEIGHT
+    LOSS_FUNCTION = args.LOSS_FUNCTION
+    HAMMING_DISTANCE_ENCODING = args.HAMMING_DISTANCE_ENCODING
+    LOAD_METADATA = args.LOAD_METADATA
+    SCRATCH_STORAGE = args.SCRATCH_STORAGE
+    USE_ASCAD = args.USE_ASCAD
+    if not USE_MLP and not USE_CNN and not USE_CNN_PRETRAINED and not USE_LSTM:
+        print "|| No models set to run - setting USE_MLP to True"
+        USE_MLP = True
+
+    PROGRESS_BAR = 1 if args.PROGRESS_BAR else 0
+
+    # Handle dodgy input
+    if (INPUT_LENGTH % 2) and INPUT_LENGTH != 1 and INPUT_LENGTH != -1:
+        print "|| Error: input length must be even, adding 1 to fix ({} -> {})".format(INPUT_LENGTH, INPUT_LENGTH+1)
+        INPUT_LENGTH += 1
+
+    # Handle ASCAD Defaults
+    if USE_ASCAD:
+        print "|| Setting to ASCAD Default Values (epochs etc):"
+        print "|| * INPUT_LENGTH {} -> 700".format(INPUT_LENGTH)
+        INPUT_LENGTH = 700
 
 
+    if TEST_VARIABLES:
+        variable_list = ['s001','k001','t001','K004']
+    if ALL_VARS:
+        variable_list = get_variable_list()
+    elif COMBINE:
+
+        variable_list =[]
+        var  = get_variable_name(VARIABLE)
+        start = 1 if FIRST_ROUND else 17
+        end = 17 if not SECOND_ROUND else 33
+
+        end -= 0 if not var =='h' else 4
+        if start - end == 0:
+            print('Error no round specified : Please indicate at least one round')
+        for i in range(start,end):
+            
+            variable_list.append(var+'0'+ ('0'+str(i) if i < 10 else '' + str(i)))
+        print(variable_list)
+
+    else:
+        variable_list = [VARIABLE]
 
 
+    X = np.array([])
+    X_l =  np.array([])
+    V = np.array([])
+    V_l =  np.array([])
+    for variable in variable_list:
 
-    train_variable_model(mlp = USE_MLP,cnn=USE_CNN)
-    #train_variable_model('k001',mlp = USE_MLP,cnn=USE_CNN)         
+        print "$$$ Training Neural Networks $$$\nVariable {}, Hamming Weight {} Hamming Distance Encoding {}, MLP {} ({} layers, {} nodes per layer), CNN {} (Pretrained {}), LSTM {} ({} layers, {} nodes per layer), Input Length {}, Learning Rate {}, Noise {}, Jitter {}, Normalising {}\n{} Epochs, Batch Size {}, Training Traces {}, Validation Traces {}, ASCAD {}".format(
+            variable, HAMMINGWEIGHT, HAMMING_DISTANCE_ENCODING, USE_MLP, MLP_LAYERS, MLP_NODES, USE_CNN, USE_CNN_PRETRAINED, USE_LSTM, LSTM_LAYERS, LSTM_NODES, INPUT_LENGTH, LEARNING_RATE, ADD_NOISE, JITTER, NORMALISE, EPOCHS, BATCH_SIZE, TRAINING_TRACES, VALIDATION_TRACES, USE_ASCAD)
+
+        # Load the profiling traces and the attack traces
+        
+        
+        (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
+                                                                      input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
+                                                                   hammingweight=HAMMINGWEIGHT,load_metadata=LOAD_METADATA)
+        
+        new_data = []
+        new_label = []
+        count_no = 0
+        max_element = np.count_nonzero(Y_profiling == 128)
+        for elem in range(len(X_profiling)) : 
+            data = X_profiling[elem]
+            label = Y_profiling[elem]
+            
+            
+            if label == 128:
+                new_data.append(data)
+                new_label.append([0,1])
+            else:
+                if count_no <= max_element:
+                    new_data.append(data)
+                    new_label.append([1,0])     
+                    count_no += 1
+        X_profiling = np.array(new_data)
+        Y_profiling = np.array(new_label)
+        
+        new_data = []
+        new_label = []
+        count_no = 0
+        max_element = np.count_nonzero(Y_attack == 128)
+        for elem in range(len(X_attack)) : 
+            data = X_profiling[elem]
+            label = Y_profiling[elem]
+            
+            
+            if label == 128:
+                new_data.append(data)
+                new_label.append([0,1])
+            else:
+                if count_no <= max_element:
+                    new_data.append(data)
+                    new_label.append([1,0])     
+                    count_no += 1        
+        X_attack = np.array(new_data)
+        Y_attack = np.array(new_label)        
+        
+        
+        if X.shape[0] == 0:
+            X = X_profiling
+            X_l = Y_profiling
+            V = X_attack
+            V_l = Y_attack
+        else:
+            X = np.append(X,X_profiling,axis = 0)  
+            X_l = np.append(X_l,Y_profiling,axis = 0)   
+            V = np.append(V,X_attack,axis = 0)   
+            V_l = np.append(V_l,Y_attack,axis = 0)                                                           
+     
+        # Handle Input Length of -1
+        
+        if INPUT_LENGTH < 0:
+            # Set to length of X_profiling
+            print "|| Changing Input Length from {} to {} (max samples)".format(INPUT_LENGTH, X_profiling.shape[1])
+            INPUT_LENGTH = X_profiling.shape[1]
 
 
+    train_variable_model(variable, X, X_l, V, V_l, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM,combine = COMBINE, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
+        training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
+        learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
+
+    # for var, length in variable_dict.iteritems():
+    #     for i in range(length):
+    #         variable = "{}{}".format(var, pad_string_zeros(i+1))
+    #         # print variable
+    #         print "$$$ Training Neural Networks $$$\nVariable {}, MLP {}, CNN {}, Input Length {}, Noise {}\n".format(VARIABLE, USE_MLP,
+    #                                                                                                  USE_CNN, INPUT_LENGTH, ADD_NOISE)
+    #         train_variable_model(VARIABLE, mlp=USE_MLP, cnn=USE_CNN, input_length=INPUT_LENGTH, add_noise=ADD_NOISE)
 
     print "$ Done!"
