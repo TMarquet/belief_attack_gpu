@@ -205,7 +205,7 @@ def mlp_new(input_length=700, learning_rate=0.00001, classes=256, loss_function=
     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1)))
     model.add(BatchNormalization(name='block{}_batchnorm'.format(str(4))))
     model.add(tf.keras.layers.Activation('relu'))    
-    model.add(Dense(classes, activation='softmax'))
+
     
     model.add(Dense(classes, activation='softmax', name='predictions'))
     # Save image!
@@ -662,7 +662,10 @@ if __name__ == "__main__":
             print "|| Changing Input Length from {} to {} (max samples)".format(INPUT_LENGTH, X_profiling.shape[1])
             INPUT_LENGTH = X_profiling.shape[1]
 
-
+    print(X.shape)
+    print(X_l.shape)
+    print(V.shape)
+    print(V_l.shape)
     train_variable_model(variable, X, X_l, V, V_l, mlp=USE_MLP, cnn=USE_CNN, cnn_pre=USE_CNN_PRETRAINED, lstm=USE_LSTM,combine = COMBINE, input_length=INPUT_LENGTH, add_noise=ADD_NOISE, epochs=EPOCHS,
         training_traces=TRAINING_TRACES, mlp_layers=MLP_LAYERS, mlp_nodes=MLP_NODES, lstm_layers=LSTM_LAYERS, lstm_nodes=LSTM_NODES, batch_size=BATCH_SIZE, sd=STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, progress_bar=PROGRESS_BAR,
         learning_rate=LEARNING_RATE, multilabel=MULTILABEL, hammingweight=HAMMINGWEIGHT, loss_function=LOSS_FUNCTION, hamming_distance_encoding=HAMMING_DISTANCE_ENCODING, scratch_storage=SCRATCH_STORAGE, use_ascad=USE_ASCAD)
