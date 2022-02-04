@@ -7,7 +7,7 @@ Created on Fri Feb  4 08:11:54 2022
 
 from utility import *
 import csv
-import tqdm as tqdm
+from tqdm import tqdm
 traces = load_trace_data()
 print(traces.shape)
 file = 'tracedata.csv'
