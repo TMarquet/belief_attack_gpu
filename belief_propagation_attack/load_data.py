@@ -10,7 +10,7 @@ import csv
 traces = load_trace_data()
 print(traces.shape)
 file = 'tracedata.csv'
-with open(file,'w',encoding='UTF8') as f:
+with open(file,'w') as f:
     write = csv.write(file)
     for trace in traces:
         writer.writerow(trace)
