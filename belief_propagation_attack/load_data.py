@@ -7,12 +7,13 @@ Created on Fri Feb  4 08:11:54 2022
 
 from utility import *
 import csv
+import tqdm as tqdm
 traces = load_trace_data()
 print(traces.shape)
 file = 'tracedata.csv'
 with open(file,'w') as f:
     writer = csv.writer(f)
-    for trace in traces:
+    for trace in tqdm(traces):
         writer.writerow(trace)
         
     f.close()
