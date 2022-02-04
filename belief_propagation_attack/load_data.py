@@ -11,7 +11,7 @@ traces = load_trace_data()
 print(traces.shape)
 file = 'tracedata.csv'
 with open(file,'w') as f:
-    write = csv.writer(f)
+    writer = csv.writer(f)
     for trace in traces:
         writer.writerow(trace)
         
