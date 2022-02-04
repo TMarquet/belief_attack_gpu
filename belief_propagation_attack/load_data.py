@@ -6,13 +6,10 @@ Created on Fri Feb  4 08:11:54 2022
 """
 
 from utility import *
-import csv
+import pandas as pd
 from tqdm import tqdm
 traces = load_trace_data()
 print(traces.shape)
-file = 'tracedata.csv'
-with open(file,'w') as f:
-    writer = csv.writer(f)
-    writer.writerows(traces)
-        
-    f.close()
+file = 'tracedata_pd.csv'
+df = pd.DataFrame(data=traces)
+df.to_csv(file)
