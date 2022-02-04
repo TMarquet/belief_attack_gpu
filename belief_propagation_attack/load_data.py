@@ -7,4 +7,5 @@ Created on Fri Feb  4 08:11:54 2022
 
 from utility import *
 
-load_trace_data()
+traces = load_trace_data()
+print(traces.shape)
