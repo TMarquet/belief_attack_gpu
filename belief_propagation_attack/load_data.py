@@ -12,4 +12,6 @@ traces = load_trace_data()
 print(traces.shape)
 file = 'tracedata_pd.csv'
 df = pd.DataFrame(data=traces)
+print(len(df))
+print(len(df[0]))
 df.to_csv(file)
