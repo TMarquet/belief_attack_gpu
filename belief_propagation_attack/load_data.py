@@ -13,7 +13,6 @@ print(traces.shape)
 file = 'tracedata.csv'
 with open(file,'w') as f:
     writer = csv.writer(f)
-    for trace in tqdm(traces):
-        writer.writerow(trace)
+    writer.writerows(traces)
         
     f.close()
