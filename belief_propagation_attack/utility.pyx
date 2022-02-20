@@ -1742,7 +1742,7 @@ def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length
     elif window_type == "gaussian": 
         x = np.arange(-5000, 5001)
         xU, xL = x + 0.5, x - 0.5 
-        prob = stats.norm.cdf(xU, scale = 2500) - ss.norm.cdf(xL, scale = 2500)
+        prob = stats.norm.cdf(xU, scale = 2500) - stats.norm.cdf(xL, scale = 2500)
         prob = prob / prob.sum() # normalize the probabilities so their sum is 1
         distr_samples = np.random.choice(x, size = input_length, p = prob, replace=False)
         trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, distr_samples]
