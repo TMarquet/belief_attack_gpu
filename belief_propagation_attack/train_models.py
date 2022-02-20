@@ -6,10 +6,11 @@ import numpy as np
 import argparse
 import timing
 from time import time
+
 import matplotlib
 matplotlib.use('Agg')
 
-os.environ["CUDA_VISIBLE_DEVICES"]="1"
+
 
 import tensorflow as tf
 from tensorflow.keras.models import Model, Sequential
@@ -243,40 +244,52 @@ def cnn_aes_hd(input_length=700, learning_rate=0.00001, classes=256, dense_units
 ### CNN Best model
 def cnn_best(input_length=2000, learning_rate=0.00001, filters = 3, classes=256, dense_units=2048,pooling = [0,1,2,3,4],dense_layers = 2,size = [64,128,256,512,512]):
     # From VGG16 design
-    input_shape = (input_length, 1)
-    model = tf.keras.Sequential(name='cnn')
+    # input_shape = (input_length, 1)
+    # model = tf.keras.Sequential(name='cnn')
     
-    # Convolution blocks
+    # # Convolution blocks
     
-    for i in range(len(size)):  
-        if i == 0:
-            model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))           
-        else:
-            model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1)))          
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1),name = 'L2_regularisation_{}'.format(i+1)))
-        model.add(BatchNormalization(name = 'Batch_normalisation_{}'.format(i+1)))
-        model.add(tf.keras.layers.Activation('relu'))
-        if i in pooling:
-            model.add(AveragePooling1D(2, strides=2, name='block{}_pool'.format(i+1)))
+    # for i in range(len(size)):  
+    #     if i == 0:
+    #         model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1),input_shape=input_shape))           
+    #     else:
+    #         model.add(Conv1D(size[i], filters, padding='same', name='block{}_conv'.format(i+1)))          
+    #     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1),name = 'L2_regularisation_{}'.format(i+1)))
+    #     model.add(BatchNormalization(name = 'Batch_normalisation_{}'.format(i+1)))
+    #     model.add(tf.keras.layers.Activation('relu'))
+    #     if i in pooling:
+    #         model.add(AveragePooling1D(2, strides=2, name='block{}_pool'.format(i+1)))
     
 
-    model.add(Flatten(name='flatten'))
+    # model.add(Flatten(name='flatten'))
         
-    # Two Dense layers
+    # # Two Dense layers
     
-    #model.add(Dropout(0.5))
-    for i in range(0,dense_layers):
-        model.add(Dense(dense_units, name='Dense_{}'.format(i+1)))
-        model.add(Lambda(lambda x: K.l2_normalize(x,axis=1),name = 'L2_regularisation_dense_{}'.format(i+1)))
-        model.add(BatchNormalization(name='block_dense_{}_batchnorm'.format(i+1)))
-        model.add(tf.keras.layers.Activation('relu'))
-        #model.add(Dropout(0.5))
+    # #model.add(Dropout(0.5))
+    # for i in range(0,dense_layers):
+    #     model.add(Dense(dense_units, name='Dense_{}'.format(i+1)))
+    #     model.add(Lambda(lambda x: K.l2_normalize(x,axis=1),name = 'L2_regularisation_dense_{}'.format(i+1)))
+    #     model.add(BatchNormalization(name='block_dense_{}_batchnorm'.format(i+1)))
+    #     model.add(tf.keras.layers.Activation('relu'))
+    #     #model.add(Dropout(0.5))
 
-    model.add(Dense(classes, activation='softmax', name='predictions'))
+    # model.add(Dense(classes, activation='softmax', name='predictions'))
 
+
+    model = Sequential(name='best_cnn')
+    model.add(Conv1D(kernel_size=34, strides=17, filters=4, activation='selu', input_shape=(input_length, 1), padding='same'))
+    model.add(AveragePooling1D(pool_size=2, strides=2, padding='same'))
+    model.add(BatchNormalization())
+    model.add(Flatten())
+    model.add(Dense(200, activation='selu', kernel_initializer='random_uniform'))
+    model.add(Dense(200, activation='selu', kernel_initializer='random_uniform'))
+    model.add(Dense(200, activation='selu', kernel_initializer='random_uniform'))
+    model.add(Dense(classes, activation='softmax'))
+    
     optimizer = RMSprop(lr=learning_rate)
     model.compile(loss=tf_rank_loss, optimizer=optimizer, metrics=['accuracy'])
     model.summary()
+
     return model
 
 
@@ -551,6 +564,9 @@ if __name__ == "__main__":
                         help='Uses data of ASCAD', default=False)
     parser.add_argument('-loss', '-loss_function', action="store", dest="LOSS_FUNCTION", help='Loss Function (default: None (uses standard depending on model structure, usually categorical cross entropy))',
                         default=None)
+    parser.add_argument('-window_type', '-wt', action="store", dest="WIN_TYPE", help='Type of creation of window (default: None (uses standard depending on model structure, usually categorical cross entropy))',
+                        default="classic")
+
 
     # Target node here
     args            = parser.parse_args()
@@ -587,6 +603,7 @@ if __name__ == "__main__":
     LOAD_METADATA = args.LOAD_METADATA
     SCRATCH_STORAGE = args.SCRATCH_STORAGE
     USE_ASCAD = args.USE_ASCAD
+    WIN_TYPE = args.WIN_TYPE
     if not USE_MLP and not USE_CNN and not USE_CNN_PRETRAINED and not USE_LSTM:
         print "|| No models set to run - setting USE_MLP to True"
         USE_MLP = True
@@ -642,7 +659,7 @@ if __name__ == "__main__":
         
         (X_profiling, Y_profiling), (X_attack, Y_attack) = load_bpann(variable, normalise_traces=NORMALISE,
                                                                       input_length=INPUT_LENGTH, training_traces=TRAINING_TRACES, sd = STANDARD_DEVIATION, augment_method=AUGMENT_METHOD, jitter=JITTER, validation_traces=VALIDATION_TRACES, randomkey_validation=RANDOMKEY_VALIDATION,
-                                                                   hammingweight=HAMMINGWEIGHT,load_metadata=LOAD_METADATA)
+                                                                   hammingweight=HAMMINGWEIGHT,load_metadata=LOAD_METADATA,window_type = WIN_TYPE)
         
         if X.shape[0] == 0:
             X = X_profiling

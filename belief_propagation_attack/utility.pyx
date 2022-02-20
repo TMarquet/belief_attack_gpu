@@ -1,7 +1,7 @@
 ########################################
 ## utility.pyx
 ########################################
-
+from statistics import mean
 from sys import exit
 import numpy as np
 import pickle
@@ -11,6 +11,7 @@ import ast
 import linecache
 import struct
 from scipy import stats
+
 import multiprocessing
 try:
     import matplotlib.pyplot as plt
@@ -1714,7 +1715,7 @@ def handle_window(time_point, input_length, minimum, maximum):
 #### bpann helper to load profiling and attack data (traces and labels)
 # Loads the profiling and attack datasets from the bpann
 # database
-def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length=700, training_traces=50000, sd = 100, augment_method=2, jitter=None, validation_traces=10000, randomkey_validation=False, hammingweight=False):
+def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length=700, training_traces=50000, sd = 100, augment_method=2, jitter=None, validation_traces=10000, randomkey_validation=False, hammingweight=False,window_type = "classic"):
 
     # Load meta
     #profile_traces, attack_traces, samples, coding = load_meta()
@@ -1735,10 +1736,21 @@ def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length
     # Get time point for variable
     print('{}{}.npy'.format(TIMEPOINTS_FOLDER, var_name))
     time_point = np.load('{}{}.npy'.format(TIMEPOINTS_FOLDER, var_name), allow_pickle=True)[var_number-1]
-
-    start_window, end_window = handle_window(time_point, input_length, 0, samples - 1)
-
-    trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, start_window:end_window]
+    if window_type == "classic":
+        start_window, end_window = handle_window(time_point, input_length, 0, samples - 1)
+        trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, start_window:end_window]
+    elif window_type == "gaussian": 
+        x = np.arange(-5000, 5001)
+        xU, xL = x + 0.5, x - 0.5 
+        prob = stats.norm.cdf(xU, scale = 2500) - ss.norm.cdf(xL, scale = 2500)
+        prob = prob / prob.sum() # normalize the probabilities so their sum is 1
+        distr_samples = np.random.choice(x, size = input_length, p = prob, replace=False)
+        trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, distr_samples]
+    elif window_type == "cpa":
+        trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, start_window:end_window]
+    else:
+        start_window, end_window = handle_window(time_point, input_length, 0, samples - 1)
+        trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, start_window:end_window]
     traces, data_length = trace_data.shape
     traces -= validation_traces
     type = trace_data.dtype
