@@ -1746,8 +1746,8 @@ def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length
         prob = prob / prob.sum() # normalize the probabilities so their sum is 1
         distr_samples = np.random.choice(x, size = input_length, p = prob, replace=False)
         trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, distr_samples]
-    elif window_type == "cpa":
-        trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, start_window:end_window]
+    # elif window_type == "cpa":
+        # TO DO
     else:
         start_window, end_window = handle_window(time_point, input_length, 0, samples - 1)
         trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, start_window:end_window]
