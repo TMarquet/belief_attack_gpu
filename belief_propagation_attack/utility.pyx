@@ -1734,7 +1734,7 @@ def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length
     #         print "! Could not load metadata! Writing from scratch..."
 
     # Get time point for variable
-    print('{}{}.npy'.format(TIMEPOINTS_FOLDER, var_name))
+   
     time_point = np.load('{}{}.npy'.format(TIMEPOINTS_FOLDER, var_name), allow_pickle=True)[var_number-1]
     if window_type == "classic":
         start_window, end_window = handle_window(time_point, input_length, 0, samples - 1)
@@ -1744,7 +1744,7 @@ def load_bpann(variable, load_metadata=True, normalise_traces=True, input_length
         xU, xL = x + 0.5, x - 0.5 
         prob = stats.norm.cdf(xU, scale = 2500) - stats.norm.cdf(xL, scale = 2500)
         prob = prob / prob.sum() # normalize the probabilities so their sum is 1
-        distr_samples = np.random.choice(x, size = input_length, p = prob, replace=False)
+        distr_samples = np.random.choice(x, size = input_length, p = prob, replace=False) + time_point
         trace_data = load_trace_data(filepath=get_shifted_tracedata_filepath(shifted=jitter))[:, distr_samples]
     # elif window_type == "cpa":
         # TO DO
